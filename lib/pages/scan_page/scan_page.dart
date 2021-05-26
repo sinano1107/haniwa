@@ -4,15 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:haniwa/theme/common_theme.dart';
 import 'package:haniwa/components/icon_button.dart';
 import 'scan_view_model.dart';
+import 'components/nfc_button.dart';
 
-class ScanPage extends StatefulWidget {
+class ScanPage extends StatelessWidget {
   static const id = 'scan';
 
-  @override
-  _ScanPageState createState() => _ScanPageState();
-}
-
-class _ScanPageState extends State<ScanPage> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -36,7 +32,7 @@ class ScanPageContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             SvgPicture.asset('assets/images/phone.svg'),
             SizedBox(height: 10),
             Text(
@@ -48,11 +44,7 @@ class ScanPageContent extends StatelessWidget {
             ),
             Text('ホーム画面やカメラアプリからも反応します'),
             SizedBox(height: 50),
-            IconButtonWidget(
-              icon: Icon(Icons.nfc),
-              text: 'タッチで読み込む',
-              color: kColor1,
-            ),
+            NfcButton(),
             SizedBox(height: 10),
             Text('or', style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
@@ -60,6 +52,7 @@ class ScanPageContent extends StatelessWidget {
               icon: Icon(Icons.qr_code),
               text: 'QRコードで読み込む',
               color: kColor2,
+              onPressed: () {},
             ),
           ],
         ),

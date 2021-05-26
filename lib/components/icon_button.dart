@@ -4,10 +4,12 @@ class IconButtonWidget extends StatelessWidget {
   final Icon icon;
   final String text;
   final Color color;
+  final Function onPressed;
   IconButtonWidget({
     @required this.icon,
     @required this.text,
     @required this.color,
+    @required this.onPressed,
   });
 
   @override
@@ -23,7 +25,7 @@ class IconButtonWidget extends StatelessWidget {
         text,
         style: TextStyle(fontSize: 17),
       ),
-      onPressed: () {},
+      onPressed: onPressed,
     );
   }
 }
