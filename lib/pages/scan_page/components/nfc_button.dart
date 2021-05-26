@@ -23,7 +23,6 @@ class _NfcButtonState extends State<NfcButton> {
   Widget build(BuildContext context) {
     return IconButtonWidget(
       icon: Icon(Icons.nfc),
-      //text: 'タッチで読み込む',
       text: 'タッチで読み込む',
       color: kColor1,
       onPressed: Provider.of<ScanViewModel>(context, listen: false).nfcScan,
