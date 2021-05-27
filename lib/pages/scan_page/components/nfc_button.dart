@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:haniwa/theme/common_theme.dart';
 import 'package:haniwa/components/icon_button.dart';
 import '../scan_view_model.dart';
 
@@ -24,7 +23,7 @@ class _NfcButtonState extends State<NfcButton> {
     return IconButtonWidget(
       icon: Icon(Icons.nfc),
       text: 'タッチで読み込む',
-      color: kColor1,
+      color: Theme.of(context).primaryColor,
       onPressed: Provider.of<ScanViewModel>(context, listen: false).nfcScan,
     );
   }

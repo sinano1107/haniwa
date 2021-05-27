@@ -24,6 +24,8 @@ class ScanPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Theme.of(context).textTheme.bodyText1.color),
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),

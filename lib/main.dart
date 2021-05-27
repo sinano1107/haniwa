@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
 
+import 'pages/home_page/home_page.dart';
 import 'pages/scan_page/scan_page.dart';
 
 void main() {
@@ -15,8 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: kLightTheme,
       darkTheme: kDarkTheme,
-      initialRoute: ScanPage.id,
+      initialRoute: HomePage.id,
       routes: {
+        HomePage.id: (_) => HomePage(),
         ScanPage.id: (_) => ScanPage(),
       },
     );

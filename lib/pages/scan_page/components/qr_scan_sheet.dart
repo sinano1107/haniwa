@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:haniwa/theme/common_theme.dart';
 import 'package:haniwa/common/snackbar.dart';
 
 class QRScanSheet extends StatefulWidget {
@@ -83,7 +82,7 @@ class _QRScanSheetState extends State<QRScanSheet> with ReassembleHandler {
       key: _qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-        borderColor: kColor1,
+        borderColor: Theme.of(context).primaryColor,
         borderRadius: 16,
         borderLength: 24,
         borderWidth: 8,
