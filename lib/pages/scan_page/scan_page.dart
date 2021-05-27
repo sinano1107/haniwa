@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:haniwa/theme/common_theme.dart';
-import 'package:haniwa/components/icon_button.dart';
 import 'scan_view_model.dart';
 import 'components/nfc_button.dart';
+import 'components/qr_button.dart';
 
 class ScanPage extends StatelessWidget {
   static const id = 'scan';
@@ -48,12 +47,7 @@ class ScanPageContent extends StatelessWidget {
             SizedBox(height: 10),
             Text('or', style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            IconButtonWidget(
-              icon: Icon(Icons.qr_code),
-              text: 'QRコードで読み込む',
-              color: kColor2,
-              onPressed: () {},
-            ),
+            QRButton(),
           ],
         ),
       ),

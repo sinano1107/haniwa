@@ -41,6 +41,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>QRコードを読み取るためにカメラを使用します</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>タグを読み込むためにNFCを利用します</string>
 	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
