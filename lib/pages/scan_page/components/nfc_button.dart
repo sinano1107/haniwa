@@ -13,7 +13,7 @@ class _NfcButtonState extends State<NfcButton> {
   void initState() {
     final viewModel = Provider.of<ScanViewModel>(context, listen: false);
     viewModel.nfcAction.stream.listen((event) {
-      print(event.uri);
+      print(event.groupTagId);
     });
     super.initState();
   }

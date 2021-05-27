@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:haniwa/common/nfc_session.dart';
 import 'package:haniwa/common/extraction_url.dart';
+import 'package:haniwa/common/extraction_group_tag_id.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
 class ScanViewModel extends ChangeNotifier {
@@ -22,7 +23,8 @@ class ScanViewModel extends ChangeNotifier {
   void nfcScan() async {
     startSession(handleTag: (NfcTag tag) async {
       final uri = extractionUri(tag);
-      _nfcSucceedAction.sink.add(NfcSucceedEvent(uri));
+      final groupTagId = extractionGroupTagId(uri);
+      _nfcSucceedAction.sink.add(NfcSucceedEvent(groupTagId));
       return 'タグの読み込みに成功しました';
     });
   }
@@ -46,8 +48,8 @@ class ScanViewModel extends ChangeNotifier {
 }
 
 class NfcSucceedEvent {
-  final String uri;
-  NfcSucceedEvent(this.uri);
+  final String groupTagId;
+  NfcSucceedEvent(this.groupTagId);
 }
 
 class ShowPermissionDialogEvent {}

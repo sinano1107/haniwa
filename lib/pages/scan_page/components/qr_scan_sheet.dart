@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/common/extraction_group_tag_id.dart';
 
 class QRScanSheet extends StatefulWidget {
   @override
@@ -104,6 +105,7 @@ class _QRScanSheetState extends State<QRScanSheet> with ReassembleHandler {
 
   Future<void> _transitionToNextScreen(String uri) async {
     _qrController?.pauseCamera();
-    print(uri);
+    final groupTagId = extractionGroupTagId(uri);
+    print(groupTagId);
   }
 }
