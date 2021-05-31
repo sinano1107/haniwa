@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
 
@@ -19,14 +20,27 @@ class Haniwa extends StatelessWidget {
       title: 'Flutter Demo',
       theme: kLightTheme,
       darkTheme: kDarkTheme,
-      initialRoute: SigninPage.id,
+      initialRoute: HomePage.id,
       routes: {
-        SigninPage.id: (_) => SigninPage(),
-        HomePage.id: (_) => HomePage(),
-        ScanPage.id: (_) => ScanPage(),
+        SigninPage.id: (_) => SigninPage(HomePage.id),
+        HomePage.id: (context) => _routeBranch(
+              context,
+              HomePage.id,
+              HomePage(),
+            ),
+        ScanPage.id: (context) => _routeBranch(
+              context,
+              ScanPage.id,
+              ScanPage(),
+            ),
       },
     );
   }
+}
+
+Widget _routeBranch(BuildContext context, String id, Widget trueWidget) {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  return (currentUser == null) ? SigninPage(id) : trueWidget;
 }
 
 class MyApp extends StatefulWidget {

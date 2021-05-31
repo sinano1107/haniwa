@@ -8,6 +8,8 @@ import 'signin_view_model.dart';
 
 class SigninPage extends StatelessWidget {
   static const id = 'signin';
+  final String nextPageId;
+  SigninPage(this.nextPageId);
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +17,15 @@ class SigninPage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => SigninViewModel()),
       ],
-      child: SigninPageContent(),
+      child: SigninPageContent(nextPageId),
     );
   }
 }
 
 class SigninPageContent extends StatefulWidget {
+  final String nextPageId;
+  SigninPageContent(this.nextPageId);
+
   @override
   _SigninPageContentState createState() => _SigninPageContentState();
 }
@@ -29,13 +34,16 @@ class _SigninPageContentState extends State<SigninPageContent> {
   @override
   void initState() {
     final viewModel = Provider.of<SigninViewModel>(context, listen: false);
-    viewModel.progressAction.stream.listen((event) {
-      if (event.pleaseOpen) {
-        showProgressDialog(context);
-      } else {
-        Navigator.pop(context);
-      }
-    });
+    // 次のページへ遷移
+    viewModel.nextPageAction.stream
+        .listen((_) => Navigator.pushReplacementNamed(
+              context,
+              widget.nextPageId,
+            ));
+    // プログレスインジケータ
+    viewModel.progressAction.stream.listen((event) => event.pleaseOpen
+        ? showProgressDialog(context)
+        : Navigator.pop(context));
     super.initState();
   }
 
