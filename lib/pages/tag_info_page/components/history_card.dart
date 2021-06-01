@@ -23,7 +23,10 @@ class HistoryCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               vertical: 20,
             ),
-            child: HistoryTimeline(),
+            child: HistoryTimeline(
+              start: DateTime(2021, 3, 1, 15, 30),
+              end: DateTime(2021, 3, 1, 16, 30),
+            ),
           ),
         ],
       ),

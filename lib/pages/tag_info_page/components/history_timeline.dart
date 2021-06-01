@@ -4,6 +4,14 @@ import 'package:timelines/timelines.dart';
 import '../tag_info_view_model.dart';
 
 class HistoryTimeline extends StatelessWidget {
+  HistoryTimeline({
+    @required this.start,
+    @required this.end,
+  });
+
+  final DateTime start;
+  final DateTime end;
+
   @override
   Widget build(BuildContext context) {
     final _viewModel = Provider.of<TagInfoViewModel>(context);
@@ -34,7 +42,7 @@ class HistoryTimeline extends StatelessWidget {
               children: (index == 0)
                   ? ([
                       Text(
-                        '12:12',
+                        '${start.hour}:${start.minute}',
                         style: kTimeStyle.copyWith(color: _viewModel.colors[0]),
                       ),
                       SizedBox(
@@ -50,7 +58,7 @@ class HistoryTimeline extends StatelessWidget {
                               ),
                               SizedBox(width: 20),
                               Text(
-                                '58分',
+                                _diff(),
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -63,7 +71,7 @@ class HistoryTimeline extends StatelessWidget {
                     ])
                   : ([
                       Text(
-                        '13:10',
+                        '${end.hour}:${end.minute}',
                         style: kTimeStyle.copyWith(
                           color: _viewModel.colors[1],
                         ),
@@ -94,5 +102,18 @@ class HistoryTimeline extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _diff() {
+    final Duration difference = end.difference(start);
+    final int sec = difference.inSeconds;
+
+    if (sec >= 60 * 60) {
+      return '${difference.inHours.toString()}時間';
+    } else if (sec >= 60) {
+      return '${difference.inMinutes.toString()}分';
+    } else {
+      return '$sec秒';
+    }
   }
 }
