@@ -10,15 +10,6 @@ class NfcButton extends StatefulWidget {
 
 class _NfcButtonState extends State<NfcButton> {
   @override
-  void initState() {
-    final viewModel = Provider.of<ScanViewModel>(context, listen: false);
-    viewModel.nfcAction.stream.listen((event) {
-      print(event.groupTagId);
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return IconButtonWidget(
       icon: Icon(Icons.nfc),

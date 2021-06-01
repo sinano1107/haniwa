@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/extraction_group_tag_id.dart';
+import 'package:haniwa/pages/tag_info_page/tag_info_page.dart';
 
 class QRScanSheet extends StatefulWidget {
   @override
@@ -107,5 +108,10 @@ class _QRScanSheetState extends State<QRScanSheet> with ReassembleHandler {
     _qrController?.pauseCamera();
     final groupTagId = extractionGroupTagId(uri);
     print(groupTagId);
+    Navigator.pushReplacementNamed(
+      context,
+      TagInfoPage.id,
+      arguments: TagInfoArguments(groupTagId: groupTagId),
+    );
   }
 }

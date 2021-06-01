@@ -7,6 +7,7 @@ import 'theme/dark_theme.dart';
 import 'pages/signin_page/signin_page.dart';
 import 'pages/home_page/home_page.dart';
 import 'pages/scan_page/scan_page.dart';
+import 'pages/tag_info_page/tag_info_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,16 +24,12 @@ class Haniwa extends StatelessWidget {
       initialRoute: HomePage.id,
       routes: {
         SigninPage.id: (_) => SigninPage(HomePage.id),
-        HomePage.id: (context) => _routeBranch(
-              context,
-              HomePage.id,
-              HomePage(),
-            ),
-        ScanPage.id: (context) => _routeBranch(
-              context,
-              ScanPage.id,
-              ScanPage(),
-            ),
+        HomePage.id: (context) =>
+            _routeBranch(context, HomePage.id, HomePage()),
+        ScanPage.id: (context) =>
+            _routeBranch(context, ScanPage.id, ScanPage()),
+        TagInfoPage.id: (context) =>
+            _routeBranch(context, TagInfoPage.id, TagInfoPage()),
       },
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'scan_view_model.dart';
 import 'components/nfc_button.dart';
 import 'components/qr_button.dart';
+import 'package:haniwa/pages/tag_info_page/tag_info_page.dart';
 
 class ScanPage extends StatelessWidget {
   static const id = 'scan';
@@ -19,7 +20,26 @@ class ScanPage extends StatelessWidget {
   }
 }
 
-class ScanPageContent extends StatelessWidget {
+class ScanPageContent extends StatefulWidget {
+  @override
+  _ScanPageContentState createState() => _ScanPageContentState();
+}
+
+class _ScanPageContentState extends State<ScanPageContent> {
+  @override
+  void initState() {
+    final viewModel = Provider.of<ScanViewModel>(context, listen: false);
+    viewModel.nfcAction.stream.listen((event) {
+      print(event.groupTagId);
+      Navigator.pushReplacementNamed(
+        context,
+        TagInfoPage.id,
+        arguments: TagInfoArguments(groupTagId: event.groupTagId),
+      );
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
