@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import './history_timeline.dart';
+import 'package:haniwa/models/history.dart';
 
 class HistoryCard extends StatelessWidget {
+  HistoryCard(this.history);
+
+  final History history;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -12,9 +17,11 @@ class HistoryCard extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Row(
               children: [
-                CircleAvatar(),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(history.image),
+                ),
                 SizedBox(width: 10),
-                Text('name'),
+                Text(history.name),
               ],
             ),
           ),
@@ -24,8 +31,8 @@ class HistoryCard extends StatelessWidget {
               vertical: 20,
             ),
             child: HistoryTimeline(
-              start: DateTime(2021, 3, 1, 15, 30),
-              end: DateTime(2021, 3, 1, 16, 30),
+              start: history.start,
+              end: history.end,
             ),
           ),
         ],

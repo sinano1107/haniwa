@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import "package:intl/intl.dart";
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:timelines/timelines.dart';
 import '../tag_info_view_model.dart';
 
@@ -19,6 +21,8 @@ class HistoryTimeline extends StatelessWidget {
       fontSize: 20,
       fontWeight: FontWeight.bold,
     );
+    initializeDateFormatting("ja_JP");
+    final formatter = DateFormat('HH:mm');
 
     return FixedTimeline.tileBuilder(
       theme: TimelineThemeData(
@@ -42,7 +46,7 @@ class HistoryTimeline extends StatelessWidget {
               children: (index == 0)
                   ? ([
                       Text(
-                        '${start.hour}:${start.minute}',
+                        formatter.format(start),
                         style: kTimeStyle.copyWith(color: _viewModel.colors[0]),
                       ),
                       SizedBox(
@@ -71,7 +75,7 @@ class HistoryTimeline extends StatelessWidget {
                     ])
                   : ([
                       Text(
-                        '${end.hour}:${end.minute}',
+                        formatter.format(end),
                         style: kTimeStyle.copyWith(
                           color: _viewModel.colors[1],
                         ),
