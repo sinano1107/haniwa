@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:timelines/timelines.dart';
+import '../tag_info_view_model.dart';
 
 class HistoryTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _viewModel = Provider.of<TagInfoViewModel>(context);
     final kTimeStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
     );
-
-    final colors = [
-      Colors.lightBlueAccent[100],
-      Colors.blue,
-    ];
 
     return FixedTimeline.tileBuilder(
       theme: TimelineThemeData(
@@ -37,7 +35,7 @@ class HistoryTimeline extends StatelessWidget {
                   ? ([
                       Text(
                         '12:12',
-                        style: kTimeStyle.copyWith(color: colors[0]),
+                        style: kTimeStyle.copyWith(color: _viewModel.colors[0]),
                       ),
                       SizedBox(
                         height: 120,
@@ -67,7 +65,7 @@ class HistoryTimeline extends StatelessWidget {
                       Text(
                         '13:10',
                         style: kTimeStyle.copyWith(
-                          color: colors[1],
+                          color: _viewModel.colors[1],
                         ),
                       ),
                     ]),
@@ -77,10 +75,10 @@ class HistoryTimeline extends StatelessWidget {
         indicatorBuilder: (_, index) {
           return OutlinedDotIndicator(
             borderWidth: 2.5,
-            color: (index != 1) ? colors[0] : colors[1],
+            color: (index != 1) ? _viewModel.colors[0] : _viewModel.colors[1],
             child: Icon(
               (index != 1) ? Icons.play_arrow : Icons.stop,
-              color: (index != 1) ? colors[0] : colors[1],
+              color: (index != 1) ? _viewModel.colors[0] : _viewModel.colors[1],
               size: 15,
             ),
           );
@@ -90,7 +88,7 @@ class HistoryTimeline extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: colors,
+              colors: _viewModel.colors,
             ),
           ),
         ),

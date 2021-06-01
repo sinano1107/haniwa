@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'tag_info_view_model.dart';
 import 'components/timer_text.dart';
@@ -21,8 +22,20 @@ class TagInfoPage extends StatelessWidget {
 
 const kPadding = 20.0;
 
-class TagInfoPageContent extends StatelessWidget {
-  final colors = [Colors.lightBlueAccent[100], Colors.blue];
+class TagInfoPageContent extends StatefulWidget {
+  @override
+  _TagInfoPageContentState createState() => _TagInfoPageContentState();
+}
+
+class _TagInfoPageContentState extends State<TagInfoPageContent> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TagInfoViewModel>(context, listen: false)
+          .changeColors([Colors.lightBlueAccent[100], Colors.blue]);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +45,7 @@ class TagInfoPageContent extends StatelessWidget {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           stops: [0.2, 0.8],
-          colors: colors,
+          colors: Provider.of<TagInfoViewModel>(context).colors,
         ),
       ),
       child: Scaffold(
