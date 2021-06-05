@@ -1,34 +1,42 @@
 // エミュレータホストの指定。デフォルトポートでエミュレータを起動した場合は不要
-// process.env.FIRESTORE_EMULATOR_HOST = "localhost:58080";
+// process.env.FIRESTORE_EMULATOR_HOST = 'localhost:58080';
 
-const fs = require("fs");
-const firebase = require("@firebase/testing");
+const fs = require('fs');
+const firebase = require('@firebase/testing');
+const projectId = 'my-test-project';
+// テスト用ユーザーID
+const testUid = 'test-user-id';
 
 // 認証なしFirestoreクライアントの取得
 function getFirestore() {
     const app = firebase.initializeTestApp({
-        projectId: "my-test-project"
+        projectId: projectId
     });
 
     return app.firestore();
 }
 
 // 認証付きFirestoreクライアントの取得
-function getFirestoreWithAuth() {
+function getFirestoreWithAuth(uid=testUid) {
     const app = firebase.initializeTestApp({
-        projectId: "my-test-project",
-        auth: {uid: "test_user", email: "test_user@example.com"}
+        projectId: projectId,
+        auth: {uid: uid}
     });
 
     return app.firestore();
 }
 
-describe("fruitsコレクションへの認証付きでのアクセスのみを許可", () => {
+// サーバータイムスタンプ
+function serverTimestamp() {
+    return firebase.firestore.FieldValue.serverTimestamp();
+}
+
+describe('Haniwaのテスト', () => {
     beforeEach(async () => {
         // セキュリティルールの読み込み
         await firebase.loadFirestoreRules({
-            projectId: "my-test-project",
-            rules: fs.readFileSync("firestore.rules", "utf8")
+            projectId: projectId,
+            rules: fs.readFileSync('firestore.rules', 'utf8')
         });
     });
 
@@ -37,55 +45,91 @@ describe("fruitsコレクションへの認証付きでのアクセスのみを�
         await Promise.all(firebase.apps().map(app => app.delete()))
     });
 
-    describe('fruitsコレクションへの認証付きアクセスを許可', () => {
-        test('認証なしでのデータ保存に失敗', async () => {
-            const db = getFirestore();
-            const doc = db.collection('fruits').doc('apple');
-            await firebase.assertFails(doc.set({ color: 'res' }));
+    describe('groupsコレクション', () => {
+        // 正しい形式のグループオブジェクト
+        const correctGroup = {
+            name: 'test-group-name',
+            members: [testUid],
+            createdAt: serverTimestamp(),
+        };
+
+        describe('create', () => {
+            describe('groupsコレクションは認証されていないと作成できない', () => {
+                test('認証なしでのデータ作成に失敗', async () => {
+                    const db = getFirestore();
+                    const collection = db.collection('groups');
+                    await firebase.assertFails(collection.add(correctGroup));
+                });
+
+                test('認証ありでのデータ作成に成功', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    await firebase.assertSucceeds(collection.add(correctGroup));
+                });
+            });
+
+            describe('groupsコレクションは認証されていても形式が不正であれば作成できない', () => {
+                test('nameがstringではないと作成できない', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    const badData = { ...correctGroup, name: null };
+                    await firebase.assertFails(collection.add(badData));
+                });
+
+                test('nameがstringであっても15字以上だと作成できない', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    const goodData = { ...correctGroup, name: '123456789012345' };
+                    const badData = { ...correctGroup, name: '1234567890123456' };
+                    await firebase.assertSucceeds(collection.add(goodData));
+                    await firebase.assertFails(collection.add(badData));
+                });
+
+                test('membersがlistでなければ作成できない', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    const badData = { ...correctGroup, members: null };
+                    await firebase.assertFails(collection.add(badData));
+                });
+
+                test('createdAtが正しくないと作成できない', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    const badData = { ...correctGroup, createdAt: Date(2021, 1, 1, 0, 0) };
+                    await firebase.assertFails(collection.add(badData));
+                });
+            });
         });
 
-        test('認証ありでのデータ保存に成功', async () => {
-            const db = getFirestoreWithAuth();
-            const doc = db.collection('fruits').doc('orange');
-            await firebase.assertSucceeds(doc.set({ color: 'orange' }));
-        });
+        describe('read', () => {
+            describe('groupsコレクションは認証されていないと読めない', () => {
+                let id;
 
-        test('認証なしでの取得に失敗', async () => {
-            const db = getFirestore();
-            const doc = db.collection('fruits').doc('strawberry');
-            await firebase.assertFails(doc.get());
-        });
+                beforeAll(async () => {
+                    // テスト用にあらかじめデータを書き込んでおく処理
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    id = (await collection.add(correctGroup)).id;
+                })
 
-        test('認証ありでの取得に成功', async () => {
-            const db = getFirestoreWithAuth();
-            const doc = db.collection('fruits').doc('cherry');
-            await firebase.assertSucceeds(doc.get());
-        })
+                test('認証なしのデータ読み込みに失敗', async () => {
+                    const db = getFirestore();
+                    const collection = db.collection('groups');
+                    await firebase.assertFails(collection.doc(id).get());
+                });
+
+                test('認証があってもメンバーではなかったら失敗', async () => {
+                    const db = getFirestoreWithAuth('no-member-id');
+                    const collection = db.collection('groups');
+                    await firebase.assertFails(collection.doc(id).get());
+                });
+
+                test('認証ありかつメンバーであれば読み込みに成功', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    await firebase.assertSucceeds(collection.doc(id).get());
+                });
+            });
+        });
     });
-
-    describe('fruits以外のコレクションへのアクセス禁止', () => {
-        test('認証なしでのデータ保存に失敗', async () => {
-            const db = getFirestore();
-            const doc = db.collection('countries').doc('japan');
-            await firebase.assertFails(doc.set({ language: 'japanese' }));
-        });
-
-        test('認証ありでのデータ保存に失敗', async () => {
-            const db = getFirestoreWithAuth();
-            const doc = db.collection('vegetables').doc('tomato');
-            await firebase.assertFails(doc.set({ color: 'red' }));
-        });
-
-        test('認証なしでの取得に失敗', async () => {
-            const db = getFirestore();
-            const doc = db.collection('vehicles').doc('car');
-            await firebase.assertFails(doc.get());
-        });
-
-        test('認証ありでの取得に失敗', async () => {
-            const db = getFirestoreWithAuth();
-            const doc = db.collection('prefectures').doc('tokyo');
-            await firebase.assertFails(doc.get());
-        });
-    })
 });

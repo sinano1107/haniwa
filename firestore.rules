@@ -6,9 +6,19 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // fruitsコレクションについては、認証されたユーザのみ書き込みを許可
-    match /fruits/{fruit} {
-      allow read, write: if request.auth.uid != null;
+    function isAnyAuthenticated() {
+      return request.auth.uid != null;
+    }
+
+    // groupsコレクション
+    match /groups/{groupID} {
+      allow create: if isAnyAuthenticated()
+        && (request.resource.data.name is string && request.resource.data.name.size() <= 15)
+        && request.resource.data.members is list
+        && request.resource.data.createdAt == request.time
+
+      allow read: if isAnyAuthenticated()
+        && request.auth.uid in resource.data.members
     }
   }
 }
