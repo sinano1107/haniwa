@@ -1,0 +1,38 @@
+{
+  "name": "haniwa",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "firestore-export": "firebase emulators:export --force ./data/",
+    "firestore-import-start": "firebase emulators:start --import=./data --only firestore"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinano1107/haniwa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sinano1107/haniwa/issues"
+  },
+  "homepage": "https://github.com/sinano1107/haniwa#readme",
+  "devDependencies": {
+    "@firebase/testing": "^0.20.11",
+    "@types/jest": "^26.0.23",
+    "jest": "^27.0.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "rules"
+    ]
+  }
+}

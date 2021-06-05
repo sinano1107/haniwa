@@ -1,9 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // 全てのアクセスをブロック
     match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2021, 7, 3);
+      allow read, write: if false;
+    }
+
+    // fruitsコレクションについては、認証されたユーザのみ書き込みを許可
+    match /fruits/{fruit} {
+      allow read, write: if request.auth.uid != null;
     }
   }
 }
