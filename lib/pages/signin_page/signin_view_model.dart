@@ -4,12 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SigninViewModel extends ChangeNotifier {
-  final _nextPageAction = StreamController<NextPageEvent>();
-  StreamController<NextPageEvent> get nextPageAction => _nextPageAction;
-
-  final _progressAction = StreamController<ProgressEvent>();
-  StreamController<ProgressEvent> get progressAction => _progressAction;
-
   final _googleSigninAction = StreamController<GoogleSigninEvent>();
   StreamController<GoogleSigninEvent> get googleSigninAction =>
       _googleSigninAction;
@@ -17,17 +11,13 @@ class SigninViewModel extends ChangeNotifier {
   // Googleサインインを開始
   Future<void> startGoogleSignin() async {
     try {
-      _progressAction.sink.add(ProgressEvent(pleaseOpen: true));
       final userCredential = await signInWithGoogle();
       print('サインインに成功');
       print('uid: ${userCredential.user.uid}');
       _googleSigninAction.sink.add(GoogleSigninEvent(isSucceed: true));
-      _progressAction.sink.add(ProgressEvent(pleaseOpen: false));
-      _nextPageAction.sink.add(NextPageEvent());
     } catch (e) {
       print('サインインに失敗しました $e');
       _googleSigninAction.sink.add(GoogleSigninEvent(isSucceed: false));
-      _progressAction.sink.add(ProgressEvent(pleaseOpen: false));
     }
   }
 
@@ -44,8 +34,6 @@ class SigninViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _nextPageAction.close();
-    _progressAction.close();
     _googleSigninAction.close();
     super.dispose();
   }

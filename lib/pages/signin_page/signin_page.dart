@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:haniwa/common/progress.dart';
+import 'package:haniwa/common/snackbar.dart';
 import 'components/wave.dart';
 import 'components/google_signin_button.dart';
 import 'signin_view_model.dart';
@@ -34,16 +34,16 @@ class _SigninPageContentState extends State<SigninPageContent> {
   @override
   void initState() {
     final viewModel = Provider.of<SigninViewModel>(context, listen: false);
-    // 次のページへ遷移
-    viewModel.nextPageAction.stream
-        .listen((_) => Navigator.pushReplacementNamed(
-              context,
-              widget.nextPageId,
-            ));
-    // プログレスインジケータ
-    viewModel.progressAction.stream.listen((event) => event.pleaseOpen
-        ? showProgressDialog(context)
-        : Navigator.pop(context));
+    // グーグルサインインの結果
+    viewModel.googleSigninAction.stream.listen((event) async {
+      Navigator.pop(context);
+      if (event.isSucceed) {
+        print('成功しました');
+        Navigator.pushReplacementNamed(context, widget.nextPageId);
+      } else {
+        showSnackBar(context, 'Googleサインインに失敗しました');
+      }
+    });
     super.initState();
   }
 
