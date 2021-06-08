@@ -130,6 +130,35 @@ describe('Haniwaのテスト', () => {
                     await firebase.assertSucceeds(collection.doc(id).get());
                 });
             });
+
+            describe('groupコレクション配下はメンバーでなければ読めない', () => {
+                let id;
+
+                beforeAll(async () => {
+                    // テスト用にあらかじめデータを書き込んでおく処理
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    id = (await collection.add(correctGroup)).id;
+                })
+
+                test('認証なしのデータ読み込みに失敗', async () => {
+                    const db = getFirestore();
+                    const collection = db.collection('groups');
+                    await firebase.assertFails(collection.doc(id).collection('tags').get());
+                });
+
+                test('認証があってもメンバーではなかったら失敗', async () => {
+                    const db = getFirestoreWithAuth('no-member-id');
+                    const collection = db.collection('groups');
+                    await firebase.assertFails(collection.doc(id).collection('tags').get());
+                });
+
+                test('認証ありかつメンバーであれば読み込みに成功', async () => {
+                    const db = getFirestoreWithAuth();
+                    const collection = db.collection('groups');
+                    await firebase.assertSucceeds(collection.doc(id).collection('tags').get());
+                });
+            });
         });
     });
 });

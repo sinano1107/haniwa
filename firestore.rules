@@ -12,6 +12,10 @@ service cloud.firestore {
 
     // groupsコレクション
     match /groups/{groupID} {
+      function getGroup() {
+        return get(/databases/$(database)/documents/groups/$(groupID))
+      }
+
       allow create: if isAnyAuthenticated()
         && (request.resource.data.name is string && request.resource.data.name.size() <= 15)
         && request.resource.data.members is list
@@ -19,6 +23,11 @@ service cloud.firestore {
 
       allow read: if isAnyAuthenticated()
         && request.auth.uid in resource.data.members
+
+      match /{document=**} {
+        allow read: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members
+      }
     }
   }
 }
