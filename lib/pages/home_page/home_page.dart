@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/pages/scan_page/scan_page.dart';
 import 'package:haniwa/pages/signin_page/signin_page.dart';
 
@@ -19,6 +20,10 @@ class HomePage extends StatelessWidget {
             onPressed: () => Navigator.pushNamed(context, ScanPage.id),
           ),
           MaterialButton(
+            child: Text('グループ作成'),
+            onPressed: testCreateGroup,
+          ),
+          MaterialButton(
             child: Text('ログアウト'),
             onPressed: () {
               FirebaseAuth.instance.signOut();
@@ -28,5 +33,14 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void testCreateGroup() async {
+    try {
+      await createGroup('name');
+      print('作成完了');
+    } catch (e) {
+      print('エラー $e');
+    }
   }
 }
