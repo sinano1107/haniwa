@@ -15,7 +15,41 @@ class TagInfoPage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => TagInfoViewModel()),
       ],
-      child: TagInfoPageContent(),
+      child: TagInfoBranch(),
+    );
+  }
+}
+
+class TagInfoBranch extends StatefulWidget {
+  @override
+  _TagInfoBranchState createState() => _TagInfoBranchState();
+}
+
+class _TagInfoBranchState extends State<TagInfoBranch> {
+  @override
+  Widget build(BuildContext context) {
+    final TagInfoArguments _args = ModalRoute.of(context).settings.arguments;
+    final _viewModel = Provider.of<TagInfoViewModel>(context, listen: false);
+    final _future = _viewModel.fetchTagData(_args.groupTagId);
+
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        return (_viewModel.isError)
+            ? Scaffold(
+                body: Center(
+                  child: Text('このタグはあなたのグループに存在しません'),
+                ),
+              )
+            : TagInfoPageContent();
+      },
     );
   }
 }
@@ -31,6 +65,9 @@ class _TagInfoPageContentState extends State<TagInfoPageContent> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      final TagInfoArguments _args = ModalRoute.of(context).settings.arguments;
+      Provider.of<TagInfoViewModel>(context, listen: false)
+          .fetchTagData(_args.groupTagId);
       Provider.of<TagInfoViewModel>(context, listen: false)
           .changeColors([Colors.lightBlueAccent[100], Colors.blue]);
     });

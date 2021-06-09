@@ -11,7 +11,7 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "firestore-export": "firebase emulators:export --force ./data/",
-    "firestore-import-start": "firebase emulators:start --import=./data --only firestore"
+    "firestore-import-start": "firebase emulators:start --import=./data"
   },
   "repository": {
     "type": "git",

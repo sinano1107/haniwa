@@ -23,7 +23,7 @@ void run({bool isEmulator = false}) async {
   // firebase_enumの分岐
   if (isEmulator) {
     FirebaseFirestore.instance.settings =
-        Settings(host: kLocalIP, sslEnabled: false);
+        Settings(host: '$kLocalIP:8080', sslEnabled: false);
     FirebaseAuth.instance.useEmulator('http://$kLocalIP:9099');
   }
   runApp(Haniwa());
