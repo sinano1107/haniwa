@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:haniwa/common/firestore.dart';
+import 'package:haniwa/common/notification.dart';
 import 'package:haniwa/pages/scan_page/scan_page.dart';
 import 'package:haniwa/pages/signin_page/signin_page.dart';
 
 class HomePage extends StatelessWidget {
   static const id = 'home';
+  final storage = LocalStorage('test_key');
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +25,18 @@ class HomePage extends StatelessWidget {
           MaterialButton(
             child: Text('グループ作成'),
             onPressed: testCreateGroup,
+          ),
+          MaterialButton(
+            child: Text('通知'),
+            onPressed: () => scheduleLocalNotification(Duration(seconds: 10)),
+          ),
+          MaterialButton(
+            child: Text('ローカルストレージ保存'),
+            onPressed: testSetToStorage,
+          ),
+          MaterialButton(
+            child: Text('ローカルストレージ確認'),
+            onPressed: testGetFromStorage,
           ),
           MaterialButton(
             child: Text('ログアウト'),
@@ -42,5 +57,16 @@ class HomePage extends StatelessWidget {
     } catch (e) {
       print('エラー $e');
     }
+  }
+
+  void testSetToStorage() {
+    final now = DateTime.now();
+    print(now);
+    storage.setItem('test_key', now.toString());
+  }
+
+  void testGetFromStorage() {
+    final value = storage.getItem('test_key');
+    print(value);
   }
 }

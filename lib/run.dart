@@ -3,6 +3,8 @@ import 'package:simple_logger/simple_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
@@ -27,6 +29,11 @@ void run({bool isEmulator = false}) async {
         Settings(host: '$kLocalIP:8080', sslEnabled: false);
     FirebaseAuth.instance.useEmulator('http://$kLocalIP:9099');
   }
+
+  // タイムゾーンを初期化
+  tz.initializeTimeZones();
+  var tokyo = tz.getLocation('Asia/Tokyo');
+  tz.setLocalLocation(tokyo);
   runApp(Haniwa());
 }
 
