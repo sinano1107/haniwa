@@ -34,7 +34,12 @@ class _ScanPageContentState extends State<ScanPageContent> {
       Navigator.pushReplacementNamed(
         context,
         TagInfoPage.id,
-        arguments: TagInfoArguments(groupTagId: event.groupTagId),
+        arguments: TagInfoArguments(
+          groupTagId: event.groupTagId,
+          elapsedTime: null,
+          wasOngoing: null,
+          endTime: null,
+        ),
       );
     });
     super.initState();

@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/notification.dart';
 import 'package:haniwa/pages/scan_page/scan_page.dart';
 import 'package:haniwa/pages/signin_page/signin_page.dart';
+import 'package:haniwa/pages/tag_info_page/tag_info_view_model.dart';
+import 'components/previous_task_dialog.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const id = 'home';
-  final storage = LocalStorage('test_key');
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  SharedPreferences _prefs;
+
+  void init() async {
+    _prefs = await SharedPreferences.getInstance();
+    final timerData = _prefs.getString(TagInfoViewModel.timerKey);
+    // もしストレージに何か残っていればタイマー中に終了したということなのでタグページに遷移する
+    if (timerData != null) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => PreviousTaskDialog(timerData),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +58,6 @@ class HomePage extends StatelessWidget {
             onPressed: () => scheduleLocalNotification(Duration(seconds: 10)),
           ),
           MaterialButton(
-            child: Text('ローカルストレージ保存'),
-            onPressed: testSetToStorage,
-          ),
-          MaterialButton(
-            child: Text('ローカルストレージ確認'),
-            onPressed: testGetFromStorage,
-          ),
-          MaterialButton(
             child: Text('ログアウト'),
             onPressed: () {
               FirebaseAuth.instance.signOut();
@@ -57,16 +76,5 @@ class HomePage extends StatelessWidget {
     } catch (e) {
       print('エラー $e');
     }
-  }
-
-  void testSetToStorage() {
-    final now = DateTime.now();
-    print(now);
-    storage.setItem('test_key', now.toString());
-  }
-
-  void testGetFromStorage() {
-    final value = storage.getItem('test_key');
-    print(value);
   }
 }

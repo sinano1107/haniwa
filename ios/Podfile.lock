@@ -334,14 +334,14 @@ PODS:
   - nanopb/encode (2.30908.0)
   - nfc_manager (0.0.1):
     - Flutter
-  - path_provider (0.0.1):
-    - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
+  - shared_preferences (0.0.1):
+    - Flutter
   - vibration (1.7.3):
     - Flutter
 
@@ -353,9 +353,9 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - nfc_manager (from `.symlinks/plugins/nfc_manager/ios`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
 
 SPEC REPOS:
@@ -395,12 +395,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in/ios"
   nfc_manager:
     :path: ".symlinks/plugins/nfc_manager/ios"
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
   vibration:
     :path: ".symlinks/plugins/vibration/ios"
 
@@ -430,10 +430,10 @@ SPEC CHECKSUMS:
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   nfc_manager: 69e4cd9c15112206ab30246b1ce8d81a75729fdf
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   vibration: b5a33e764c3f609a975b9dca73dce20fdde627dc
 
 PODFILE CHECKSUM: 56cf4de2d3ee8e39c86278a0e17cfa04a4056dfb

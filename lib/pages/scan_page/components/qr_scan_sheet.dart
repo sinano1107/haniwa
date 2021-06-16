@@ -111,7 +111,12 @@ class _QRScanSheetState extends State<QRScanSheet> with ReassembleHandler {
     Navigator.pushReplacementNamed(
       context,
       TagInfoPage.id,
-      arguments: TagInfoArguments(groupTagId: groupTagId),
+      arguments: TagInfoArguments(
+        groupTagId: groupTagId,
+        elapsedTime: null,
+        wasOngoing: null,
+        endTime: null,
+      ),
     );
   }
 }

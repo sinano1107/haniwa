@@ -8,9 +8,9 @@ int scheduleLocalNotification(Duration duration) {
     android: AndroidInitializationSettings('app_icon'),
     iOS: IOSInitializationSettings(),
   ));
-  int notificationId = DateTime.now().hashCode;
+  // int notificationId = DateTime.now().hashCode;
   FlutterLocalNotificationsPlugin().zonedSchedule(
-    notificationId,
+    0, // notificationId,
     'Hello',
     ':) :) :)',
     tz.TZDateTime.now(tz.local).add(duration),
@@ -24,5 +24,11 @@ int scheduleLocalNotification(Duration duration) {
         UILocalNotificationDateInterpretation.absoluteTime,
     androidAllowWhileIdle: true,
   );
-  return notificationId;
+  return 0; // notificationId;
+}
+
+// 通知をキャンセル
+void cancelLocalNotification() async {
+  await FlutterLocalNotificationsPlugin().cancel(0);
+  print('notificationCanceled');
 }

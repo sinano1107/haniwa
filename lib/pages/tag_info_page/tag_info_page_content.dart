@@ -16,24 +16,55 @@ class TagInfoPageContent extends StatefulWidget {
   _TagInfoPageContentState createState() => _TagInfoPageContentState();
 }
 
-class _TagInfoPageContentState extends State<TagInfoPageContent> {
+class _TagInfoPageContentState extends State<TagInfoPageContent>
+    with WidgetsBindingObserver {
+  TagInfoArguments _args;
+
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final TagInfoArguments _args = ModalRoute.of(context).settings.arguments;
+      _args = ModalRoute.of(context).settings.arguments;
       final viewModel = Provider.of<TagInfoViewModel>(context, listen: false);
+      viewModel.init(_args);
+      // タグデータ読み込み
       viewModel.fetchTagData(_args.groupTagId);
+      // 色変更
       viewModel.changeColors([Colors.lightBlueAccent[100], Colors.blue]);
+      // ダイアログのリッスン
       viewModel.showDialogAction.stream.listen((_) {
         showDialog(
           context: context,
           builder: (_) => PauseDialog(),
         );
       });
+      // スナックバーのリッスン
       viewModel.showSnackbarAction.stream
           .listen((event) => showSnackBar(context, event.text));
     });
+    // バックグラウンド化イベントをリッスン
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // バックグラウンド化イベントをクローズ
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final _viewModel = Provider.of<TagInfoViewModel>(context, listen: false);
+    if (state == AppLifecycleState.paused) {
+      // ポーズ時
+      print('ポーズ');
+      _viewModel.pausedAction(_args.groupTagId);
+    } else if (state == AppLifecycleState.resumed) {
+      // 復帰時
+      _viewModel.resumedAction();
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override

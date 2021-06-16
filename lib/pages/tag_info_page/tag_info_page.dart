@@ -52,8 +52,14 @@ class _TagInfoBranchState extends State<TagInfoBranch> {
 }
 
 class TagInfoArguments {
-  final String groupTagId;
   TagInfoArguments({
     @required this.groupTagId,
+    @required this.elapsedTime,
+    @required this.wasOngoing,
+    @required this.endTime,
   });
+  final String groupTagId;
+  final String elapsedTime;
+  final bool wasOngoing;
+  final String endTime;
 }
