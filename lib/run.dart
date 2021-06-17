@@ -14,6 +14,7 @@ import 'pages/home_page/home_page.dart';
 import 'pages/scan_page/scan_page.dart';
 import 'pages/tag_info_page/tag_info_page.dart';
 import 'pages/result_page/result_page.dart';
+import 'pages/list_page/list_page.dart';
 
 void run({bool isEmulator = false}) async {
   final logger = SimpleLogger();
@@ -44,7 +45,7 @@ class Haniwa extends StatelessWidget {
       title: 'Flutter Demo',
       theme: kLightTheme,
       darkTheme: kDarkTheme,
-      initialRoute: HomePage.id,
+      initialRoute: ListPage.id,
       routes: {
         SigninPage.id: (_) => SigninPage(HomePage.id),
         HomePage.id: (context) =>
@@ -55,6 +56,8 @@ class Haniwa extends StatelessWidget {
             _routeBranch(context, TagInfoPage.id, TagInfoPage()),
         ResultPage.id: (context) =>
             _routeBranch(context, ResultPage.id, ResultPage()),
+        ListPage.id: (context) =>
+            _routeBranch(context, ListPage.id, ListPage()),
       },
     );
   }
