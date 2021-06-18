@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haniwa/models/quest.dart';
+import 'package:haniwa/pages/quest_info_page/quest_info_page.dart';
 
 class QuestListItem extends StatelessWidget {
   QuestListItem({
@@ -27,42 +28,47 @@ class QuestListItem extends StatelessWidget {
       decoration: BoxDecoration(
         border: showBorder ? _border : null,
       ),
-      child: InkWell(
-        hoverColor: _theme.canvasColor,
-        child: ListTile(
-          leading: SizedBox(
-            height: 35,
-            child: CircleAvatar(
-              backgroundColor: Colors.blue,
-            ),
+      child: ListTile(
+        leading: SizedBox(
+          height: 35,
+          child: CircleAvatar(
+            backgroundColor: Colors.blue,
           ),
-          title: Text(
-            quest.name,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: quest.subscriber != null ? _subscribedText : null,
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${quest.minutes}分',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              SizedBox(width: 10),
-              Text(
-                '${quest.point}pt',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          onTap: () => print('aaa'),
         ),
+        title: Text(
+          quest.name,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: quest.subscriber != null ? _subscribedText : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${quest.minutes}分',
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(width: 10),
+            Text(
+              '${quest.point}pt',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        onTap: () => _showInfoPage(context),
       ),
     );
   }
+}
+
+void _showInfoPage(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (_) => QuestInfoPage(),
+    backgroundColor: Colors.transparent,
+  );
 }
