@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../view_model.dart';
 
 class PointText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _viewModel = Provider.of<QuestInfoViewModel>(context, listen: false);
     final _theme = Theme.of(context);
 
     return Column(
@@ -35,7 +38,7 @@ class PointText extends StatelessWidget {
           ],
         ),
         Text(
-          '1000pt',
+          '${_viewModel.quest.point}pt',
           style: TextStyle(
             color: _theme.primaryColor,
             fontSize: 35,

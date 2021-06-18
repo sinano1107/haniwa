@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haniwa/models/quest.dart';
-import 'package:haniwa/pages/quest_info_page/quest_info_page.dart';
+import 'package:haniwa/pages/quest_info_page/index.dart';
 
 class QuestListItem extends StatelessWidget {
   QuestListItem({
@@ -59,16 +59,16 @@ class QuestListItem extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () => _showInfoPage(context),
+        onTap: () => _showInfoPage(context, quest),
       ),
     );
   }
 }
 
-void _showInfoPage(BuildContext context) {
+void _showInfoPage(BuildContext context, Quest quest) {
   showModalBottomSheet(
     context: context,
-    builder: (_) => QuestInfoPage(),
+    builder: (_) => QuestInfoPage(quest),
     backgroundColor: Colors.transparent,
   );
 }

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/pages/quest_info_page/content.dart';
+import 'package:provider/provider.dart';
+import '../view_model.dart';
 
 class ConditionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _viewModel = Provider.of<QuestInfoViewModel>(context, listen: false);
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 3),
       decoration: BoxDecoration(
@@ -26,7 +31,7 @@ class ConditionText extends StatelessWidget {
           SizedBox(width: 10),
           Flexible(
             child: Text(
-              '15分がんばる',
+              '${_viewModel.quest.minutes}分がんばる',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w700,

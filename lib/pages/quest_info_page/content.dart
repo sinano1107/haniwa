@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:haniwa/components/icon_button.dart';
 import 'components/quest_info_header.dart';
 import 'components/point_text.dart';
 import 'components/condition_text.dart';
+import 'view_model.dart';
 
-class QuestInfoPage extends StatelessWidget {
+class QuestInfoPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _viewModel = Provider.of<QuestInfoViewModel>(context, listen: false);
     final _theme = Theme.of(context);
 
     return Container(
@@ -31,7 +34,7 @@ class QuestInfoPage extends StatelessWidget {
             text: '予約する',
             color: _theme.accentColor,
             fontWeight: FontWeight.bold,
-            onPressed: () {},
+            onPressed: _viewModel.quest.subscriber == null ? () {} : null,
           ),
           SizedBox(height: 20),
           IconButtonWidget(
@@ -39,7 +42,7 @@ class QuestInfoPage extends StatelessWidget {
             text: '始める',
             color: _theme.primaryColor,
             fontWeight: FontWeight.bold,
-            onPressed: () {},
+            onPressed: _viewModel.quest.subscriber == null ? () {} : null,
           ),
         ],
       ),
