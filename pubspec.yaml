@@ -33,6 +33,7 @@ dependencies:
   vibration: ^1.7.3
   flutter_local_notifications: ^6.0.0
   shared_preferences: ^2.0.6
+  circular_countdown_timer: ^0.2.0
 
 dev_dependencies:
   flutter_test:

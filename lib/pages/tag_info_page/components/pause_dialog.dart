@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haniwa/pages/result_page/result_page.dart';
+import 'package:haniwa/pages/result_page/index.dart';
 
 class PauseDialog extends StatelessWidget {
   @override

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../view_model.dart';
 
 class PointText extends StatelessWidget {
+  PointText({
+    @required this.point,
+    this.thickness = 3,
+  });
+  final int point;
+  final double thickness;
+
   @override
   Widget build(BuildContext context) {
-    final _viewModel = Provider.of<QuestInfoViewModel>(context, listen: false);
     final _theme = Theme.of(context);
 
     return Column(
@@ -14,7 +18,7 @@ class PointText extends StatelessWidget {
           children: [
             Expanded(
               child: Divider(
-                thickness: 3,
+                thickness: thickness,
                 color: _theme.primaryColor,
               ),
             ),
@@ -31,14 +35,14 @@ class PointText extends StatelessWidget {
             ),
             Expanded(
               child: Divider(
-                thickness: 3,
+                thickness: thickness,
                 color: _theme.primaryColor,
               ),
             ),
           ],
         ),
         Text(
-          '${_viewModel.quest.point}pt',
+          '${point}pt',
           style: TextStyle(
             color: _theme.primaryColor,
             fontSize: 35,
@@ -46,7 +50,7 @@ class PointText extends StatelessWidget {
           ),
         ),
         Divider(
-          thickness: 3,
+          thickness: thickness,
           color: _theme.primaryColor,
         ),
       ],

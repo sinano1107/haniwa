@@ -13,8 +13,9 @@ import 'pages/signin_page/signin_page.dart';
 import 'pages/home_page/home_page.dart';
 import 'pages/scan_page/scan_page.dart';
 import 'pages/tag_info_page/tag_info_page.dart';
-import 'pages/result_page/result_page.dart';
-import 'pages/list_page/list_page.dart';
+import 'pages/result_page/index.dart';
+import 'pages/list_page/index.dart';
+import 'pages/timer_page/index.dart';
 
 void run({bool isEmulator = false}) async {
   final logger = SimpleLogger();
@@ -58,6 +59,8 @@ class Haniwa extends StatelessWidget {
             _routeBranch(context, ResultPage.id, ResultPage()),
         ListPage.id: (context) =>
             _routeBranch(context, ListPage.id, ListPage()),
+        TimerPage.id: (context) =>
+            _routeBranch(context, TimerPage.id, TimerPage()),
       },
     );
   }
