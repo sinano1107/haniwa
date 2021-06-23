@@ -34,6 +34,9 @@ dependencies:
   flutter_local_notifications: ^6.0.0
   shared_preferences: ^2.0.6
   circular_countdown_timer: ^0.2.0
+  lottie: ^1.0.1
+  simple_animations: ^3.1.1
+  confetti: ^0.5.5
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +48,7 @@ flutter:
   assets:
     - assets/images/phone.svg
     - assets/images/haniwa.svg
+    - assets/lottiefiles/congratulations.json
 
 flutter_native_splash:
   color: "#EC407A"

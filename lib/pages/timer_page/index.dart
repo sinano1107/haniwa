@@ -26,6 +26,7 @@ class _TimerPageState extends State<TimerPage> {
     final TimerArguments _args = ModalRoute.of(context).settings.arguments;
     final _quest = _args.quest;
     _duration = 60 * _quest.minutes;
+    _duration = 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +46,7 @@ class _TimerPageState extends State<TimerPage> {
       ),
       body: Column(
         children: [
-          SizedBox(height: _height * 0.13),
+          SizedBox(height: _height * 0.1),
           Center(
             child: GestureDetector(
               onTap: () => _timerControll(context),
@@ -83,12 +84,12 @@ class _TimerPageState extends State<TimerPage> {
               ),
             ),
           ),
-          SizedBox(height: _height * 0.04),
+          SizedBox(height: _height * 0.1),
           PointText(
             point: _quest.point,
             thickness: 6,
           ),
-          SizedBox(height: _height * 0.03),
+          SizedBox(height: _height * 0.05),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25),
             child: Text(
