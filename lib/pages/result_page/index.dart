@@ -6,6 +6,7 @@ import 'package:haniwa/animations/fade_animation.dart';
 import './components/get_point.dart';
 import './components/total_point.dart';
 import './components/finish_button.dart';
+import 'package:haniwa/models/quest.dart';
 
 class ResultPage extends StatelessWidget {
   static const id = 'result';
@@ -14,6 +15,8 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ResultArguments _args = ModalRoute.of(context).settings.arguments;
+    final _quest = _args.quest;
     final _height = MediaQuery.of(context).size.height;
     final _delay = (500 * 8).round();
     Future.delayed(Duration(milliseconds: _delay), _controller.play);
@@ -38,12 +41,18 @@ class ResultPage extends StatelessWidget {
                 SizedBox(height: _height * 0.03),
                 FadeAnimation(
                   delay: 1,
-                  child: GetPoint(delay: 1),
+                  child: GetPoint(
+                    point: _quest.point,
+                    delay: 1,
+                  ),
                 ),
                 SizedBox(height: _height * 0.01),
                 FadeAnimation(
                   delay: 4,
-                  child: TotalPoint(delay: 4),
+                  child: TotalPoint(
+                    point: _quest.point,
+                    delay: 4,
+                  ),
                 ),
                 SizedBox(height: _height * 0.1),
                 FadeAnimation(
@@ -81,4 +90,11 @@ class ResultPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class ResultArguments {
+  ResultArguments({
+    @required this.quest,
+  });
+  final Quest quest;
 }

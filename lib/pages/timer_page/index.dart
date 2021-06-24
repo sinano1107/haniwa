@@ -79,7 +79,11 @@ class _TimerPageState extends State<TimerPage> {
                 },
                 onComplete: () {
                   print('Countdown Ended');
-                  Navigator.pushReplacementNamed(context, ResultPage.id);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    ResultPage.id,
+                    arguments: ResultArguments(quest: _quest),
+                  );
                 },
               ),
             ),

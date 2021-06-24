@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:haniwa/animations/custom_countup.dart';
 
 class TotalPoint extends StatelessWidget {
-  TotalPoint({@required this.delay});
+  TotalPoint({
+    @required this.point,
+    @required this.delay,
+  });
+  final int point;
   final double delay;
+  final _currentPoint = 1000.0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +31,8 @@ class TotalPoint extends StatelessWidget {
           ),
         ),
         CustomCountup(
-          begin: 1000,
-          end: 1100,
+          begin: _currentPoint,
+          end: _currentPoint + point,
           delay: delay,
           duration: Duration(seconds: 1),
           style: _pointStyle,
@@ -45,32 +50,6 @@ class TotalPoint extends StatelessWidget {
           ),
         ),
       ],
-    );
-
-    return RichText(
-      text: TextSpan(
-        text: 'Total ',
-        style: TextStyle(
-          color: Colors.amber,
-          fontWeight: FontWeight.bold,
-          fontSize: 35,
-        ),
-        children: [
-          TextSpan(
-            text: '1100pt',
-            style: TextStyle(
-              color: _theme.primaryColor,
-              fontSize: 55,
-            ),
-            children: [
-              TextSpan(
-                text: '!!',
-                style: TextStyle(color: _theme.accentColor),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

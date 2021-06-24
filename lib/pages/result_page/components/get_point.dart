@@ -1,8 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:haniwa/animations/custom_countup.dart';
 
 class GetPoint extends StatelessWidget {
-  GetPoint({@required this.delay});
+  GetPoint({
+    @required this.point,
+    @required this.delay,
+  });
+  final int point;
   final double delay;
 
   @override
@@ -27,7 +33,7 @@ class GetPoint extends StatelessWidget {
         ),
         CustomCountup(
           begin: 0,
-          end: 100,
+          end: point.toDouble(),
           delay: delay,
           duration: Duration(seconds: 1),
           style: _pointStyle,
