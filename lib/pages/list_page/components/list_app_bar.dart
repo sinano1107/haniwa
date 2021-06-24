@@ -3,7 +3,11 @@ import 'quest_list_item.dart';
 import 'package:haniwa/models/quest.dart';
 
 class ListAppBar extends StatelessWidget {
-  final recommendQuest = Quest(name: 'aaa', minutes: 10, point: 1000);
+  final recommendQuest = Quest(
+    name: '出ているものを片付ける',
+    minutes: 15,
+    point: 1000,
+  );
 
   @override
   Widget build(BuildContext context) {

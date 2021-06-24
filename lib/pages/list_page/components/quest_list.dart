@@ -5,116 +5,79 @@ import 'quest_list_item.dart';
 class QuestList extends StatelessWidget {
   final List<Quest> questList = [
     Quest(
-      name: 'お皿洗い',
+      name: '洗濯物をたたむ',
       minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
+      point: 500,
     ),
     Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
+      name: '掃除機 下の階',
+      minutes: 7,
+      point: 100,
     ),
     Quest(
-      name: '片付け',
+      name: '掃除機 上の階',
+      minutes: 10,
+      point: 100,
+    ),
+    Quest(
+      name: 'ゴミ出し',
+      minutes: 15,
+      point: 200,
+    ),
+    Quest(
+      name: '食器洗い',
+      minutes: 30,
+      point: 500,
+    ),
+    Quest(
+      name: 'アイロン',
+      minutes: 15,
+      point: 200,
+    ),
+    Quest(
+      name: 'トイレ 便器の中',
+      minutes: 10,
+      point: 1000,
+    ),
+    Quest(
+      name: 'トイレ　床',
+      minutes: 5,
+      point: 500,
+    ),
+    Quest(
+      name: '床拭き',
       minutes: 15,
       point: 500,
     ),
     Quest(
-      name: 'お皿洗い',
+      name: 'テーブル',
       minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
+      point: 500,
     ),
     Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-    ),
-    Quest(
-      name: '片付け',
+      name: 'たな・ドア 拭き掃除',
       minutes: 15,
       point: 500,
     ),
     Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
-    ),
-    Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-    ),
-    Quest(
-      name: '片付け',
+      name: '出ているものを片付ける',
       minutes: 15,
-      point: 500,
+      point: 1000,
     ),
     Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
-    ),
-    Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-    ),
-    Quest(
-      name: '片付け',
+      name: 'お風呂 洗って沸かす',
       minutes: 15,
-      point: 500,
+      point: 200,
     ),
     Quest(
-      name: 'お皿洗い',
+      name: 'お風呂 床壁掃除 片付け',
       minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
+      point: 300,
     ),
     Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-    ),
-    Quest(
-      name: '片付け',
+      name: '冷蔵庫 片付け・掃除',
       minutes: 15,
-      point: 500,
-    ),
-    Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
-    ),
-    Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-    ),
-    Quest(
-      name: '片付け',
-      minutes: 15,
-      point: 500,
-    ),
-    Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-      subscriber: 'まさき',
-    ),
-    Quest(
-      name: 'お皿洗い',
-      minutes: 10,
-      point: 50,
-    ),
-    Quest(
-      name: '片付け',
-      minutes: 15,
-      point: 500,
+      point: 300,
     ),
   ];
 
