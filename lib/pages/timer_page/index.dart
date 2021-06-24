@@ -26,7 +26,6 @@ class _TimerPageState extends State<TimerPage> {
     final TimerArguments _args = ModalRoute.of(context).settings.arguments;
     final _quest = _args.quest;
     _duration = 60 * _quest.minutes;
-    _duration = 1;
 
     return Scaffold(
       appBar: AppBar(

@@ -43,6 +43,7 @@ class Haniwa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: kLightTheme,
       darkTheme: kDarkTheme,
