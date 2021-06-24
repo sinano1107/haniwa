@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:haniwa/animations/custom_countup.dart';
+import '../view_model.dart';
 
 class TotalPoint extends StatelessWidget {
   TotalPoint({
@@ -8,11 +10,12 @@ class TotalPoint extends StatelessWidget {
   });
   final int point;
   final double delay;
-  final _currentPoint = 1000.0;
 
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
+    final _viewModel = Provider.of<ResultViewModel>(context, listen: false);
+    final _currentPoint = _viewModel.member.point.toDouble();
     final _pointStyle = TextStyle(
       color: _theme.primaryColor,
       fontSize: 55,

@@ -1,93 +1,53 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:confetti/confetti.dart';
-import 'package:haniwa/animations/fade_animation.dart';
-import './components/get_point.dart';
-import './components/total_point.dart';
-import './components/finish_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:haniwa/models/quest.dart';
+import 'package:haniwa/models/member.dart';
+import 'package:haniwa/common/firestore.dart';
+import './content.dart';
+import './view_model.dart';
 
 class ResultPage extends StatelessWidget {
   static const id = 'result';
-  final _controller = ConfettiController(duration: Duration(seconds: 10));
-  final _numberOfParticles = 15;
 
   @override
   Widget build(BuildContext context) {
-    final ResultArguments _args = ModalRoute.of(context).settings.arguments;
-    final _quest = _args.quest;
-    final _height = MediaQuery.of(context).size.height;
-    final _delay = (500 * 8).round();
-    Future.delayed(Duration(milliseconds: _delay), _controller.play);
+    final _uid = FirebaseAuth.instance.currentUser.uid;
+    final _future = fetchMemberData(_uid);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: _height * 0.1),
-              Lottie.asset('assets/lottiefiles/congratulations.json'),
-            ],
-          ),
-          Center(
-            child: Column(
-              children: [
-                SizedBox(height: _height * 0.4),
-                CircleAvatar(
-                  radius: 60,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ResultViewModel()),
+      ],
+      builder: (context, _) {
+        final _viewModel = Provider.of<ResultViewModel>(
+          context,
+          listen: false,
+        );
+        return FutureBuilder<Member>(
+          future: _future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
                 ),
-                SizedBox(height: _height * 0.03),
-                FadeAnimation(
-                  delay: 1,
-                  child: GetPoint(
-                    point: _quest.point,
-                    delay: 1,
-                  ),
-                ),
-                SizedBox(height: _height * 0.01),
-                FadeAnimation(
-                  delay: 4,
-                  child: TotalPoint(
-                    point: _quest.point,
-                    delay: 4,
-                  ),
-                ),
-                SizedBox(height: _height * 0.1),
-                FadeAnimation(
-                  delay: 7,
-                  child: FinishButton(),
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: ConfettiWidget(
-              confettiController: _controller,
-              blastDirection: 3 / 8 * pi,
-              numberOfParticles: _numberOfParticles,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _controller,
-              blastDirection: 1 / 2 * pi,
-              numberOfParticles: _numberOfParticles,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: ConfettiWidget(
-              confettiController: _controller,
-              blastDirection: 5 / 8 * pi,
-              numberOfParticles: _numberOfParticles,
-            ),
-          ),
-        ],
-      ),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text('エラー'));
+            }
+
+            if (snapshot.hasData) {
+              _viewModel.setMember(snapshot.data);
+              return ResultPageContent();
+            } else {
+              return Center(child: Text('データが存在しません'));
+            }
+          },
+        );
+      },
     );
   }
 }
