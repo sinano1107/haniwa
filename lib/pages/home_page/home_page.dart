@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/notification.dart';
 import 'package:haniwa/pages/scan_page/scan_page.dart';
-import 'package:haniwa/pages/signin_page/signin_page.dart';
+import 'package:haniwa/pages/signin_page/index.dart';
 import 'package:haniwa/pages/tag_info_page/tag_info_view_model.dart';
 import 'components/previous_task_dialog.dart';
 

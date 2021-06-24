@@ -3,6 +3,10 @@ import 'quest_list_item.dart';
 import 'package:haniwa/models/quest.dart';
 
 class ListAppBar extends StatelessWidget {
+  ListAppBar({
+    @required this.scaffoldKey,
+  });
+  final GlobalKey<ScaffoldState> scaffoldKey;
   final recommendQuest = Quest(
     name: '出ているものを片付ける',
     minutes: 15,
@@ -14,7 +18,10 @@ class ListAppBar extends StatelessWidget {
     final _theme = Theme.of(context);
 
     return SliverAppBar(
-      leading: Icon(Icons.menu),
+      leading: IconButton(
+        icon: Icon(Icons.menu),
+        onPressed: scaffoldKey.currentState.openDrawer,
+      ),
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: EdgeInsets.only(bottom: 10),
         title: Column(

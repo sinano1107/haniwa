@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart';
 import 'package:haniwa/common/progress.dart';
-import '../signin_view_model.dart';
+import '../view_model.dart';
 
 class GoogleSigninButton extends StatelessWidget {
   @override

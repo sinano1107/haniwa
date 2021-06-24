@@ -9,7 +9,7 @@ import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
 
-import 'pages/signin_page/signin_page.dart';
+import 'pages/signin_page/index.dart';
 import 'pages/home_page/home_page.dart';
 import 'pages/scan_page/scan_page.dart';
 import 'pages/tag_info_page/tag_info_page.dart';
@@ -48,7 +48,7 @@ class Haniwa extends StatelessWidget {
       darkTheme: kDarkTheme,
       initialRoute: ListPage.id,
       routes: {
-        SigninPage.id: (_) => SigninPage(HomePage.id),
+        SigninPage.id: (_) => SigninPage(ListPage.id),
         HomePage.id: (context) =>
             _routeBranch(context, HomePage.id, HomePage()),
         ScanPage.id: (context) =>

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'components/wave.dart';
 import 'components/google_signin_button.dart';
-import 'signin_view_model.dart';
+import 'view_model.dart';
 
 class SigninPage extends StatelessWidget {
   static const id = 'signin';
@@ -40,6 +40,7 @@ class _SigninPageContentState extends State<SigninPageContent> {
       if (event.isSucceed) {
         print('成功しました');
         Navigator.pushReplacementNamed(context, widget.nextPageId);
+        showSnackBar(context, 'サインインに成功しました!');
       } else {
         showSnackBar(context, 'Googleサインインに失敗しました');
       }
