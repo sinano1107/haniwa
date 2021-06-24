@@ -51,3 +51,15 @@ Future<Member> fetchMemberData(String uid) async {
 
   return FirebaseFirestore.instance.doc(path).get().then(then);
 }
+
+// 自分のデータをアップデート
+Future updateMyData(Map<String, Object> newData) async {
+  final uid = FirebaseAuth.instance.currentUser.uid;
+  final groupId = 'cho12345678912345678';
+  final path = 'groups/$groupId/members/$uid';
+
+  await FirebaseFirestore.instance
+      .doc(path)
+      .update(newData)
+      .catchError((e) => StateError('自分のデータをアップデートできませんでした'));
+}

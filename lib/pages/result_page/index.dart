@@ -12,8 +12,8 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _uid = FirebaseAuth.instance.currentUser.uid;
-    final _future = fetchMemberData(_uid);
+    final ResultArguments _args = ModalRoute.of(context).settings.arguments;
+    final _quest = _args.quest;
 
     return MultiProvider(
       providers: [
@@ -25,7 +25,7 @@ class ResultPage extends StatelessWidget {
           listen: false,
         );
         return FutureBuilder<Member>(
-          future: _future,
+          future: fetchAndUpdateMyData(_quest),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return Scaffold(
@@ -50,6 +50,13 @@ class ResultPage extends StatelessWidget {
       },
     );
   }
+}
+
+Future<Member> fetchAndUpdateMyData(Quest quest) async {
+  final uid = FirebaseAuth.instance.currentUser.uid;
+  final data = await fetchMemberData(uid);
+  await updateMyData({'point': data.point + quest.point});
+  return data;
 }
 
 class ResultArguments {
