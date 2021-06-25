@@ -105,7 +105,7 @@ class TagInfoViewModel extends ChangeNotifier {
 
   // ポーズされた時のアクション
   void pausedAction(String groupTagId) async {
-    scheduleLocalNotification(Duration(seconds: 10));
+    scheduleLocalNotification(Duration(seconds: 10), '', '');
     // アプリが終了される可能性があるためローカルストレージに保存
     if (_time != DateTime(0)) {
       final elapsedTime = _time.toString();

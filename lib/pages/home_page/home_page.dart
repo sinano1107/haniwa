@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/common/notification.dart';
 import 'package:haniwa/pages/scan_page/scan_page.dart';
 import 'package:haniwa/pages/signin_page/index.dart';
 import 'package:haniwa/pages/tag_info_page/tag_info_view_model.dart';
@@ -52,10 +51,6 @@ class _HomePageState extends State<HomePage> {
           MaterialButton(
             child: Text('グループ作成'),
             onPressed: testCreateGroup,
-          ),
-          MaterialButton(
-            child: Text('通知'),
-            onPressed: () => scheduleLocalNotification(Duration(seconds: 10)),
           ),
           MaterialButton(
             child: Text('ログアウト'),
