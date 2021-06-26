@@ -70,35 +70,38 @@ class _TimerPageContentState extends State<TimerPageContent>
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: TimerAppBar(),
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: _height * 0.1),
-          Center(
-            child: Timer(),
-          ),
-          SizedBox(height: _height * 0.1),
-          PointText(
-            point: _quest.point,
-            thickness: 6,
-          ),
-          SizedBox(height: _height * 0.05),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25),
-            child: Text(
-              '${_quest.minutes}分間がんばれ！👍',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+    return WillPopScope(
+      onWillPop: () => _back(context, _viewModel.wasStart),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: TimerAppBar(),
+        ),
+        body: Column(
+          children: [
+            SizedBox(height: _height * 0.1),
+            Center(
+              child: Timer(),
+            ),
+            SizedBox(height: _height * 0.1),
+            PointText(
+              point: _quest.point,
+              thickness: 6,
+            ),
+            SizedBox(height: _height * 0.05),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Text(
+                '${_quest.minutes}分間がんばれ！👍',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -115,5 +118,42 @@ class _TimerPageContentState extends State<TimerPageContent>
       progress: all.inSeconds - duration.inSeconds,
     );
     _prefs.setString(timerKey, jsonEncode(_data.encode));
+  }
+
+  Future<bool> _back(BuildContext context, bool wasStart) async {
+    bool branch = true;
+
+    if (wasStart) {
+      await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('作業のデータは削除されます'),
+          content: Text('本当に戻りますか'),
+          actions: [
+            TextButton(
+              child: Text(
+                'キャンセル',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                branch = false;
+              },
+            ),
+            TextButton(
+              child: Text(
+                '戻る',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                branch = true;
+              },
+            ),
+          ],
+        ),
+      );
+    }
+    return branch;
   }
 }
