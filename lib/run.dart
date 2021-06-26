@@ -11,9 +11,6 @@ import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
 
 import 'pages/signin_page/index.dart';
-import 'pages/home_page/home_page.dart';
-import 'pages/scan_page/scan_page.dart';
-import 'pages/tag_info_page/tag_info_page.dart';
 import 'pages/result_page/index.dart';
 import 'pages/list_page/index.dart';
 import 'pages/timer_page/index.dart';
@@ -55,12 +52,6 @@ class Haniwa extends StatelessWidget {
       initialRoute: ListPage.id,
       routes: {
         SigninPage.id: (_) => SigninPage(ListPage.id),
-        HomePage.id: (context) =>
-            _routeBranch(context, HomePage.id, HomePage()),
-        ScanPage.id: (context) =>
-            _routeBranch(context, ScanPage.id, ScanPage()),
-        TagInfoPage.id: (context) =>
-            _routeBranch(context, TagInfoPage.id, TagInfoPage()),
         ResultPage.id: (context) =>
             _routeBranch(context, ResultPage.id, ResultPage()),
         ListPage.id: (context) =>
