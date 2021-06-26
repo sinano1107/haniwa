@@ -1,4 +1,3 @@
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/pages/list_page/index.dart';
@@ -9,7 +8,6 @@ class TimerAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final _viewModel = Provider.of<TimerViewModel>(context, listen: false);
     final _quest = _viewModel.quest;
-    final _controller = _viewModel.controller;
     final _theme = Theme.of(context);
 
     return AppBar(
@@ -22,16 +20,15 @@ class TimerAppBar extends StatelessWidget {
       ),
       iconTheme: IconThemeData(color: _theme.iconTheme.color),
       leading: BackButton(
-        onPressed: () => _back(context, _controller),
+        onPressed: () => _back(context, _viewModel.wasStart),
       ),
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
     );
   }
 
-  void _back(BuildContext context, CountDownController controller) {
-    final time = controller.getTime();
-    if (time != '00:00') {
+  void _back(BuildContext context, bool wasStart) {
+    if (wasStart) {
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
