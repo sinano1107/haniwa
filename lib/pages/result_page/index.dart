@@ -29,8 +29,11 @@ class ResultPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
+                body: WillPopScope(
+                  onWillPop: () async => false,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               );
             }

@@ -2,7 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // ローカル通知
-int scheduleLocalNotification(Duration duration) {
+int scheduleLocalNotification(Duration duration, String title, String text) {
   print('notification scheduled.');
   FlutterLocalNotificationsPlugin().initialize(InitializationSettings(
     android: AndroidInitializationSettings('app_icon'),
@@ -11,8 +11,8 @@ int scheduleLocalNotification(Duration duration) {
   // int notificationId = DateTime.now().hashCode;
   FlutterLocalNotificationsPlugin().zonedSchedule(
     0, // notificationId,
-    'Hello',
-    ':) :) :)',
+    title,
+    text,
     tz.TZDateTime.now(tz.local).add(duration),
     NotificationDetails(
       android: AndroidNotificationDetails(
