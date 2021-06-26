@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +37,11 @@ void run({bool isEmulator = false}) async {
   tz.initializeTimeZones();
   var tokyo = tz.getLocation('Asia/Tokyo');
   tz.setLocalLocation(tokyo);
+
+  //向き指定
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, //縦固定
+  ]);
   runApp(Haniwa());
 }
 
