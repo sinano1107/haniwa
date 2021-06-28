@@ -44,6 +44,7 @@ flutter:
   assets:
     - assets/images/phone.svg
     - assets/images/haniwa.svg
+    - assets/images/logo.svg
     - assets/lottiefiles/congratulations.json
 
 flutter_native_splash:

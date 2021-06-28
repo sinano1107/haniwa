@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/theme/colors.dart';
 
 class PointText extends StatelessWidget {
   PointText({
@@ -10,8 +11,6 @@ class PointText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-
     return Column(
       children: [
         Row(
@@ -19,7 +18,7 @@ class PointText extends StatelessWidget {
             Expanded(
               child: Divider(
                 thickness: thickness,
-                color: _theme.primaryColor,
+                color: kPointColor,
               ),
             ),
             Container(
@@ -27,7 +26,7 @@ class PointText extends StatelessWidget {
               child: Text(
                 '報酬',
                 style: TextStyle(
-                  color: _theme.primaryColor,
+                  color: kPointColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -36,7 +35,7 @@ class PointText extends StatelessWidget {
             Expanded(
               child: Divider(
                 thickness: thickness,
-                color: _theme.primaryColor,
+                color: kPointColor,
               ),
             ),
           ],
@@ -44,14 +43,14 @@ class PointText extends StatelessWidget {
         Text(
           '${point}pt',
           style: TextStyle(
-            color: _theme.primaryColor,
+            color: kPointColor,
             fontSize: 35,
             fontWeight: FontWeight.w800,
           ),
         ),
         Divider(
           thickness: thickness,
-          color: _theme.primaryColor,
+          color: kPointColor,
         ),
       ],
     );
