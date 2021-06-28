@@ -16,15 +16,15 @@ service cloud.firestore {
         return get(/databases/$(database)/documents/groups/$(groupID))
       }
 
-      allow create: if isAnyAuthenticated()
-        && (request.resource.data.name is string && request.resource.data.name.size() <= 15)
-        && request.resource.data.members is list
-        && request.resource.data.createdAt == request.time
+      allow update: if isAnyAuthenticated();
 
-      allow read: if isAnyAuthenticated()
-        && request.auth.uid in resource.data.members;
+      allow read: if isAnyAuthenticated();
 
       match /members/{memberID} {
+        allow create: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members
+          && (request.resource.data.point is number && request.resource.data.point == 0);
+        
         allow update: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members
           && request.auth.uid == memberID;

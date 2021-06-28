@@ -34,6 +34,27 @@ Future createGroup(String name) async {
 
 //-↑旧Haniwa-----------------------------------------------
 
+// グループに自分を追加
+Future addMe(String uid) async {
+  final groupId = 'cho12345678912345678';
+  final path = 'groups/$groupId';
+  //-memberに追加-
+  List data = await FirebaseFirestore.instance
+      .doc(path)
+      .get()
+      .then((snap) => snap.exists ? snap['members'] : null);
+  if (data != null) {
+    data.add(uid);
+    await FirebaseFirestore.instance.doc(path).update({'members': data});
+    //-membersコレクションにデータを追加-
+    await FirebaseFirestore.instance
+        .doc(path + '/members/$uid')
+        .set({'point': 0});
+  } else {
+    throw StateError('新規ユーザーデータの作成に失敗しました');
+  }
+}
+
 // メンバーのデータを取得
 Future<Member> fetchMemberData(String uid) async {
   final groupId = 'cho12345678912345678';
