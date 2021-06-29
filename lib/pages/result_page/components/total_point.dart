@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/animations/custom_countup.dart';
 import '../view_model.dart';
@@ -17,7 +18,7 @@ class TotalPoint extends StatelessWidget {
     final _viewModel = Provider.of<ResultViewModel>(context, listen: false);
     final _currentPoint = _viewModel.member.point.toDouble();
     final _pointStyle = TextStyle(
-      color: _theme.primaryColor,
+      color: kPointColor,
       fontSize: 55,
       fontWeight: FontWeight.bold,
     );

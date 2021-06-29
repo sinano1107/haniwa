@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/pages/signin_page/index.dart';
 
 class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
     final _user = FirebaseAuth.instance.currentUser;
 
     return SafeArea(
@@ -32,7 +32,7 @@ class Menu extends StatelessWidget {
                       return Text(
                         '${snapshot.data.point.toString()}pt',
                         style: TextStyle(
-                          color: _theme.primaryColor,
+                          color: kPointColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
                         ),

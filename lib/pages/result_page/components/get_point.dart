@@ -1,7 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:haniwa/animations/custom_countup.dart';
+import 'package:haniwa/theme/colors.dart';
 
 class GetPoint extends StatelessWidget {
   GetPoint({
@@ -13,9 +12,8 @@ class GetPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
     final _pointStyle = TextStyle(
-      color: _theme.primaryColor,
+      color: kPointColor,
       fontWeight: FontWeight.bold,
       fontSize: 50,
     );

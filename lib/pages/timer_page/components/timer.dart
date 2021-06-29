@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:vibration/vibration.dart';
@@ -24,12 +25,11 @@ class _TimerState extends State<Timer> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
     final _viewModel = Provider.of<TimerViewModel>(context, listen: false);
     final _quest = _viewModel.quest;
     final _controller = _viewModel.controller;
-    final _theme = Theme.of(context);
     int _duration = 60 * _quest.minutes;
-    // _duration = 10;
 
     return GestureDetector(
       onTap: () => _timerControll(
@@ -46,17 +46,19 @@ class _TimerState extends State<Timer> {
         controller: _controller,
         width: MediaQuery.of(context).size.width / 1,
         height: MediaQuery.of(context).size.height / 2.8,
-        ringColor: Colors.grey[200],
+        ringColor: _theme.brightness == Brightness.light
+            ? Colors.grey[200]
+            : Colors.grey[700],
         ringGradient: null,
-        fillColor: _theme.primaryColor,
+        fillColor: kPointColor,
         fillGradient: null,
-        backgroundColor: Colors.white,
+        backgroundColor: _theme.canvasColor,
         backgroundGradient: null,
         strokeWidth: 20.0,
         strokeCap: StrokeCap.round,
         textStyle: TextStyle(
           fontSize: 60,
-          color: _theme.primaryColor,
+          color: kPointColor,
           fontWeight: FontWeight.bold,
         ),
         textFormat: CountdownTextFormat.MM_SS,
