@@ -49,7 +49,7 @@ class Haniwa extends StatelessWidget {
       title: 'Flutter Demo',
       theme: kLightTheme,
       darkTheme: kDarkTheme,
-      initialRoute: SigninPage.id,
+      initialRoute: ListPage.id,
       routes: {
         SigninPage.id: (_) => SigninPage(ListPage.id),
         ResultPage.id: (context) =>

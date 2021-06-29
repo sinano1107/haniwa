@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "839442432095",
+    "project_id": "haniwa-28",
+    "storage_bucket": "haniwa-28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839442432095:android:8a333f61f23997118e5bea",
+        "android_client_info": {
+          "package_name": "com.example.haniwa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839442432095-klsia0rhgmas16uu2dgus1e4uoqo1301.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.haniwa",
+            "certificate_hash": "3b9c70f1acb695ea6709e2aaa3aff3e21dec94f4"
+          }
+        },
+        {
+          "client_id": "839442432095-rkll70r8ueh5bh7dco4lllim0b3rl4o0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIMYqdfQSZOp8M8NG95md-5eC5x5E2kgY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839442432095-bo60tlofr3v9lvk98lmdg9mln7pb65t8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "839442432095-v3aedm4t5qk2joqdsonuii697ig8ddop.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sinano1107.haniwa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

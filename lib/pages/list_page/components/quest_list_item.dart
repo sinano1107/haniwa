@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/pages/quest_info_page/index.dart';
@@ -33,7 +34,8 @@ class QuestListItem extends StatelessWidget {
         leading: SizedBox(
           height: 35,
           child: CircleAvatar(
-            backgroundColor: Colors.blue,
+            backgroundImage:
+                NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
           ),
         ),
         title: Text(

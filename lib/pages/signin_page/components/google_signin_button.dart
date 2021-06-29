@@ -12,9 +12,7 @@ class GoogleSigninButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SignInButton(
-      buttonType: (Theme.of(context).brightness == Brightness.dark)
-          ? ButtonType.googleDark
-          : ButtonType.google,
+      buttonType: ButtonType.google,
       buttonSize: ButtonSize.large,
       onPressed: () => startGoogleSignin(context),
     );

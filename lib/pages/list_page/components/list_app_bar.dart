@@ -48,8 +48,8 @@ class ListAppBar extends StatelessWidget {
         ),
       ),
       pinned: true,
-      collapsedHeight: MediaQuery.of(context).size.height * 0.13,
-      expandedHeight: MediaQuery.of(context).size.height * 0.23,
+      collapsedHeight: 120,
+      expandedHeight: 200,
     );
   }
 }

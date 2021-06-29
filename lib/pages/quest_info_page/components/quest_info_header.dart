@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../view_model.dart';
 
 class QuestInfoHeader extends StatelessWidget {
@@ -10,7 +11,8 @@ class QuestInfoHeader extends StatelessWidget {
     return Row(
       children: [
         CircleAvatar(
-          backgroundColor: Colors.blue,
+          backgroundImage:
+              NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
           radius: 30,
         ),
         SizedBox(width: 15),
