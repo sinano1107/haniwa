@@ -26,8 +26,8 @@ class QuestList extends StatelessWidget {
     ),
     Quest(
       name: '食器洗い',
-      minutes: 30,
-      point: 500,
+      minutes: 15,
+      point: 250,
     ),
     Quest(
       name: 'アイロン',
