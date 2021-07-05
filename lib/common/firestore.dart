@@ -1,42 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:haniwa/models/tag.dart';
+import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/models/member.dart';
 
-// tagを取得
-Future<Tag> fetchTag(String groupId, String tagId) async {
-  final then = (DocumentSnapshot docSnap) {
-    if (docSnap.exists) {
-      print(docSnap.data());
-      return Tag(
-        name: docSnap['name'],
-      );
-    } else {
-      throw StateError('タグが存在しませんでした');
-    }
-  };
-  return FirebaseFirestore.instance
-      .doc('groups/$groupId/tags/$tagId')
-      .get()
-      .then(then);
-}
-
-// groupを作成
-Future createGroup(String name) async {
-  final uid = FirebaseAuth.instance.currentUser.uid;
-
-  FirebaseFirestore.instance.collection('groups').add({
-    'name': name,
-    'members': [uid],
-    'createdAt': FieldValue.serverTimestamp(),
-  });
-}
-
-//-↑旧Haniwa-----------------------------------------------
+// 今のところグループIDを固定
+const groupId = 'cho12345678912345678';
 
 // グループに自分を追加
 Future addMe(String uid) async {
-  final groupId = 'cho12345678912345678';
   final path = 'groups/$groupId';
   //-memberに追加-
   List data = await FirebaseFirestore.instance
@@ -57,7 +28,6 @@ Future addMe(String uid) async {
 
 // メンバーのデータを取得
 Future<Member> fetchMemberData(String uid) async {
-  final groupId = 'cho12345678912345678';
   final path = 'groups/$groupId/members/$uid';
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
@@ -76,11 +46,28 @@ Future<Member> fetchMemberData(String uid) async {
 // 自分のデータをアップデート
 Future updateMyData(Map<String, Object> newData) async {
   final uid = FirebaseAuth.instance.currentUser.uid;
-  final groupId = 'cho12345678912345678';
   final path = 'groups/$groupId/members/$uid';
 
   await FirebaseFirestore.instance
       .doc(path)
       .update(newData)
       .catchError((e) => StateError('自分のデータをアップデートできませんでした'));
+}
+
+// クエストを取得
+Future<List<Quest>> fetchQuests() async {
+  final path = 'groups/$groupId/quests';
+  final then = (QuerySnapshot querySnap) {
+    return querySnap.docs.map((docSnap) {
+      if (docSnap.exists) {
+        return Quest(
+          name: docSnap['name'],
+          minutes: docSnap['minutes'],
+          point: docSnap['point'],
+        );
+      }
+    }).toList();
+  };
+
+  return await FirebaseFirestore.instance.collection(path).get().then(then);
 }

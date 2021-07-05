@@ -32,6 +32,11 @@ service cloud.firestore {
         allow read: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members;
       }
+
+      match /quests/{questID} {
+        allow read: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members;
+      }
     }
   }
 }

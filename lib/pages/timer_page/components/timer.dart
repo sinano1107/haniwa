@@ -30,7 +30,7 @@ class _TimerState extends State<Timer> {
     final _quest = _viewModel.quest;
     final _controller = _viewModel.controller;
     int _duration = 60 * _quest.minutes;
-    // _duration = 10;
+    _duration = 10;
 
     return GestureDetector(
       onTap: () => _timerControll(
