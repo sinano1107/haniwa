@@ -37,6 +37,11 @@ service cloud.firestore {
         allow read: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members;
       }
+
+      match /tags/{tagID} {
+        allow read: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members;
+      }
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:haniwa/common/firestore.dart';
+import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,7 +54,7 @@ void run({bool isEmulator = false}) async {
     onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final prefs = await SharedPreferences.getInstance();
       final currentTimer = prefs.getString(timerKey);
-      _navigatePage(currentTimer);
+      _navigatePage(currentTimer, dynamicLink?.link);
     },
     onError: (OnLinkErrorException e) async {
       print('DynamiLinkエラー');
@@ -92,15 +94,32 @@ Widget _routeBranch(BuildContext context, String id, Widget trueWidget) {
   return (currentUser == null) ? SigninPage(id) : trueWidget;
 }
 
-void _navigatePage(String currentTimer) async {
-  if (currentTimer == null) {
-    if (FirebaseAuth.instance.currentUser != null) {
-      _navigatorKey.currentState.popUntil(ModalRoute.withName(ListPage.id));
-      _navigatorKey.currentState.pushNamed(DevPage.id);
+void _navigatePage(String currentTimer, Uri deeplink) async {
+  try {
+    if (currentTimer == null) {
+      if (FirebaseAuth.instance.currentUser != null) {
+        // リスト画面まで戻る
+        _navigatorKey.currentState.popUntil(ModalRoute.withName(ListPage.id));
+        // プログレスを表示してクエストを取得
+        showProgressDialog(_navigatorKey.currentContext);
+        final idList = deeplink.queryParameters['id'].split('-');
+        print(idList[1]);
+        final _quest = await fetchTagQuest(idList[1]);
+        _navigatorKey.currentState.pop();
+        // 終了したらタイマー画面へプッシュ
+        _navigatorKey.currentState.pushNamed(
+          TimerPage.id,
+          arguments: TimerArguments(quest: _quest),
+        );
+      } else {
+        showSnackBar(_navigatorKey.currentContext, 'サインインが完了していません');
+      }
     } else {
-      showSnackBar(_navigatorKey.currentContext, 'サインインが完了していません');
+      showSnackBar(_navigatorKey.currentContext, '作業中のクエストがあります');
     }
-  } else {
-    showSnackBar(_navigatorKey.currentContext, '作業中のクエストがあります');
+  } catch (e) {
+    print('タグ取得エラー $e');
+    showSnackBar(_navigatorKey.currentContext, 'このタグを所有するグループに参加してください');
+    _navigatorKey.currentState.popUntil(ModalRoute.withName(ListPage.id));
   }
 }

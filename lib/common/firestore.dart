@@ -71,3 +71,21 @@ Future<List<Quest>> fetchQuests() async {
 
   return await FirebaseFirestore.instance.collection(path).get().then(then);
 }
+
+// タグのクエストを取得
+Future<Quest> fetchTagQuest(String tagId) async {
+  final path = 'groups/$groupId/tags/$tagId';
+  final then = (DocumentSnapshot docSnap) {
+    if (docSnap.exists) {
+      return Quest(
+        name: docSnap['name'],
+        minutes: docSnap['minutes'],
+        point: docSnap['point'],
+      );
+    } else {
+      throw StateError('タグが存在しませんでした');
+    }
+  };
+
+  return await FirebaseFirestore.instance.doc(path).get().then(then);
+}
