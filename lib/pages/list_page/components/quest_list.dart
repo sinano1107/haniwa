@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/common/firestore.dart';
@@ -6,10 +7,23 @@ import 'quest_list_item.dart';
 class QuestList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Quest>>(
-      future: _buildList(),
+    return StreamBuilder<QuerySnapshot>(
+      stream: streamQuests(),
       builder: (context, snap) {
-        if (snap.connectionState != ConnectionState.done) {
+        if (snap.hasError) {
+          return SliverList(
+            delegate: SliverChildListDelegate([
+              Text(
+                'エラー',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              )
+            ]),
+          );
+        }
+
+        if (snap.connectionState == ConnectionState.waiting) {
           return SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -22,21 +36,20 @@ class QuestList extends StatelessWidget {
 
         return SliverList(
           delegate: SliverChildListDelegate(
-            snap.data
-                .map(
-                  (q) => QuestListItem(
-                    quest: q,
-                    showBorder: true,
-                  ),
-                )
-                .toList(),
+            snap.data.docs.map((DocumentSnapshot docSnap) {
+              final data = docSnap;
+              return QuestListItem(
+                quest: Quest(
+                  name: data['name'],
+                  minutes: data['minutes'],
+                  point: data['point'],
+                ),
+                showBorder: true,
+              );
+            }).toList(),
           ),
         );
       },
     );
-  }
-
-  Future<List<Quest>> _buildList() async {
-    return await fetchQuests();
   }
 }

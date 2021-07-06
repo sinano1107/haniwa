@@ -55,21 +55,12 @@ Future updateMyData(Map<String, Object> newData) async {
 }
 
 // クエストを取得
-Future<List<Quest>> fetchQuests() async {
+Stream<QuerySnapshot> streamQuests() {
   final path = 'groups/$groupId/quests';
-  final then = (QuerySnapshot querySnap) {
-    return querySnap.docs.map((docSnap) {
-      if (docSnap.exists) {
-        return Quest(
-          name: docSnap['name'],
-          minutes: docSnap['minutes'],
-          point: docSnap['point'],
-        );
-      }
-    }).toList();
-  };
-
-  return await FirebaseFirestore.instance.collection(path).get().then(then);
+  return FirebaseFirestore.instance
+      .collection(path)
+      .orderBy('createdAt', descending: true)
+      .snapshots();
 }
 
 // クエストを作成
