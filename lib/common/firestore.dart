@@ -72,6 +72,18 @@ Future<List<Quest>> fetchQuests() async {
   return await FirebaseFirestore.instance.collection(path).get().then(then);
 }
 
+// クエストを作成
+Future createQuest(String name, int minutes, int point) async {
+  final path = 'groups/$groupId/quests';
+  await FirebaseFirestore.instance.collection(path).add({
+    'createdAt': FieldValue.serverTimestamp(),
+    'uid': FirebaseAuth.instance.currentUser.uid,
+    'name': name,
+    'minutes': minutes,
+    'point': point,
+  });
+}
+
 // タグのクエストを取得
 Future<Quest> fetchTagQuest(String tagId) async {
   final path = 'groups/$groupId/tags/$tagId';

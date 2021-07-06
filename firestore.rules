@@ -33,9 +33,25 @@ service cloud.firestore {
           && request.auth.uid in getGroup().data.members;
       }
 
+      // クエストのスキーマ検証
+      function isValidQuest(quest) {
+        return quest.size() == 5
+          && 'createdAt' in quest && quest.createdAt is timestamp
+          && 'uid' in quest && quest.uid is string
+          && 'name' in quest && quest.name is string
+          && 'minutes' in quest && quest.minutes is number
+          && 'point' in quest && quest.point is number;
+      }
+
       match /quests/{questID} {
         allow read: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members;
+
+        allow create: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members
+          && isValidQuest(request.resource.data)
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.uid == request.auth.uid;
       }
 
       match /tags/{tagID} {
