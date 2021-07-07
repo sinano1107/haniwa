@@ -18,11 +18,14 @@ void _showCreatePage(BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (context) => SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: QuestCreatePage(),
+      child: Column(
+        children: [
+          QuestCreatePage(),
+          Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).viewInsets.bottom,
+          ),
+        ],
       ),
     ),
     backgroundColor: Colors.transparent,
