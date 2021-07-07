@@ -99,7 +99,7 @@ Future<Quest> fetchTagQuest(String tagId) async {
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
       return Quest(
-        id: docSnap.id,
+        id: docSnap['id'],
         uid: docSnap['uid'],
         name: docSnap['name'],
         minutes: docSnap['minutes'],
