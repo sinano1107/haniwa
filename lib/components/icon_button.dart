@@ -8,6 +8,7 @@ class IconButtonWidget extends StatelessWidget {
     @required this.onPressed,
     this.fontSize = 17,
     this.fontWeight,
+    this.size = const Size(300, 50),
   });
   final Icon icon;
   final String text;
@@ -15,12 +16,13 @@ class IconButtonWidget extends StatelessWidget {
   final Function onPressed;
   final double fontSize;
   final FontWeight fontWeight;
+  final Size size;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(300, 50),
+        minimumSize: size,
         primary: color,
         shape: StadiumBorder(),
       ),

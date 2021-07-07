@@ -71,6 +71,7 @@ class _TimerState extends State<Timer> {
         },
         onComplete: () {
           print('Countdown Ended');
+          _vibration();
           Navigator.pushReplacementNamed(
             context,
             ResultPage.id,

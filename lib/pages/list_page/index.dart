@@ -8,7 +8,7 @@ import 'package:haniwa/common/notification.dart';
 import 'components/list_app_bar.dart';
 import 'components/quest_list.dart';
 import 'components/menu.dart';
-// import 'components/list_page_fab.dart';
+import 'components/list_page_fab.dart';
 
 class ListPage extends StatefulWidget {
   static const id = 'list';
@@ -42,7 +42,7 @@ class _ListPageState extends State<ListPage> {
         ],
       ),
       drawer: Menu(),
-      // floatingActionButton: ListPageFAB(),
+      floatingActionButton: ListPageFAB(),
     );
   }
 
