@@ -35,8 +35,9 @@ service cloud.firestore {
 
       // クエストのスキーマ検証
       function isValidQuest(quest) {
-        return quest.size() == 5
+        return quest.size() == 6
           && 'createdAt' in quest && quest.createdAt is timestamp
+          && 'updatedAt' in quest && quest.updatedAt is timestamp
           && 'uid' in quest && quest.uid is string
           && 'name' in quest && quest.name is string
           && 'minutes' in quest && quest.minutes is number
@@ -50,8 +51,17 @@ service cloud.firestore {
         allow create: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members
           && isValidQuest(request.resource.data)
-          && request.resource.data.createdAt == request.time
-          && request.resource.data.uid == request.auth.uid;
+          && request.resource.data.createdAt == request.time // createdAtが現在時刻か
+          && request.resource.data.createdAt == request.resource.data.updatedAt // updatedAtがcreatedAtと等しいか
+          && request.resource.data.uid == request.auth.uid; // uidが本人のものか
+
+        allow update: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members
+          && isValidQuest(request.resource.data)
+          && request.resource.data.createdAt == resource.data.createdAt // createdAtが変更されないか
+          && request.resource.data.updatedAt == request.time // updatedAtが現在時刻か
+          && resource.data.uid == request.resource.data.uid // uidが変更されないか
+          && resource.data.uid == request.auth.uid; // uidが本人のものか
       }
 
       match /tags/{tagID} {

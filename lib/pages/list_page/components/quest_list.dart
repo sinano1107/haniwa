@@ -40,6 +40,8 @@ class QuestList extends StatelessWidget {
               final data = docSnap;
               return QuestListItem(
                 quest: Quest(
+                  id: docSnap.id,
+                  uid: data['uid'],
                   name: data['name'],
                   minutes: data['minutes'],
                   point: data['point'],

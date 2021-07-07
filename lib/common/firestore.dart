@@ -68,7 +68,19 @@ Future createQuest(String name, int minutes, int point) async {
   final path = 'groups/$groupId/quests';
   await FirebaseFirestore.instance.collection(path).add({
     'createdAt': FieldValue.serverTimestamp(),
+    'updatedAt': FieldValue.serverTimestamp(),
     'uid': FirebaseAuth.instance.currentUser.uid,
+    'name': name,
+    'minutes': minutes,
+    'point': point,
+  });
+}
+
+// クエストを編集
+Future updateQuest(String questId, String name, int minutes, int point) async {
+  final path = 'groups/$groupId/quests/$questId';
+  await FirebaseFirestore.instance.doc(path).update({
+    'updatedAt': FieldValue.serverTimestamp(),
     'name': name,
     'minutes': minutes,
     'point': point,
@@ -81,6 +93,8 @@ Future<Quest> fetchTagQuest(String tagId) async {
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
       return Quest(
+        id: docSnap.id,
+        uid: docSnap['uid'],
         name: docSnap['name'],
         minutes: docSnap['minutes'],
         point: docSnap['point'],

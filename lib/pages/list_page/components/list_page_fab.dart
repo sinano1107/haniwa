@@ -15,6 +15,7 @@ class ListPageFAB extends StatelessWidget {
 }
 
 void _showCreatePage(BuildContext context) {
+  final _theme = Theme.of(context);
   showModalBottomSheet(
     context: context,
     builder: (context) => SingleChildScrollView(
@@ -22,7 +23,7 @@ void _showCreatePage(BuildContext context) {
         children: [
           QuestCreatePage(),
           Container(
-            color: Colors.white,
+            color: _theme.canvasColor,
             height: MediaQuery.of(context).viewInsets.bottom,
           ),
         ],

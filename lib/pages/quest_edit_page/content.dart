@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/models/quest.dart';
 import 'package:provider/provider.dart';
 import 'view_model.dart';
 import 'package:haniwa/components/quest_name_input.dart';
@@ -6,11 +7,26 @@ import 'package:haniwa/components/quest_minutes_input.dart';
 import 'package:haniwa/components/quest_point_input.dart';
 import 'package:haniwa/components/icon_button.dart';
 
-class QuestCreateContent extends StatelessWidget {
+class QuestEditContent extends StatefulWidget {
+  QuestEditContent(this.quest);
+  final Quest quest;
+
+  @override
+  _QuestEditContentState createState() => _QuestEditContentState();
+}
+
+class _QuestEditContentState extends State<QuestEditContent> {
+  @override
+  void initState() {
+    final _viewModel = Provider.of<QuestEditViewModel>(context, listen: false);
+    _viewModel.init(widget.quest);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
-    final _viewModel = context.watch<QuestCreateViewModel>();
+    final _viewModel = context.watch<QuestEditViewModel>();
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -23,7 +39,10 @@ class QuestCreateContent extends StatelessWidget {
       ),
       child: Column(
         children: [
-          QuestNameInput(value: _viewModel.name, onChanged: _viewModel.setName),
+          QuestNameInput(
+            value: _viewModel.name,
+            onChanged: _viewModel.setName,
+          ),
           SizedBox(height: 10),
           QuestMinutesInput(
             value: _viewModel.minutes,
@@ -36,11 +55,11 @@ class QuestCreateContent extends StatelessWidget {
           ),
           SizedBox(height: 30),
           IconButtonWidget(
-            icon: Icon(Icons.send),
-            text: 'クエストを作成',
+            icon: Icon(Icons.edit),
+            text: 'クエストを編集',
             color: _theme.primaryColor,
             onPressed: _viewModel.name != ''
-                ? () => _viewModel.createNewQuest(context)
+                ? () => _viewModel.editQuest(context)
                 : null,
             size: Size(300, 45),
           )
