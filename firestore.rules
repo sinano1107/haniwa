@@ -62,6 +62,10 @@ service cloud.firestore {
           && request.resource.data.updatedAt == request.time // updatedAtが現在時刻か
           && resource.data.uid == request.resource.data.uid // uidが変更されないか
           && resource.data.uid == request.auth.uid; // uidが本人のものか
+        
+        allow delete: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members
+          && resource.data.uid == request.auth.uid; // uidが本人のものか
       }
 
       match /tags/{tagID} {

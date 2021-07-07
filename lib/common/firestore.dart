@@ -87,6 +87,12 @@ Future updateQuest(String questId, String name, int minutes, int point) async {
   });
 }
 
+// クエストを削除
+Future deleteQuest(String questId) async {
+  final path = 'groups/$groupId/quests/$questId';
+  await FirebaseFirestore.instance.doc(path).delete();
+}
+
 // タグのクエストを取得
 Future<Quest> fetchTagQuest(String tagId) async {
   final path = 'groups/$groupId/tags/$tagId';
