@@ -9,12 +9,14 @@ import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/pages/quest_info_page/index.dart';
 import 'package:haniwa/pages/quest_edit_page/index.dart';
 import 'package:haniwa/pages/list_page/index.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 
 class QuestListItem extends StatelessWidget {
-  QuestListItem({
+  const QuestListItem({
+    Key key,
     @required this.quest,
     this.showBorder = false,
-  });
+  }) : super(key: key);
   final Quest quest;
   final bool showBorder;
 
@@ -65,11 +67,11 @@ class QuestListItem extends StatelessWidget {
                   ]
                 : [],
         child: ListTile(
+          key: ValueKey(quest.id),
           leading: SizedBox(
             height: 35,
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+              child: CloudStorageAvatar(path: 'users/${quest.uid}/icon.JPG'),
             ),
           ),
           title: Text(

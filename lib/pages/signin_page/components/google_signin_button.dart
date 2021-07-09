@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_button/sign_button.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/firestore.dart';
-import '../view_model.dart';
+import 'package:haniwa/pages/list_page/index.dart';
 
 class GoogleSigninButton extends StatelessWidget {
   @override
@@ -26,8 +25,7 @@ class GoogleSigninButton extends StatelessWidget {
         // 新しいユーザーだった場合
         await addMe(userCredential.user.uid);
       }
-      final _viewModel = Provider.of<SigninViewModel>(context, listen: false);
-      Navigator.pushReplacementNamed(context, _viewModel.nextPageId);
+      Navigator.pushReplacementNamed(context, ListPage.id);
       showSnackBar(context, 'サインインに成功しました！');
     } catch (e) {
       showSnackBar(context, 'サインインに失敗しました');
