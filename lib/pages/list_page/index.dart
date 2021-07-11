@@ -53,11 +53,13 @@ class _ListPageState extends State<ListPage> {
 
   void init() async {
     // ダイナミックリンクをリッスン
+    final data = await FirebaseDynamicLinks.instance.getInitialLink();
+    if (data?.link != null) {
+      _navigatePage(context, data?.link);
+    }
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        final prefs = await SharedPreferences.getInstance();
-        final currentTimer = prefs.getString(timerKey);
-        _navigatePage(context, currentTimer, dynamicLink?.link);
+        _navigatePage(context, dynamicLink?.link);
       },
       onError: (OnLinkErrorException e) async {
         print('DynamiLinkエラー');
@@ -97,10 +99,11 @@ class _ListPageState extends State<ListPage> {
 
 void _navigatePage(
   BuildContext context,
-  String currentTimer,
   Uri deeplink,
 ) async {
   final _navigator = Navigator.of(context);
+  final prefs = await SharedPreferences.getInstance();
+  final currentTimer = prefs.getString(timerKey);
   try {
     if (currentTimer == null) {
       if (FirebaseAuth.instance.currentUser != null) {
