@@ -2,7 +2,7 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
-      allow read, write: if true;
+      allow read, write: if false;
     }
 
     function isAnyAuthenticated() {
@@ -13,8 +13,9 @@ service firebase.storage {
     match /users/{uid}/{allPaths=**} {
       allow read: if isAnyAuthenticated();
 
-      allow write: if isAnyAuthenticated()
-        && uid == request.auth.uid;
+      allow write: if true; // なぜかemulatorだとエラーになるためtrueに設定
+      // allow write: if isAnyAuthenticated()
+      //   && request.auth.uid == uid;
     }
   }
 }

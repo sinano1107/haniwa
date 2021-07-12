@@ -5,6 +5,7 @@ import 'package:sign_button/sign_button.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/firestore.dart';
+import 'package:haniwa/common/cloudstorage.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 
 class GoogleSigninButton extends StatelessWidget {
@@ -24,12 +25,13 @@ class GoogleSigninButton extends StatelessWidget {
       if (userCredential.additionalUserInfo.isNewUser) {
         // 新しいユーザーだった場合
         await addMe(userCredential.user.uid);
+        await addMyImage();
       }
       Navigator.pushReplacementNamed(context, ListPage.id);
       showSnackBar(context, 'サインインに成功しました！');
     } catch (e) {
       showSnackBar(context, 'サインインに失敗しました');
-      print('error: $e');
+      print('サインインエラー: $e');
       Navigator.pop(context);
     }
   }
