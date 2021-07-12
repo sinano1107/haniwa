@@ -6,8 +6,10 @@ class CloudStorageAvatar extends StatelessWidget {
   const CloudStorageAvatar({
     Key key,
     @required this.path,
+    this.radius,
   }) : super(key: key);
   final String path;
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class CloudStorageAvatar extends StatelessWidget {
         return CircleAvatar(
           child: CircularProgressIndicator(),
           backgroundColor: _theme.canvasColor,
+          radius: radius,
         );
         break;
       case 'error':
@@ -29,12 +32,14 @@ class CloudStorageAvatar extends StatelessWidget {
             width: 25,
           ),
           backgroundColor: Colors.red,
+          radius: radius,
         );
         break;
       default:
         return CircleAvatar(
           backgroundImage: NetworkImage(_store[path]),
           backgroundColor: _theme.canvasColor,
+          radius: radius,
         );
     }
   }

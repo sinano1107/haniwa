@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 
 class QuestNameInput extends StatefulWidget {
   QuestNameInput({
@@ -34,10 +35,8 @@ class _QuestNameInputState extends State<QuestNameInput> {
 
     return Row(
       children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage(
-            FirebaseAuth.instance.currentUser.photoURL,
-          ),
+        CloudStorageAvatar(
+          path: 'users/${FirebaseAuth.instance.currentUser.uid}/icon.JPG',
           radius: 25,
         ),
         SizedBox(width: 15),
