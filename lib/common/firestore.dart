@@ -112,3 +112,9 @@ Future<Quest> fetchTagQuest(String tagId) async {
 
   return await FirebaseFirestore.instance.doc(path).get().then(then);
 }
+
+// タグのクエストを編集
+Future updateTagQuest(String tagId, Quest quest) async {
+  final path = 'groups/$groupId/tags/$tagId';
+  await FirebaseFirestore.instance.doc(path).update(quest.encode);
+}

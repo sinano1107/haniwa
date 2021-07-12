@@ -20,6 +20,7 @@ service cloud.firestore {
 
       allow read: if isAnyAuthenticated();
 
+      // ==========members===========
       match /members/{memberID} {
         allow create: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members
@@ -33,6 +34,7 @@ service cloud.firestore {
           && request.auth.uid in getGroup().data.members;
       }
 
+      // ===========quests===========
       // クエストのスキーマ検証
       function isValidQuest(quest) {
         return quest.size() == 6
@@ -68,9 +70,24 @@ service cloud.firestore {
           && resource.data.uid == request.auth.uid; // uidが本人のものか
       }
 
+      // ==========tags==========
+      // タグのスキーマ検証
+      function isValidTag(tag) {
+        return tag.size() == 5
+          && 'id' in tag && tag.id is string
+          && 'minutes' in tag && tag.minutes is number
+          && 'name' in tag && tag.name is string
+          && 'point' in tag && tag.point is number
+          && 'uid' in tag && tag.uid is string;
+      }
+
       match /tags/{tagID} {
         allow read: if isAnyAuthenticated()
           && request.auth.uid in getGroup().data.members;
+
+        allow update: if isAnyAuthenticated()
+          && request.auth.uid in getGroup().data.members
+          && isValidTag(request.resource.data);
       }
     }
   }

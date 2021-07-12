@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/common/nfc.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/pages/quest_info_page/index.dart';
@@ -33,6 +34,26 @@ class QuestListItem extends StatelessWidget {
       '${quest.subscriber}が予約済み',
       style: TextStyle(color: _theme.accentColor, fontWeight: FontWeight.bold),
     );
+    final _tagAction = IconSlideAction(
+      caption: 'タグに紐ずける',
+      color: Colors.lightGreen,
+      foregroundColor: Colors.white,
+      icon: Icons.nfc,
+      onTap: () {
+        getTagId((tagId) async {
+          print(tagId);
+          showProgressDialog(context);
+          try {
+            await updateTagQuest(tagId.split('-').last, quest);
+            showSnackBar(context, 'タグの編集に成功しました！');
+          } catch (e) {
+            print('タグアップデートエラー: $e');
+            showSnackBar(context, 'タグの編集に失敗しました');
+          }
+          Navigator.pop(context);
+        });
+      },
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -49,9 +70,12 @@ class QuestListItem extends StatelessWidget {
                       color: Colors.blue,
                       icon: Icons.edit,
                       onTap: () => _showEditPage(context, quest),
-                    )
+                    ),
+                    _tagAction,
                   ]
-                : [],
+                : [
+                    _tagAction,
+                  ],
         secondaryActions:
             quest.uid == FirebaseAuth.instance.currentUser.uid && showBorder
                 ? [
