@@ -40,18 +40,21 @@ class QuestListItem extends StatelessWidget {
       foregroundColor: Colors.white,
       icon: Icons.nfc,
       onTap: () {
-        getTagId((tagId) async {
-          print(tagId);
-          showProgressDialog(context);
-          try {
-            await updateTagQuest(tagId.split('-').last, quest);
-            showSnackBar(context, 'タグの編集に成功しました！');
-          } catch (e) {
-            print('タグアップデートエラー: $e');
-            showSnackBar(context, 'タグの編集に失敗しました');
-          }
-          Navigator.pop(context);
-        });
+        getTagId(
+          handle: (tagId) async {
+            print(tagId);
+            showProgressDialog(context);
+            try {
+              await updateTagQuest(tagId.split('-').last, quest);
+              showSnackBar(context, 'タグの編集に成功しました！');
+            } catch (e) {
+              print('タグアップデートエラー: $e');
+              showSnackBar(context, 'タグの編集に失敗しました');
+            }
+            Navigator.pop(context);
+          },
+          context: context,
+        );
       },
     );
 
