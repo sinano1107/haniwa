@@ -34,6 +34,11 @@ dependencies:
   flutter_launcher_icons: ^0.9.0
   firebase_dynamic_links: ^2.0.6
   flutter_slidable: ^0.6.0
+  firebase_storage: ^9.0.0
+  http: ^0.13.3
+  path_provider: ^2.0.2
+  path: ^1.8.0
+  nfc_manager: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +51,7 @@ flutter:
     - assets/images/phone.svg
     - assets/images/haniwa.svg
     - assets/images/logo.svg
+    - assets/images/error_haniwa.png
     - assets/lottiefiles/congratulations.json
 
 flutter_native_splash:

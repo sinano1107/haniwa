@@ -6,6 +6,7 @@ import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/pages/signin_page/index.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 
 class Menu extends StatelessWidget {
   @override
@@ -41,9 +42,8 @@ class Menu extends StatelessWidget {
                     return Text('エラー');
                   },
                 ),
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(_user.photoURL),
+                currentAccountPicture: CloudStorageAvatar(
+                  path: 'users/${_user.uid}/icon.JPG',
                 ),
               ),
               ListTile(

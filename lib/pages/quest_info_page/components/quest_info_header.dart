@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../view_model.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 
 class QuestInfoHeader extends StatelessWidget {
   @override
@@ -10,9 +10,8 @@ class QuestInfoHeader extends StatelessWidget {
 
     return Row(
       children: [
-        CircleAvatar(
-          backgroundImage:
-              NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+        CloudStorageAvatar(
+          path: 'users/${_viewModel.quest.uid}/icon.JPG',
           radius: 30,
         ),
         SizedBox(width: 15),

@@ -39,6 +39,7 @@ class QuestList extends StatelessWidget {
             snap.data.docs.map((DocumentSnapshot docSnap) {
               final data = docSnap;
               return QuestListItem(
+                key: UniqueKey(),
                 quest: Quest(
                   id: docSnap.id,
                   uid: data['uid'],

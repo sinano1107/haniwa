@@ -9,7 +9,7 @@ class ListAppBar extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   final recommendQuest = Quest(
     id: 'aaaaa',
-    uid: 'aaaaa',
+    uid: 'ifRbBduuNZtcW2hHpPrEdApbk3Gx',
     name: '出ているものを片付ける',
     minutes: 15,
     point: 1000,

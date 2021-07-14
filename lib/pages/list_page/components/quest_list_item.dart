@@ -4,17 +4,20 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/common/nfc.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/pages/quest_info_page/index.dart';
 import 'package:haniwa/pages/quest_edit_page/index.dart';
 import 'package:haniwa/pages/list_page/index.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 
 class QuestListItem extends StatelessWidget {
-  QuestListItem({
+  const QuestListItem({
+    Key key,
     @required this.quest,
     this.showBorder = false,
-  });
+  }) : super(key: key);
   final Quest quest;
   final bool showBorder;
 
@@ -30,6 +33,29 @@ class QuestListItem extends StatelessWidget {
     final _subscribedText = Text(
       '${quest.subscriber}が予約済み',
       style: TextStyle(color: _theme.accentColor, fontWeight: FontWeight.bold),
+    );
+    final _tagAction = IconSlideAction(
+      caption: 'タグに紐ずける',
+      color: Colors.lightGreen,
+      foregroundColor: Colors.white,
+      icon: Icons.nfc,
+      onTap: () {
+        getTagId(
+          handle: (tagId) async {
+            print(tagId);
+            showProgressDialog(context);
+            try {
+              await updateTagQuest(tagId.split('-').last, quest);
+              showSnackBar(context, 'タグの編集に成功しました！');
+            } catch (e) {
+              print('タグアップデートエラー: $e');
+              showSnackBar(context, 'タグの編集に失敗しました');
+            }
+            Navigator.pop(context);
+          },
+          context: context,
+        );
+      },
     );
 
     return Container(
@@ -47,9 +73,12 @@ class QuestListItem extends StatelessWidget {
                       color: Colors.blue,
                       icon: Icons.edit,
                       onTap: () => _showEditPage(context, quest),
-                    )
+                    ),
+                    _tagAction,
                   ]
-                : [],
+                : [
+                    _tagAction,
+                  ],
         secondaryActions:
             quest.uid == FirebaseAuth.instance.currentUser.uid && showBorder
                 ? [
@@ -65,11 +94,11 @@ class QuestListItem extends StatelessWidget {
                   ]
                 : [],
         child: ListTile(
+          key: ValueKey(quest.id),
           leading: SizedBox(
             height: 35,
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(FirebaseAuth.instance.currentUser.photoURL),
+              child: CloudStorageAvatar(path: 'users/${quest.uid}/icon.JPG'),
             ),
           ),
           title: Text(

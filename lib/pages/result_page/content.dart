@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
 import 'package:confetti/confetti.dart';
 import 'package:haniwa/animations/fade_animation.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 import './components/get_point.dart';
 import './components/total_point.dart';
 import './components/finish_button.dart';
@@ -37,10 +38,10 @@ class ResultPageContent extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: _height * 0.4),
-                  CircleAvatar(
+                  CloudStorageAvatar(
+                    path:
+                        'users/${FirebaseAuth.instance.currentUser.uid}/icon.JPG',
                     radius: 60,
-                    backgroundImage: NetworkImage(
-                        FirebaseAuth.instance.currentUser.photoURL),
                   ),
                   SizedBox(height: _height * 0.03),
                   FadeAnimation(
