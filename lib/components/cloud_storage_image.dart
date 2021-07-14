@@ -11,7 +11,7 @@ class CloudStorageImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<CloudStorageProvider>(context, listen: false);
+    final _provider = Provider.of<CloudStorageProvider>(context);
     final _store = _provider.store;
     _provider.requestLoading(path);
     switch (_store[path]) {

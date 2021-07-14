@@ -13,9 +13,11 @@ class CloudStorageProvider extends ChangeNotifier {
       url = await FirebaseStorage.instance.ref(path).getDownloadURL();
       print('ダウンロード完了');
       _store[path] = url;
+      notifyListeners();
     } catch (e) {
       print('ストレージからのインストールエラー: $e');
       _store[path] = 'error';
+      notifyListeners();
     }
   }
 }
