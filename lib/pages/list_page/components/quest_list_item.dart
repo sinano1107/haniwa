@@ -35,7 +35,7 @@ class QuestListItem extends StatelessWidget {
       style: TextStyle(color: _theme.accentColor, fontWeight: FontWeight.bold),
     );
     final _tagAction = IconSlideAction(
-      caption: 'タグに紐ずける',
+      caption: 'タグにリンクする',
       color: Colors.lightGreen,
       foregroundColor: Colors.white,
       icon: Icons.nfc,
@@ -46,10 +46,10 @@ class QuestListItem extends StatelessWidget {
             showProgressDialog(context);
             try {
               await updateTagQuest(tagId.split('-').last, quest);
-              showSnackBar(context, 'タグの編集に成功しました！');
+              showSnackBar(context, 'タグとのリンクに成功しました！');
             } catch (e) {
               print('タグアップデートエラー: $e');
-              showSnackBar(context, 'タグの編集に失敗しました');
+              showSnackBar(context, 'タグとのリンクに失敗しました');
             }
             Navigator.pop(context);
           },
