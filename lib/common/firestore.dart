@@ -2,28 +2,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/models/member.dart';
+import 'package:haniwa/models/user.dart' as user;
 
 // 今のところグループIDを固定
 const groupId = 'cho12345678912345678';
 
+// usersコレクションに新規ユーザーを追加
+Future initUser(String uid) async {
+  final path = 'users/$uid';
+  await FirebaseFirestore.instance.doc(path).set({'groupId': null});
+}
+
+// userデータを取得
+Future<user.User> fetchUser(String uid) async {
+  final path = 'users/$uid';
+  final data = await FirebaseFirestore.instance.doc(path).get();
+  return user.User(groupId: data['groupId']);
+}
+
+// userデータを編集
+Future editUser(String uid, String groupId) async {
+  final path = 'users/$uid';
+  await FirebaseFirestore.instance.doc(path).update({'groupId': groupId});
+}
+
 // グループに自分を追加
-Future addMe(String uid) async {
-  final path = 'groups/$groupId';
-  //-memberに追加-
-  List data = await FirebaseFirestore.instance
-      .doc(path)
-      .get()
-      .then((snap) => snap.exists ? snap['members'] : null);
-  if (data != null) {
-    data.add(uid);
-    await FirebaseFirestore.instance.doc(path).update({'members': data});
-    //-membersコレクションにデータを追加-
-    await FirebaseFirestore.instance
-        .doc(path + '/members/$uid')
-        .set({'point': 0});
-  } else {
-    throw StateError('新規ユーザーデータの作成に失敗しました');
-  }
+Future addMe(String uid, String groupId) async {
+  final path = 'groups/$groupId/members/$uid';
+  await FirebaseFirestore.instance.doc(path).set({'point': 0});
 }
 
 // メンバーのデータを取得

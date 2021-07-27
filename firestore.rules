@@ -10,11 +10,29 @@ service cloud.firestore {
       return request.auth.uid != null;
     }
 
+    // usersコレクション
+    match /users/{userId} {
+      allow read: if isAnyAuthenticated()
+        && userId == request.auth.uid;
+      
+      allow create: if isAnyAuthenticated()
+        && userId == request.auth.uid
+        && 'groupId' in request.resource.data && request.resource.data.groupId == null;
+
+      allow update: if isAnyAuthenticated()
+        && userId == request.auth.uid
+        && 'groupId' in request.resource.data && request.resource.data.groupId is string;
+    }
+
     // groupsコレクション
-    match /groups/{groupID} {
-      function getGroup() {
-        return get(/databases/$(database)/documents/groups/$(groupID))
+    match /groups/{groupId} {
+      // ユーザーのgroupIdと:groupIdが等しいか調べる
+      function isMember() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.groupId
+          == groupId;
       }
+
+      allow create: if false;
 
       allow update: if isAnyAuthenticated();
 
@@ -23,15 +41,14 @@ service cloud.firestore {
       // ==========members===========
       match /members/{memberID} {
         allow create: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members
           && (request.resource.data.point is number && request.resource.data.point == 0);
         
         allow update: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members
+          && isMember()
           && request.auth.uid == memberID;
         
         allow read: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members;
+          && isMember();
       }
 
       // ===========quests===========
@@ -48,17 +65,17 @@ service cloud.firestore {
 
       match /quests/{questID} {
         allow read: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members;
+          && isMember();
 
         allow create: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members
+          && isMember()
           && isValidQuest(request.resource.data)
           && request.resource.data.createdAt == request.time // createdAtが現在時刻か
           && request.resource.data.createdAt == request.resource.data.updatedAt // updatedAtがcreatedAtと等しいか
           && request.resource.data.uid == request.auth.uid; // uidが本人のものか
 
         allow update: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members
+          && isMember()
           && isValidQuest(request.resource.data)
           && request.resource.data.createdAt == resource.data.createdAt // createdAtが変更されないか
           && request.resource.data.updatedAt == request.time // updatedAtが現在時刻か
@@ -66,7 +83,7 @@ service cloud.firestore {
           && resource.data.uid == request.auth.uid; // uidが本人のものか
         
         allow delete: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members
+          && isMember()
           && resource.data.uid == request.auth.uid; // uidが本人のものか
       }
 
@@ -83,10 +100,10 @@ service cloud.firestore {
 
       match /tags/{tagID} {
         allow read: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members;
+          && isMember();
 
         allow update: if isAnyAuthenticated()
-          && request.auth.uid in getGroup().data.members
+          && isMember()
           && isValidTag(request.resource.data);
       }
     }
