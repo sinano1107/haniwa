@@ -5,6 +5,7 @@ import 'package:haniwa/common/auth.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/components/cloud_storage_avatar.dart';
+import 'package:haniwa/pages/group_qr_page.dart/index.dart';
 
 class Menu extends StatelessWidget {
   @override
@@ -43,6 +44,17 @@ class Menu extends StatelessWidget {
                 currentAccountPicture: CloudStorageAvatar(
                   path: 'users/${_user.uid}/icon.JPG',
                 ),
+              ),
+              ListTile(
+                leading: Icon(Icons.qr_code),
+                title: Text('グループのQRコードを表示する'),
+                onTap: () {
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => GroupQrPage(),
+                  );
+                },
               ),
               ListTile(
                 leading: Icon(Icons.logout),
