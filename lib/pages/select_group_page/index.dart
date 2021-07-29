@@ -9,6 +9,7 @@ import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/providers/user_provider.dart';
 import 'package:haniwa/models/user.dart' as user_model;
 import 'package:haniwa/pages/list_page/index.dart';
+import 'package:haniwa/components/icon_button.dart';
 
 class SelectGroupPage extends StatelessWidget {
   const SelectGroupPage({Key key}) : super(key: key);
@@ -16,16 +17,39 @@ class SelectGroupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Column(
         children: [
-          Expanded(child: QRViewWidget()),
-          MaterialButton(
-            child: Text('新規作成'),
+          SizedBox(
+            height: _height * 0.7,
+            child: QRViewWidget(),
+          ),
+          Text(
+            '↑QRコードで参加↑',
+            style: TextStyle(
+              fontSize: 30,
+              color: Colors.green,
+            ),
+          ),
+          Text(
+            'または',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(height: _height * 0.01),
+          IconButtonWidget(
+            color: Colors.blue,
+            icon: Icon(Icons.group),
+            text: 'グループを新規作成',
             onPressed: () => createNewGroup(context),
           ),
+          SizedBox(height: _height * 0.01),
           MaterialButton(
             child: Text('サインアウト'),
+            color: Colors.grey[300],
             onPressed: () => signOut(context),
           ),
         ],

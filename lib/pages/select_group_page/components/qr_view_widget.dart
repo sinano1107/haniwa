@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class QRViewWidget extends StatefulWidget {
 class _QRViewWidgetState extends State<QRViewWidget> {
   QRViewController _qrController;
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
-  bool _isQRScanned = false;
+  bool _isPause = false;
 
   // ホットリロードwp機能させるには、プラットフォームがAndroidの場合はカメラを一時停止するか、
   // プラットフォームがiOSの場合はカメラを再開する必要がある
@@ -63,10 +64,11 @@ class _QRViewWidgetState extends State<QRViewWidget> {
       if (scanData.code == null) {
         showSnackBar(context, 'QRコード読み込みに失敗しました');
       }
-      if (!_isQRScanned) {
+      if (!_isPause) {
         // カメラを一時停止
         _qrController.pauseCamera();
-        _isQRScanned = true;
+        _isPause = true;
+        showProgressDialog(context);
         join(context, scanData.code);
       }
     });
@@ -85,6 +87,9 @@ class _QRViewWidgetState extends State<QRViewWidget> {
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {
       print('グループ参加エラー $e');
+      _qrController.resumeCamera();
+      _isPause = false;
+      Navigator.pop(context);
       showSnackBar(context, 'グループの参加に失敗しました');
     }
   }
