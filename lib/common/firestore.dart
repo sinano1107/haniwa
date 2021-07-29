@@ -20,16 +20,19 @@ Future<user.User> fetchUser(String uid) async {
   return user.User(groupId: data['groupId']);
 }
 
-// userデータを編集
-Future editUser(String uid, String groupId) async {
-  final path = 'users/$uid';
-  await FirebaseFirestore.instance.doc(path).update({'groupId': groupId});
-}
-
-// グループに自分を追加
+// 自分のuserデータを編集して、グループに自分を追加
 Future addMe(String uid, String groupId) async {
-  final path = 'groups/$groupId/members/$uid';
-  await FirebaseFirestore.instance.doc(path).set({'point': 0});
+  final groupPath = 'groups/$groupId';
+  final groupSnap = await FirebaseFirestore.instance.doc(groupPath).get();
+  // groupが存在しなかったらエラー
+  if (!groupSnap.exists) throw StateError('グループが存在しません');
+  // groupに自分を追加
+  await groupSnap.reference.collection('members').doc(uid).set({'point': 0});
+  // userDataを編集
+  final userDataPath = 'users/$uid';
+  await FirebaseFirestore.instance
+      .doc(userDataPath)
+      .update({'groupId': groupId});
 }
 
 // メンバーのデータを取得

@@ -67,7 +67,6 @@ class _QRViewWidgetState extends State<QRViewWidget> {
         // カメラを一時停止
         _qrController.pauseCamera();
         _isQRScanned = true;
-        print('aaaaaaa ${scanData.code}');
         join(context, scanData.code);
       }
     });
@@ -77,7 +76,6 @@ class _QRViewWidgetState extends State<QRViewWidget> {
     final _uid = FirebaseAuth.instance.currentUser.uid;
     try {
       await addMe(_uid, groupId);
-      await editUser(_uid, groupId);
       // グループIDをプロバイダに保存して遷移
       final userProvider = Provider.of<UserProvider>(
         context,
@@ -87,7 +85,7 @@ class _QRViewWidgetState extends State<QRViewWidget> {
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {
       print('グループ参加エラー $e');
-      showSnackBar(context, 'groupの参加に失敗しました');
+      showSnackBar(context, 'グループの参加に失敗しました');
     }
   }
 }

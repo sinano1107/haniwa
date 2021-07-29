@@ -26,13 +26,18 @@ service cloud.firestore {
 
     // groupsコレクション
     match /groups/{groupId} {
-      // ユーザーのgroupIdと:groupIdが等しいか調べる
-      function isMember() {
-        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.groupId
-          == groupId;
+      // ユーザーのgroupIdを取得
+      function getGroupId() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.groupId;
       }
 
-      allow create: if false;
+      // ユーザーのgroupIdと:groupIdが等しいか調べる
+      function isMember() {
+        return getGroupId() == groupId;
+      }
+
+      allow create: if isAnyAuthenticated()
+        && getGroupId() == null;
 
       allow update: if isAnyAuthenticated();
 
