@@ -28,7 +28,7 @@ class GoogleSigninButton extends StatelessWidget {
       final userCredential = await signInWithGoogle();
       if (userCredential.additionalUserInfo.isNewUser) {
         // 新しいユーザーだった場合
-        // await addMyImage();
+        await addMyImage();
         // groupIdをnullに設定してgroup所属画面へ
         await initUser(userCredential.user.uid);
         Navigator.pushReplacementNamed(context, SelectGroupPage.id);

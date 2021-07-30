@@ -98,7 +98,9 @@ class QuestListItem extends StatelessWidget {
           leading: SizedBox(
             height: 35,
             child: CircleAvatar(
-              child: CloudStorageAvatar(path: 'users/${quest.uid}/icon.JPG'),
+              child: CloudStorageAvatar(
+                path: 'users/${quest.uid}/icon.png',
+              ),
             ),
           ),
           title: Text(

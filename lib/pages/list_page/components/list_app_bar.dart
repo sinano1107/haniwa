@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'quest_list_item.dart';
 import 'package:haniwa/models/quest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ListAppBar extends StatelessWidget {
   ListAppBar({
@@ -9,7 +10,7 @@ class ListAppBar extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   final recommendQuest = Quest(
     id: 'aaaaa',
-    uid: 'ifRbBduuNZtcW2hHpPrEdApbk3Gx',
+    uid: FirebaseAuth.instance.currentUser.uid,
     name: '出ているものを片付ける',
     minutes: 15,
     point: 1000,

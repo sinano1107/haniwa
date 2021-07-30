@@ -12,7 +12,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
-import 'providers/cloud_storage_provider.dart';
 import 'providers/user_provider.dart';
 import 'models/user.dart' as user_model;
 
@@ -104,7 +103,6 @@ class HaniwaContent extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => CloudStorageProvider()),
       ],
       builder: (context, child) {
         // groupIdをuserProviderに保存
