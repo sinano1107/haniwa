@@ -23,7 +23,7 @@ class QuestCreateViewModel extends ChangeNotifier {
   void createNewQuest(BuildContext context) async {
     showProgressDialog(context);
     try {
-      await createQuest(name, minutes, point);
+      await createQuest(context, name, minutes, point);
     } catch (e) {
       print('クエスト作成エラー $e');
       showSnackBar(context, 'クエストを作成できませんでした');

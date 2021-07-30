@@ -40,7 +40,7 @@ class ResultPageContent extends StatelessWidget {
                   SizedBox(height: _height * 0.4),
                   CloudStorageAvatar(
                     path:
-                        'users/${FirebaseAuth.instance.currentUser.uid}/icon.JPG',
+                        'users/${FirebaseAuth.instance.currentUser.uid}/icon.png',
                     radius: 60,
                   ),
                   SizedBox(height: _height * 0.03),

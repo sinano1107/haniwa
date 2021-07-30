@@ -27,3 +27,23 @@ exports.editTagQuest = functions.firestore
             });
         });
 });
+
+// /groups/:groupId/quest/:questIdが削除された際に
+// /groups/:groupId/tags/:tagIdnのコレクションからidが:questIdと等しいものを同じ値に編集する
+exports.deleteTagQuest = functions.firestore
+    .document('/groups/{groupId}/quests/{questId}')
+    .onDelete(async (_, context) => {
+        const groupId = context.params.groupId;
+        const questId = context.params.questId;
+        // tagsコレクションからidが等しいものを探してidをnullにする
+        await admin.firestore().collection(`/groups/${groupId}/tags`)
+            .where('id', '==', questId)
+            .get().then((querySnapShot) => {
+                querySnapShot.forEach(async (doc) => {
+                    await doc.ref.update({
+                        'id': null,
+                    });
+                    functions.logger.log('deleteTagQuest', `${doc.id}のidをnullに設定しました`);
+                });
+            });
+    });

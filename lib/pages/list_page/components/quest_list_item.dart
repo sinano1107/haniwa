@@ -35,7 +35,7 @@ class QuestListItem extends StatelessWidget {
       style: TextStyle(color: _theme.accentColor, fontWeight: FontWeight.bold),
     );
     final _tagAction = IconSlideAction(
-      caption: 'タグに紐ずける',
+      caption: 'タグにリンクする',
       color: Colors.lightGreen,
       foregroundColor: Colors.white,
       icon: Icons.nfc,
@@ -45,11 +45,11 @@ class QuestListItem extends StatelessWidget {
             print(tagId);
             showProgressDialog(context);
             try {
-              await updateTagQuest(tagId.split('-').last, quest);
-              showSnackBar(context, 'タグの編集に成功しました！');
+              await updateTagQuest(context, tagId.split('-').last, quest);
+              showSnackBar(context, 'タグとのリンクに成功しました！');
             } catch (e) {
               print('タグアップデートエラー: $e');
-              showSnackBar(context, 'タグの編集に失敗しました');
+              showSnackBar(context, 'タグとのリンクに失敗しました');
             }
             Navigator.pop(context);
           },
@@ -98,7 +98,9 @@ class QuestListItem extends StatelessWidget {
           leading: SizedBox(
             height: 35,
             child: CircleAvatar(
-              child: CloudStorageAvatar(path: 'users/${quest.uid}/icon.JPG'),
+              child: CloudStorageAvatar(
+                path: 'users/${quest.uid}/icon.png',
+              ),
             ),
           ),
           title: Text(
@@ -196,7 +198,7 @@ Widget _deleteDialog(BuildContext context, Quest quest) {
 void deleteQuestAction(BuildContext context, Quest quest) async {
   showProgressDialog(context);
   try {
-    await deleteQuest(quest.id);
+    await deleteQuest(context, quest.id);
   } catch (e) {
     print('クエスト削除エラー $e');
     showSnackBar(context, 'クエストの削除に失敗しました');

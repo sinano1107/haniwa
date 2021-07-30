@@ -112,14 +112,17 @@ void _navigatePage(
         // プログレスを表示してクエストを取得
         showProgressDialog(context);
         final idList = deeplink.queryParameters['id'].split('-');
-        print(idList[1]);
-        final _quest = await fetchTagQuest(idList[1]);
+        final _quest = await fetchTagQuest(context, idList[1]);
         _navigator.pop();
-        // 終了したらタイマー画面へプッシュ
-        _navigator.pushNamed(
-          TimerPage.id,
-          arguments: TimerArguments(quest: _quest),
-        );
+        if (_quest.id == null) {
+          showSnackBar(context, 'このタグにはクエストがリンクされていません');
+        } else {
+          // 終了したらタイマー画面へプッシュ
+          _navigator.pushNamed(
+            TimerPage.id,
+            arguments: TimerArguments(quest: _quest),
+          );
+        }
       } else {
         showSnackBar(context, 'サインインが完了していません');
       }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/common/progress.dart';
-import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/common/auth.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/member.dart';
-import 'package:haniwa/pages/signin_page/index.dart';
 import 'package:haniwa/components/cloud_storage_avatar.dart';
+import 'package:haniwa/pages/group_qr_page.dart/index.dart';
 
 class Menu extends StatelessWidget {
   @override
@@ -24,7 +23,7 @@ class Menu extends StatelessWidget {
                 decoration: BoxDecoration(color: Colors.cyan),
                 accountName: Text('${_user.displayName} の所持ポイント'),
                 accountEmail: FutureBuilder<Member>(
-                  future: fetchMemberData(_user.uid),
+                  future: fetchMemberData(context, _user.uid),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return CircularProgressIndicator();
@@ -43,24 +42,24 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 currentAccountPicture: CloudStorageAvatar(
-                  path: 'users/${_user.uid}/icon.JPG',
+                  path: 'users/${_user.uid}/icon.png',
                 ),
+              ),
+              ListTile(
+                leading: Icon(Icons.qr_code),
+                title: Text('グループのQRコードを表示する'),
+                onTap: () {
+                  Navigator.pop(context);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => GroupQrPage(),
+                  );
+                },
               ),
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text('ログアウト'),
-                onTap: () async {
-                  try {
-                    showProgressDialog(context);
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.pop(context);
-                    Navigator.pushReplacementNamed(context, SigninPage.id);
-                  } catch (e) {
-                    Navigator.pop(context);
-                    print(e);
-                    showSnackBar(context, 'サインアウトに失敗しました');
-                  }
-                },
+                onTap: () => signOut(context),
               ),
             ],
           ),

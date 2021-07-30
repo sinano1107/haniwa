@@ -9,8 +9,13 @@ service firebase.storage {
       return request.auth != null;
     }
 
+    // 開発用
+    match /dev/{file} {
+      allow read, write: if true;
+    }
+
     // usersコレクション
-    match /users/{uid}/{allPaths=**} {
+    match /users/{uid}/{file} {
       allow read: if isAnyAuthenticated();
 
       allow write: if true; // なぜかemulatorだとエラーになるためtrueに設定

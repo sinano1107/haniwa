@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:haniwa/providers/cloud_storage_provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class CloudStorageAvatar extends StatelessWidget {
   const CloudStorageAvatar({
@@ -14,18 +13,23 @@ class CloudStorageAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
-    final _provider = Provider.of<CloudStorageProvider>(context);
-    final _store = _provider.store;
-    _provider.requestLoading(path);
-    switch (_store[path]) {
-      case 'loading':
-        return CircleAvatar(
-          child: CircularProgressIndicator(),
-          backgroundColor: _theme.canvasColor,
-          radius: radius,
-        );
-        break;
-      case 'error':
+    return FutureBuilder(
+      future: FirebaseStorage.instance.ref(path).getDownloadURL(),
+      builder: (context, ss) {
+        if (ss.connectionState != ConnectionState.done) {
+          return CircleAvatar(
+            child: CircularProgressIndicator(),
+            backgroundColor: _theme.canvasColor,
+            radius: radius,
+          );
+        }
+        if (!ss.hasError && ss.hasData) {
+          return CircleAvatar(
+            backgroundImage: NetworkImage(ss.data),
+            backgroundColor: _theme.canvasColor,
+            radius: radius,
+          );
+        }
         return CircleAvatar(
           child: Image.asset(
             'assets/images/error_haniwa.png',
@@ -34,13 +38,7 @@ class CloudStorageAvatar extends StatelessWidget {
           backgroundColor: Colors.red,
           radius: radius,
         );
-        break;
-      default:
-        return CircleAvatar(
-          backgroundImage: NetworkImage(_store[path]),
-          backgroundColor: _theme.canvasColor,
-          radius: radius,
-        );
-    }
+      },
+    );
   }
 }

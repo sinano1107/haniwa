@@ -9,10 +9,13 @@ Future addMyImage() async {
   final user = FirebaseAuth.instance.currentUser;
   final response = await http.get(Uri.parse(user.photoURL));
   final documentDirectory = await getApplicationDocumentsDirectory();
-  final file = File(join(documentDirectory.path, 'image.JPG'));
+  final file = File(join(documentDirectory.path, 'image.png'));
   file.writeAsBytesSync(response.bodyBytes);
-  print(file.uri);
+  final metaData = SettableMetadata(
+    cacheControl: 'max-age=600',
+    contentType: 'image/png',
+  );
   await FirebaseStorage.instance
-      .ref('users/${user.uid}/icon.JPG')
-      .putFile(file);
+      .ref('users/${user.uid}/icon.png')
+      .putFile(file, metaData);
 }
