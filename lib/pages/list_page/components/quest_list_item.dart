@@ -45,7 +45,7 @@ class QuestListItem extends StatelessWidget {
             print(tagId);
             showProgressDialog(context);
             try {
-              await updateTagQuest(tagId.split('-').last, quest);
+              await updateTagQuest(context, tagId.split('-').last, quest);
               showSnackBar(context, 'タグとのリンクに成功しました！');
             } catch (e) {
               print('タグアップデートエラー: $e');
@@ -198,7 +198,7 @@ Widget _deleteDialog(BuildContext context, Quest quest) {
 void deleteQuestAction(BuildContext context, Quest quest) async {
   showProgressDialog(context);
   try {
-    await deleteQuest(quest.id);
+    await deleteQuest(context, quest.id);
   } catch (e) {
     print('クエスト削除エラー $e');
     showSnackBar(context, 'クエストの削除に失敗しました');

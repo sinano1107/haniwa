@@ -11,8 +11,8 @@ Future signOut(BuildContext context) async {
     Navigator.pop(context);
     Navigator.pushReplacementNamed(context, SigninPage.id);
   } catch (e) {
-    Navigator.pop(context);
     print(e);
+    Navigator.pop(context);
     showSnackBar(context, 'サインアウトに失敗しました');
   }
 }

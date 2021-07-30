@@ -64,13 +64,14 @@ class SelectGroupPage extends StatelessWidget {
       final groupRef =
           await FirebaseFirestore.instance.collection('groups').add({});
       final groupId = groupRef.id;
-      addMe(uid, groupId);
+      await addMe(uid, groupId);
       // グループIDをプロバイダに保存して遷移
       final userProvider = Provider.of<UserProvider>(
         context,
         listen: false,
       );
       userProvider.setUser(user_model.User(groupId: groupId));
+      showSnackBar(context, 'グループの作成に成功しました');
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {
       print('グループ新規作成エラー $e');

@@ -25,7 +25,7 @@ class ResultPage extends StatelessWidget {
           listen: false,
         );
         return FutureBuilder<Member>(
-          future: fetchAndUpdateMyData(_quest),
+          future: fetchAndUpdateMyData(context, _quest),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return Scaffold(
@@ -55,10 +55,10 @@ class ResultPage extends StatelessWidget {
   }
 }
 
-Future<Member> fetchAndUpdateMyData(Quest quest) async {
+Future<Member> fetchAndUpdateMyData(BuildContext context, Quest quest) async {
   final uid = FirebaseAuth.instance.currentUser.uid;
-  final data = await fetchMemberData(uid);
-  await updateMyData({'point': data.point + quest.point});
+  final data = await fetchMemberData(context, uid);
+  await updateMyData(context, {'point': data.point + quest.point});
   return data;
 }
 

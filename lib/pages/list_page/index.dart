@@ -112,7 +112,7 @@ void _navigatePage(
         // プログレスを表示してクエストを取得
         showProgressDialog(context);
         final idList = deeplink.queryParameters['id'].split('-');
-        final _quest = await fetchTagQuest(idList[1]);
+        final _quest = await fetchTagQuest(context, idList[1]);
         _navigator.pop();
         if (_quest.id == null) {
           showSnackBar(context, 'このタグにはクエストがリンクされていません');

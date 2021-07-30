@@ -84,6 +84,7 @@ class _QRViewWidgetState extends State<QRViewWidget> {
         listen: false,
       );
       userProvider.setUser(user_model.User(groupId: groupId));
+      showSnackBar(context, 'グループへの参加に成功しました');
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {
       print('グループ参加エラー $e');

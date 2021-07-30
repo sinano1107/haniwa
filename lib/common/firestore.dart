@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/models/user.dart' as user;
+import 'package:haniwa/providers/user_provider.dart';
 
-// 今のところグループIDを固定
-const groupId = 'cho12345678912345678';
+String fetchGroupId(BuildContext context) {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  return userProvider.user.groupId;
+}
 
 // usersコレクションに新規ユーザーを追加
 Future initUser(String uid) async {
@@ -36,7 +41,8 @@ Future addMe(String uid, String groupId) async {
 }
 
 // メンバーのデータを取得
-Future<Member> fetchMemberData(String uid) async {
+Future<Member> fetchMemberData(BuildContext context, String uid) async {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/members/$uid';
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
@@ -53,7 +59,8 @@ Future<Member> fetchMemberData(String uid) async {
 }
 
 // 自分のデータをアップデート
-Future updateMyData(Map<String, Object> newData) async {
+Future updateMyData(BuildContext context, Map<String, Object> newData) async {
+  final groupId = fetchGroupId(context);
   final uid = FirebaseAuth.instance.currentUser.uid;
   final path = 'groups/$groupId/members/$uid';
 
@@ -64,7 +71,8 @@ Future updateMyData(Map<String, Object> newData) async {
 }
 
 // クエストを取得
-Stream<QuerySnapshot> streamQuests() {
+Stream<QuerySnapshot> streamQuests(BuildContext context) {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/quests';
   return FirebaseFirestore.instance
       .collection(path)
@@ -73,7 +81,9 @@ Stream<QuerySnapshot> streamQuests() {
 }
 
 // クエストを作成
-Future createQuest(String name, int minutes, int point) async {
+Future createQuest(
+    BuildContext context, String name, int minutes, int point) async {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/quests';
   await FirebaseFirestore.instance.collection(path).add({
     'createdAt': FieldValue.serverTimestamp(),
@@ -86,7 +96,9 @@ Future createQuest(String name, int minutes, int point) async {
 }
 
 // クエストを編集
-Future updateQuest(String questId, String name, int minutes, int point) async {
+Future updateQuest(BuildContext context, String questId, String name,
+    int minutes, int point) async {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/quests/$questId';
   await FirebaseFirestore.instance.doc(path).update({
     'updatedAt': FieldValue.serverTimestamp(),
@@ -97,13 +109,15 @@ Future updateQuest(String questId, String name, int minutes, int point) async {
 }
 
 // クエストを削除
-Future deleteQuest(String questId) async {
+Future deleteQuest(BuildContext context, String questId) async {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/quests/$questId';
   await FirebaseFirestore.instance.doc(path).delete();
 }
 
 // タグのクエストを取得
-Future<Quest> fetchTagQuest(String tagId) async {
+Future<Quest> fetchTagQuest(BuildContext context, String tagId) async {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/tags/$tagId';
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
@@ -123,7 +137,8 @@ Future<Quest> fetchTagQuest(String tagId) async {
 }
 
 // タグのクエストを編集
-Future updateTagQuest(String tagId, Quest quest) async {
+Future updateTagQuest(BuildContext context, String tagId, Quest quest) async {
+  final groupId = fetchGroupId(context);
   final path = 'groups/$groupId/tags/$tagId';
   await FirebaseFirestore.instance.doc(path).update(quest.encode);
 }
