@@ -18,9 +18,9 @@ service firebase.storage {
     match /users/{uid}/{file} {
       allow read: if isAnyAuthenticated();
 
-      allow write: if true; // なぜかemulatorだとエラーになるためtrueに設定
-      // allow write: if isAnyAuthenticated()
-      //   && request.auth.uid == uid;
+      // allow write: if true; // なぜかemulatorだとエラーになるためtrueに設定
+      allow write: if isAnyAuthenticated()
+        && request.auth.uid == uid;
     }
   }
 }
