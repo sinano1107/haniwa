@@ -9,11 +9,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/date_symbol_data_local.dart';
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
 import 'providers/user_provider.dart';
-import 'models/user.dart' as user_model;
+// import 'models/user.dart' as user_model;
 
 import 'pages/dev_page/index.dart';
 import 'pages/select_group_page/index.dart';
@@ -21,6 +22,8 @@ import 'pages/signin_page/index.dart';
 import 'pages/result_page/index.dart';
 import 'pages/list_page/index.dart';
 import 'pages/timer_page/index.dart';
+
+import 'pages_new/quest_create_page/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -45,6 +48,8 @@ void run({bool isEmulator = false}) async {
   var tokyo = tz.getLocation('Asia/Tokyo');
   tz.setLocalLocation(tokyo);
 
+  initializeDateFormatting("ja_JP");
+
   //向き指定
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, //縦固定
@@ -58,45 +63,46 @@ void run({bool isEmulator = false}) async {
 class Haniwa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future<String> fetchGroupId() async {
-      // すでにログインしている場合groupIdを取得する
-      if (FirebaseAuth.instance.currentUser != null) {
-        final doc = await FirebaseFirestore.instance
-            .doc('users/${FirebaseAuth.instance.currentUser.uid}')
-            .get();
-        return doc['groupId'];
-      } else {
-        return null;
-      }
-    }
+    return HaniwaContent();
+    // Future<String> fetchGroupId() async {
+    //   // すでにログインしている場合groupIdを取得する
+    //   if (FirebaseAuth.instance.currentUser != null) {
+    //     final doc = await FirebaseFirestore.instance
+    //         .doc('users/${FirebaseAuth.instance.currentUser.uid}')
+    //         .get();
+    //     return doc['groupId'];
+    //   } else {
+    //     return null;
+    //   }
+    // }
 
-    return FutureBuilder<String>(
-      future: fetchGroupId(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          // ランディングページをリターン
-          return MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          );
-        }
-        if (!snapshot.hasError) return HaniwaContent(groupId: snapshot.data);
-        return MaterialApp(
-          home: Text('エラー'),
-        );
-      },
-    );
+    // return FutureBuilder<String>(
+    //   future: fetchGroupId(),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.connectionState != ConnectionState.done) {
+    //       // ランディングページをリターン
+    //       return MaterialApp(
+    //         home: Scaffold(
+    //           body: Center(
+    //             child: CircularProgressIndicator(),
+    //           ),
+    //         ),
+    //       );
+    //     }
+    //     if (!snapshot.hasError) return HaniwaContent(groupId: snapshot.data);
+    //     return MaterialApp(
+    //       home: Text('エラー'),
+    //     );
+    //   },
+    // );
   }
 }
 
 class HaniwaContent extends StatelessWidget {
-  const HaniwaContent({
-    @required this.groupId,
-  });
-  final String groupId;
+  // const HaniwaContent({
+  //   @required this.groupId,
+  // });
+  // final String groupId;
 
   @override
   Widget build(BuildContext context) {
@@ -104,23 +110,24 @@ class HaniwaContent extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
-      builder: (context, child) {
-        // groupIdをuserProviderに保存
-        final userProvider = Provider.of<UserProvider>(
-          context,
-          listen: false,
-        );
-        userProvider.setUser(user_model.User(groupId: groupId));
-        return child;
-      },
+      // builder: (context, child) {
+      //   // groupIdをuserProviderに保存
+      //   final userProvider = Provider.of<UserProvider>(
+      //     context,
+      //     listen: false,
+      //   );
+      //   userProvider.setUser(user_model.User(groupId: groupId));
+      //   return child;
+      // },
       child: MaterialApp(
         title: 'Flutter Demo',
         navigatorKey: _navigatorKey,
         theme: kLightTheme,
         darkTheme: kDarkTheme,
-        initialRoute: ListPage.id,
+        initialRoute: DevPage.id,
         routes: {
           DevPage.id: (_) => DevPage(),
+          QuestCreatePage.id: (_) => QuestCreatePage(),
           SigninPage.id: (_) => SigninPage(),
           SelectGroupPage.id: (_) => SelectGroupPage(),
           ResultPage.id: (_) => ResultPage(),
