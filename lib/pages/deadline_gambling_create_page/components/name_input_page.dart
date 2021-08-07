@@ -9,7 +9,7 @@ class NameInputPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
     final _height = MediaQuery.of(context).size.height;
-    final _viewModel = Provider.of<QuestCreateViewModel>(context);
+    final _viewModel = Provider.of<DeadlineGamblingCreateViewModel>(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -2,18 +2,18 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 // ローカル通知
-int scheduleLocalNotification(Duration duration, String title, String text) {
+int scheduleLocalNotification(DateTime time, String title, String text) {
   print('notification scheduled.');
   FlutterLocalNotificationsPlugin().initialize(InitializationSettings(
     android: AndroidInitializationSettings('app_icon'),
     iOS: IOSInitializationSettings(),
   ));
-  // int notificationId = DateTime.now().hashCode;
+  int notificationId = DateTime.now().hashCode;
   FlutterLocalNotificationsPlugin().zonedSchedule(
-    0, // notificationId,
+    notificationId,
     title,
     text,
-    tz.TZDateTime.now(tz.local).add(duration),
+    tz.TZDateTime.from(time, tz.local),
     NotificationDetails(
       android: AndroidNotificationDetails(
           'your channel id', 'your channel name', 'your channel description',
@@ -24,7 +24,7 @@ int scheduleLocalNotification(Duration duration, String title, String text) {
         UILocalNotificationDateInterpretation.absoluteTime,
     androidAllowWhileIdle: true,
   );
-  return 0; // notificationId;
+  return notificationId;
 }
 
 // 通知をキャンセル

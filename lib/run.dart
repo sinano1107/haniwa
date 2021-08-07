@@ -22,8 +22,7 @@ import 'pages/signin_page/index.dart';
 import 'pages/result_page/index.dart';
 import 'pages/list_page/index.dart';
 import 'pages/timer_page/index.dart';
-
-import 'pages_new/quest_create_page/index.dart';
+import 'pages/deadline_gambling_create_page/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -127,7 +126,7 @@ class HaniwaContent extends StatelessWidget {
         initialRoute: DevPage.id,
         routes: {
           DevPage.id: (_) => DevPage(),
-          QuestCreatePage.id: (_) => QuestCreatePage(),
+          DeadlineGamblingCreatePage.id: (_) => DeadlineGamblingCreatePage(),
           SigninPage.id: (_) => SigninPage(),
           SelectGroupPage.id: (_) => SelectGroupPage(),
           ResultPage.id: (_) => ResultPage(),
@@ -143,8 +142,8 @@ class HaniwaContent extends StatelessWidget {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) return SigninPage();
     // groupIdがnullならセレクトグループページに飛ばす
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (userProvider.user.groupId == null) return SelectGroupPage();
+    // final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // if (userProvider.user.groupId == null) return SelectGroupPage();
     return trueWidget;
   }
 }

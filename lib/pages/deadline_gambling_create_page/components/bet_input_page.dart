@@ -18,7 +18,7 @@ class _BetInputPageState extends State<BetInputPage> {
 
   @override
   void initState() {
-    final viewModel = Provider.of<QuestCreateViewModel>(
+    final viewModel = Provider.of<DeadlineGamblingCreateViewModel>(
       context,
       listen: false,
     );
@@ -29,8 +29,8 @@ class _BetInputPageState extends State<BetInputPage> {
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
-    final _viewModel = Provider.of<QuestCreateViewModel>(context);
-    final _notListenViewModel = Provider.of<QuestCreateViewModel>(
+    final _viewModel = Provider.of<DeadlineGamblingCreateViewModel>(context);
+    final _notListenViewModel = Provider.of<DeadlineGamblingCreateViewModel>(
       context,
       listen: false,
     );
@@ -112,7 +112,7 @@ class _BetInputPageState extends State<BetInputPage> {
               padding: EdgeInsets.symmetric(horizontal: 80),
               child: IconButtonWidget(
                 text: 'OK!',
-                onPressed: () {},
+                onPressed: _viewModel.nextPage,
                 icon: Icon(Icons.check),
                 color: _theme.primaryColor,
               ),
@@ -127,7 +127,7 @@ class _BetInputPageState extends State<BetInputPage> {
             Padding(
               padding: EdgeInsets.only(left: 8),
               child: IconButtonWidget(
-                text: '日時「${formatter.format(_viewModel.schedule)}」を編集する',
+                text: '日時「${formatter.format(_viewModel.deadline)}」を編集する',
                 color: Colors.grey[400],
                 icon: Icon(Icons.arrow_back),
                 onPressed: _viewModel.previousPage,

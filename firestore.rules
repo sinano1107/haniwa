@@ -17,11 +17,26 @@ service cloud.firestore {
       
       allow create: if isAnyAuthenticated()
         && userId == request.auth.uid
-        && 'groupId' in request.resource.data && request.resource.data.groupId == null;
 
       allow update: if isAnyAuthenticated()
         && userId == request.auth.uid
         && 'groupId' in request.resource.data && request.resource.data.groupId is string;
+
+      function isValidDeadlineGambling(g) {
+        return g.size() == 5
+          && 'name' in g && g.name is string
+          && 'deadline' in g && g.deadline is timestamp
+          && 'bet_point' in g && g.betPoint is number
+          && 'deadline_notice_id' in g && g.deadline_notice_id is number
+          && 'soon_notice_id' in g && g.soon_notice_id is number;
+      }
+
+      // users/deadline_gamlingsコレクション
+      match /deadline_gamblings/{deadline_gambling_id} {
+        allow create: if isAnyAuthenticated()
+          && userId == request.auth.uid
+          && isValidDeadlineGambling(request.resource.data);
+      }
     }
 
     // groupsコレクション

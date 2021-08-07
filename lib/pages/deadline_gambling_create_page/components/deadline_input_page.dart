@@ -4,14 +4,14 @@ import 'package:provider/provider.dart';
 import '../view_model.dart';
 import 'package:haniwa/components/icon_button.dart';
 
-class ScheduleInputPage extends StatelessWidget {
-  const ScheduleInputPage({Key key}) : super(key: key);
+class DeadlineInputPage extends StatelessWidget {
+  const DeadlineInputPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
     final _height = MediaQuery.of(context).size.height;
-    final _viewModel = Provider.of<QuestCreateViewModel>(context);
+    final _viewModel = Provider.of<DeadlineGamblingCreateViewModel>(context);
 
     return Stack(
       children: [
@@ -21,10 +21,11 @@ class ScheduleInputPage extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                'いつまでにがんばりますか？？',
+                'いつまでに\nがんばりますか？？',
                 style: TextStyle(
                   fontSize: 33,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             SizedBox(
@@ -35,7 +36,7 @@ class ScheduleInputPage extends StatelessWidget {
                 horizontal: 30,
               ),
               child: IconButtonWidget(
-                text: '日時を入力する',
+                text: 'デッドラインを入力する',
                 color: _theme.primaryColor,
                 icon: Icon(Icons.calendar_today),
                 onPressed: () async {
@@ -67,7 +68,7 @@ class ScheduleInputPage extends StatelessWidget {
                     showSnackBar(context, 'この日時はすでに過ぎています');
                     return;
                   }
-                  _viewModel.editSchedule(selectedDateTime);
+                  _viewModel.editDeadline(selectedDateTime);
                   _viewModel.nextPage();
                 },
                 fontWeight: FontWeight.bold,

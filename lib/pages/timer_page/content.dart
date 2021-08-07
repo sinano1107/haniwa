@@ -54,7 +54,7 @@ class _TimerPageContentState extends State<TimerPageContent>
       // カウント中だった場合通知を設定する
       if (_viewModel.isCounting) {
         scheduleLocalNotification(
-          duration,
+          DateTime.now().add(duration),
           '${_quest.name} をやり遂げました！🎉',
           'おつかれさま！アプリを開いて報酬を受け取りましょう！',
         );

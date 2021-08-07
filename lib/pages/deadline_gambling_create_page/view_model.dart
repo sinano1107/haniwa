@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:haniwa/common/snackbar.dart';
 
-class QuestCreateViewModel extends ChangeNotifier {
+class DeadlineGamblingCreateViewModel extends ChangeNotifier {
   final _controller = PageController();
   PageController get controller => _controller;
   // pageViewを次へ
@@ -24,9 +26,9 @@ class QuestCreateViewModel extends ChangeNotifier {
   String get name => _name;
   void editName(String value) => _name = value;
 
-  DateTime _schedule;
-  DateTime get schedule => _schedule;
-  void editSchedule(DateTime value) => _schedule = value;
+  DateTime _deadline;
+  DateTime get deadline => _deadline;
+  void editDeadline(DateTime value) => _deadline = value;
 
   int _betPoint = 0;
   int get betPoint => _betPoint;
@@ -39,7 +41,6 @@ class QuestCreateViewModel extends ChangeNotifier {
     } else {
       _betPoint = newBetPoint;
     }
-    print(betPoint);
     notifyListeners();
   }
 
@@ -50,7 +51,19 @@ class QuestCreateViewModel extends ChangeNotifier {
     } else {
       _betPoint = newBetPoint;
     }
-    print(betPoint);
     notifyListeners();
+  }
+
+  // firestoreへ保存
+  Future createDeadlineGambling(int deadlineNoticeId, int soonNoticeId) async {
+    final uid = FirebaseAuth.instance.currentUser.uid;
+    final path = 'users/$uid/deadline_gamblings';
+    await FirebaseFirestore.instance.collection(path).add({
+      'name': _name,
+      'deadline': Timestamp.fromDate(_deadline),
+      'bet_point': _betPoint,
+      'deadline_notice_id': deadlineNoticeId,
+      'soon_notice_id': soonNoticeId,
+    });
   }
 }
