@@ -23,6 +23,7 @@ import 'pages/result_page/index.dart';
 import 'pages/list_page/index.dart';
 import 'pages/timer_page/index.dart';
 import 'pages/deadline_gambling_create_page/index.dart';
+import 'pages/deadline_gambling_list_page/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -123,7 +124,7 @@ class HaniwaContent extends StatelessWidget {
         navigatorKey: _navigatorKey,
         theme: kLightTheme,
         darkTheme: kDarkTheme,
-        initialRoute: DevPage.id,
+        initialRoute: DeadlineGamblingListPage.id,
         routes: {
           DevPage.id: (_) => DevPage(),
           DeadlineGamblingCreatePage.id: (_) => DeadlineGamblingCreatePage(),
@@ -132,6 +133,7 @@ class HaniwaContent extends StatelessWidget {
           ResultPage.id: (_) => ResultPage(),
           ListPage.id: (context) => _routeBranch(context, ListPage()),
           TimerPage.id: (_) => TimerPage(),
+          DeadlineGamblingListPage.id: (_) => DeadlineGamblingListPage(),
         },
       ),
     );
