@@ -34,22 +34,35 @@ class QuestList extends StatelessWidget {
           );
         }
 
+        final data = snap.data.docs;
         return SliverList(
           delegate: SliverChildListDelegate(
-            snap.data.docs.map((DocumentSnapshot docSnap) {
-              final data = docSnap;
-              return QuestListItem(
-                key: UniqueKey(),
-                quest: Quest(
-                  id: docSnap.id,
-                  uid: data['uid'],
-                  name: data['name'],
-                  minutes: data['minutes'],
-                  point: data['point'],
-                ),
-                showBorder: true,
-              );
-            }).toList(),
+            data.length == 0
+                ? [
+                    SizedBox(height: 50),
+                    Center(
+                        child: Text(
+                      'クエストを追加してください',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                      ),
+                    ))
+                  ]
+                : data.map((DocumentSnapshot docSnap) {
+                    final data = docSnap;
+                    return QuestListItem(
+                      key: UniqueKey(),
+                      quest: Quest(
+                        id: docSnap.id,
+                        uid: data['uid'],
+                        name: data['name'],
+                        minutes: data['minutes'],
+                        point: data['point'],
+                      ),
+                      showBorder: true,
+                    );
+                  }).toList(),
           ),
         );
       },

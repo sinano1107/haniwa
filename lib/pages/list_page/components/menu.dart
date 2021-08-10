@@ -42,7 +42,7 @@ class Menu extends StatelessWidget {
                   },
                 ),
                 currentAccountPicture: CloudStorageAvatar(
-                  path: 'users/${_user.uid}/icon.png',
+                  path: 'versions/v1/users/${_user.uid}/icon.png',
                 ),
               ),
               ListTile(

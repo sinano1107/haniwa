@@ -62,7 +62,7 @@ class Haniwa extends StatelessWidget {
       // すでにログインしている場合groupIdを取得する
       if (FirebaseAuth.instance.currentUser != null) {
         final doc = await FirebaseFirestore.instance
-            .doc('users/${FirebaseAuth.instance.currentUser.uid}')
+            .doc('versions/v1/users/${FirebaseAuth.instance.currentUser.uid}')
             .get();
         return doc['groupId'];
       } else {
@@ -83,6 +83,7 @@ class Haniwa extends StatelessWidget {
             ),
           );
         }
+        return HaniwaContent(groupId: snapshot.data);
         if (!snapshot.hasError) return HaniwaContent(groupId: snapshot.data);
         return MaterialApp(
           home: Text('エラー'),

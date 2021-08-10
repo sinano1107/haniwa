@@ -10,106 +10,108 @@ service cloud.firestore {
       return request.auth.uid != null;
     }
 
-    // usersコレクション
-    match /users/{userId} {
-      allow read: if isAnyAuthenticated()
-        && userId == request.auth.uid;
-      
-      allow create: if isAnyAuthenticated()
-        && userId == request.auth.uid
-        && 'groupId' in request.resource.data && request.resource.data.groupId == null;
-
-      allow update: if isAnyAuthenticated()
-        && userId == request.auth.uid
-        && 'groupId' in request.resource.data && request.resource.data.groupId is string;
-    }
-
-    // groupsコレクション
-    match /groups/{groupId} {
-      // ユーザーのgroupIdを取得
-      function getGroupId() {
-        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.groupId;
-      }
-
-      // ユーザーのgroupIdと:groupIdが等しいか調べる
-      function isMember() {
-        return getGroupId() == groupId;
-      }
-
-      allow create: if isAnyAuthenticated()
-        && getGroupId() == null;
-
-      allow update: if isAnyAuthenticated();
-
-      allow read: if isAnyAuthenticated();
-
-      // ==========members===========
-      match /members/{memberID} {
+    match /versions/v1 {
+      // usersコレクション
+      match /users/{userId} {
+        allow read: if isAnyAuthenticated()
+          && userId == request.auth.uid;
+        
         allow create: if isAnyAuthenticated()
-          && (request.resource.data.point is number && request.resource.data.point == 0);
-        
+          && userId == request.auth.uid
+          && 'groupId' in request.resource.data && request.resource.data.groupId == null;
+
         allow update: if isAnyAuthenticated()
-          && isMember()
-          && request.auth.uid == memberID;
-        
-        allow read: if isAnyAuthenticated()
-          && isMember();
+          && userId == request.auth.uid
+          && 'groupId' in request.resource.data && request.resource.data.groupId is string;
       }
 
-      // ===========quests===========
-      // クエストのスキーマ検証
-      function isValidQuest(quest) {
-        return quest.size() == 6
-          && 'createdAt' in quest && quest.createdAt is timestamp
-          && 'updatedAt' in quest && quest.updatedAt is timestamp
-          && 'uid' in quest && quest.uid is string
-          && 'name' in quest && quest.name is string
-          && 'minutes' in quest && quest.minutes is number
-          && 'point' in quest && quest.point is number;
-      }
+      // groupsコレクション
+      match /groups/{groupId} {
+        // ユーザーのgroupIdを取得
+        function getGroupId() {
+          return get(/databases/$(database)/documents/versions/v1/users/$(request.auth.uid)).data.groupId;
+        }
 
-      match /quests/{questID} {
-        allow read: if isAnyAuthenticated()
-          && isMember();
+        // ユーザーのgroupIdと:groupIdが等しいか調べる
+        function isMember() {
+          return getGroupId() == groupId;
+        }
 
         allow create: if isAnyAuthenticated()
-          && isMember()
-          && isValidQuest(request.resource.data)
-          && request.resource.data.createdAt == request.time // createdAtが現在時刻か
-          && request.resource.data.createdAt == request.resource.data.updatedAt // updatedAtがcreatedAtと等しいか
-          && request.resource.data.uid == request.auth.uid; // uidが本人のものか
+          && getGroupId() == null;
 
-        allow update: if isAnyAuthenticated()
-          && isMember()
-          && isValidQuest(request.resource.data)
-          && request.resource.data.createdAt == resource.data.createdAt // createdAtが変更されないか
-          && request.resource.data.updatedAt == request.time // updatedAtが現在時刻か
-          && resource.data.uid == request.resource.data.uid // uidが変更されないか
-          && resource.data.uid == request.auth.uid; // uidが本人のものか
-        
-        allow delete: if isAnyAuthenticated()
-          && isMember()
-          && resource.data.uid == request.auth.uid; // uidが本人のものか
-      }
+        allow update: if isAnyAuthenticated();
 
-      // ==========tags==========
-      // タグのスキーマ検証
-      function isValidTag(tag) {
-        return tag.size() == 5
-          && 'id' in tag && tag.id is string
-          && 'minutes' in tag && tag.minutes is number
-          && 'name' in tag && tag.name is string
-          && 'point' in tag && tag.point is number
-          && 'uid' in tag && tag.uid is string;
-      }
+        allow read: if isAnyAuthenticated();
 
-      match /tags/{tagID} {
-        allow read: if isAnyAuthenticated()
-          && isMember();
+        // ==========members===========
+        match /members/{memberID} {
+          allow create: if isAnyAuthenticated()
+            && (request.resource.data.point is number && request.resource.data.point == 0);
+          
+          allow update: if isAnyAuthenticated()
+            && isMember()
+            && request.auth.uid == memberID;
+          
+          allow read: if isAnyAuthenticated()
+            && isMember();
+        }
 
-        allow update: if isAnyAuthenticated()
-          && isMember()
-          && isValidTag(request.resource.data);
+        // ===========quests===========
+        // クエストのスキーマ検証
+        function isValidQuest(quest) {
+          return quest.size() == 6
+            && 'createdAt' in quest && quest.createdAt is timestamp
+            && 'updatedAt' in quest && quest.updatedAt is timestamp
+            && 'uid' in quest && quest.uid is string
+            && 'name' in quest && quest.name is string
+            && 'minutes' in quest && quest.minutes is number
+            && 'point' in quest && quest.point is number;
+        }
+
+        match /quests/{questID} {
+          allow read: if isAnyAuthenticated()
+            && isMember();
+
+          allow create: if isAnyAuthenticated()
+            && isMember()
+            && isValidQuest(request.resource.data)
+            && request.resource.data.createdAt == request.time // createdAtが現在時刻か
+            && request.resource.data.createdAt == request.resource.data.updatedAt // updatedAtがcreatedAtと等しいか
+            && request.resource.data.uid == request.auth.uid; // uidが本人のものか
+
+          allow update: if isAnyAuthenticated()
+            && isMember()
+            && isValidQuest(request.resource.data)
+            && request.resource.data.createdAt == resource.data.createdAt // createdAtが変更されないか
+            && request.resource.data.updatedAt == request.time // updatedAtが現在時刻か
+            && resource.data.uid == request.resource.data.uid // uidが変更されないか
+            && resource.data.uid == request.auth.uid; // uidが本人のものか
+          
+          allow delete: if isAnyAuthenticated()
+            && isMember()
+            && resource.data.uid == request.auth.uid; // uidが本人のものか
+        }
+
+        // ==========tags==========
+        // タグのスキーマ検証
+        function isValidTag(tag) {
+          return tag.size() == 5
+            && 'id' in tag && tag.id is string
+            && 'minutes' in tag && tag.minutes is number
+            && 'name' in tag && tag.name is string
+            && 'point' in tag && tag.point is number
+            && 'uid' in tag && tag.uid is string;
+        }
+
+        match /tags/{tagID} {
+          allow read: if isAnyAuthenticated()
+            && isMember();
+
+          allow update: if isAnyAuthenticated()
+            && isMember()
+            && isValidTag(request.resource.data);
+        }
       }
     }
   }

@@ -30,6 +30,7 @@ class CloudStorageAvatar extends StatelessWidget {
             radius: radius,
           );
         }
+        print('エラーだお ${ss.error}');
         return CircleAvatar(
           child: Image.asset(
             'assets/images/error_haniwa.png',
