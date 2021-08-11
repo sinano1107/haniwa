@@ -11,7 +11,7 @@ class QuestInfoHeader extends StatelessWidget {
     return Row(
       children: [
         CloudStorageAvatar(
-          path: 'users/${_viewModel.quest.uid}/icon.png',
+          path: 'versions/v1/users/${_viewModel.quest.uid}/icon.png',
           radius: 30,
         ),
         SizedBox(width: 15),

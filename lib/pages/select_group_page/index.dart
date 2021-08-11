@@ -61,8 +61,9 @@ class SelectGroupPage extends StatelessWidget {
     final uid = FirebaseAuth.instance.currentUser.uid;
     try {
       // グループを新規作成して、グループ参加と同じ処理をする
-      final groupRef =
-          await FirebaseFirestore.instance.collection('groups').add({});
+      final groupRef = await FirebaseFirestore.instance
+          .collection('versions/v1/groups')
+          .add({});
       final groupId = groupRef.id;
       await addMe(uid, groupId);
       // グループIDをプロバイダに保存して遷移
