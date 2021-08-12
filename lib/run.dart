@@ -83,7 +83,6 @@ class Haniwa extends StatelessWidget {
             ),
           );
         }
-        return HaniwaContent(groupId: snapshot.data);
         if (!snapshot.hasError) return HaniwaContent(groupId: snapshot.data);
         return MaterialApp(
           home: Text('エラー'),
