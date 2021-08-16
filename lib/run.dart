@@ -85,7 +85,22 @@ class Haniwa extends StatelessWidget {
         }
         if (!snapshot.hasError) return HaniwaContent(groupId: snapshot.data);
         return MaterialApp(
-          home: Text('エラー'),
+          home: Scaffold(
+            body: SafeArea(
+              child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(child: Text('エラー')),
+                    MaterialButton(
+                      child: Text('サインアウト'),
+                      onPressed: () => FirebaseAuth.instance.signOut(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         );
       },
     );
