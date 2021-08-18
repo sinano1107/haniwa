@@ -13,6 +13,7 @@ import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
 import 'providers/user_provider.dart';
+import 'providers/haniwa_provider.dart';
 import 'models/user.dart' as user_model;
 
 import 'pages/dev_page/index.dart';
@@ -62,7 +63,7 @@ class Haniwa extends StatelessWidget {
       // すでにログインしている場合groupIdを取得する
       if (FirebaseAuth.instance.currentUser != null) {
         final doc = await FirebaseFirestore.instance
-            .doc('versions/v1/users/${FirebaseAuth.instance.currentUser.uid}')
+            .doc('versions/v2/users/${FirebaseAuth.instance.currentUser.uid}')
             .get();
         return doc['groupId'];
       } else {
@@ -117,6 +118,7 @@ class HaniwaContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => HaniwaProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       builder: (context, child) {

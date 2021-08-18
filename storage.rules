@@ -14,14 +14,22 @@ service firebase.storage {
       allow read, write: if true;
     }
 
-    match /versions/v1 {
-      // usersコレクション
-      match /users/{uid}/{file} {
-        allow read: if isAnyAuthenticated();
+    match /versions {
+      match /v2 {
+        match /{all=**} {
+          allow read, write: if true;
+        }
+      }
 
-        allow write: if true; // なぜかemulatorだとエラーになるためtrueに設定
-        // allow write: if isAnyAuthenticated()
-        //   && request.auth.uid == uid;
+      match /v1 {
+        // usersコレクション
+        match /users/{uid}/{file} {
+          allow read: if isAnyAuthenticated();
+
+          allow write: if true; // なぜかemulatorだとエラーになるためtrueに設定
+          // allow write: if isAnyAuthenticated()
+          //   && request.auth.uid == uid;
+        }
       }
     }
   }

@@ -12,29 +12,36 @@ String fetchGroupId(BuildContext context) {
   return userProvider.user.groupId;
 }
 
+// グループのデータを取得
+Future fetchGroupData(String groupId) async {
+  final path = 'versions/v2/groups/$groupId';
+  final data = await FirebaseFirestore.instance.doc(path).get();
+  return data;
+}
+
 // usersコレクションに新規ユーザーを追加
 Future initUser(String uid) async {
-  final path = 'versions/v1/users/$uid';
+  final path = 'versions/v2/users/$uid';
   await FirebaseFirestore.instance.doc(path).set({'groupId': null});
 }
 
 // userデータを取得
 Future<user.User> fetchUser(String uid) async {
-  final path = 'versions/v1/users/$uid';
+  final path = 'versions/v2/users/$uid';
   final data = await FirebaseFirestore.instance.doc(path).get();
   return user.User(groupId: data['groupId']);
 }
 
 // 自分のuserデータを編集して、グループに自分を追加
 Future addMe(String uid, String groupId) async {
-  final groupPath = 'versions/v1/groups/$groupId';
+  final groupPath = 'versions/v2/groups/$groupId';
   final groupSnap = await FirebaseFirestore.instance.doc(groupPath).get();
   // groupが存在しなかったらエラー
   if (!groupSnap.exists) throw StateError('グループが存在しません');
   // groupに自分を追加
   await groupSnap.reference.collection('members').doc(uid).set({'point': 0});
   // userDataを編集
-  final userDataPath = 'versions/v1/users/$uid';
+  final userDataPath = 'versions/v2/users/$uid';
   await FirebaseFirestore.instance
       .doc(userDataPath)
       .update({'groupId': groupId});
@@ -43,7 +50,7 @@ Future addMe(String uid, String groupId) async {
 // メンバーのデータを取得
 Future<Member> fetchMemberData(BuildContext context, String uid) async {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/members/$uid';
+  final path = 'versions/v2/groups/$groupId/members/$uid';
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
       print(docSnap.data);
@@ -62,7 +69,7 @@ Future<Member> fetchMemberData(BuildContext context, String uid) async {
 Future updateMyData(BuildContext context, Map<String, Object> newData) async {
   final groupId = fetchGroupId(context);
   final uid = FirebaseAuth.instance.currentUser.uid;
-  final path = 'versions/v1/groups/$groupId/members/$uid';
+  final path = 'versions/v2/groups/$groupId/members/$uid';
 
   await FirebaseFirestore.instance
       .doc(path)
@@ -73,7 +80,7 @@ Future updateMyData(BuildContext context, Map<String, Object> newData) async {
 // クエストを取得
 Stream<QuerySnapshot> streamQuests(BuildContext context) {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/quests';
+  final path = 'versions/v2/groups/$groupId/quests';
   return FirebaseFirestore.instance
       .collection(path)
       .orderBy('createdAt', descending: true)
@@ -84,7 +91,7 @@ Stream<QuerySnapshot> streamQuests(BuildContext context) {
 Future createQuest(
     BuildContext context, String name, int minutes, int point) async {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/quests';
+  final path = 'versions/v2/groups/$groupId/quests';
   await FirebaseFirestore.instance.collection(path).add({
     'createdAt': FieldValue.serverTimestamp(),
     'updatedAt': FieldValue.serverTimestamp(),
@@ -99,7 +106,7 @@ Future createQuest(
 Future updateQuest(BuildContext context, String questId, String name,
     int minutes, int point) async {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/quests/$questId';
+  final path = 'versions/v2/groups/$groupId/quests/$questId';
   await FirebaseFirestore.instance.doc(path).update({
     'updatedAt': FieldValue.serverTimestamp(),
     'name': name,
@@ -111,14 +118,14 @@ Future updateQuest(BuildContext context, String questId, String name,
 // クエストを削除
 Future deleteQuest(BuildContext context, String questId) async {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/quests/$questId';
+  final path = 'versions/v2/groups/$groupId/quests/$questId';
   await FirebaseFirestore.instance.doc(path).delete();
 }
 
 // タグのクエストを取得
 Future<Quest> fetchTagQuest(BuildContext context, String tagId) async {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/tags/$tagId';
+  final path = 'versions/v2/groups/$groupId/tags/$tagId';
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
       return Quest(
@@ -139,6 +146,6 @@ Future<Quest> fetchTagQuest(BuildContext context, String tagId) async {
 // タグのクエストを編集
 Future updateTagQuest(BuildContext context, String tagId, Quest quest) async {
   final groupId = fetchGroupId(context);
-  final path = 'versions/v1/groups/$groupId/tags/$tagId';
+  final path = 'versions/v2/groups/$groupId/tags/$tagId';
   await FirebaseFirestore.instance.doc(path).update(quest.encode);
 }

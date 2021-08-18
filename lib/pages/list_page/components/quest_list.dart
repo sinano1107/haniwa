@@ -42,7 +42,7 @@ class QuestList extends StatelessWidget {
                     SizedBox(height: 50),
                     Center(
                         child: Text(
-                      'クエストを追加してください',
+                      'クエストが存在しません',
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 20,
