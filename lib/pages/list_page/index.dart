@@ -28,7 +28,7 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final haniwaProvider = Provider.of<HaniwaProvider>(context);
+    final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -50,8 +50,6 @@ class _ListPageState extends State<ListPage> {
   }
 
   void init() async {
-    // groupのデータを取得し初期化する
-    initGroupData(context);
     // ダイナミックリンクをリッスン
     listenDynamicLink(context);
     // タイマーのデータが残存している場合はタイマー画面にとばす

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:haniwa/pages/quest_create_page/index.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,10 +12,11 @@ import 'package:timezone/timezone.dart' as tz;
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
-import 'providers/user_provider.dart';
 import 'providers/haniwa_provider.dart';
-import 'models/user.dart' as user_model;
 
+import 'pages/landing_page/index.dart';
+import 'pages/error_page/index.dart';
+import 'pages/quest_create_page/index.dart';
 import 'pages/dev_page/index.dart';
 import 'pages/select_group_page/index.dart';
 import 'pages/signin_page/index.dart';
@@ -54,109 +54,35 @@ void run({bool isEmulator = false}) async {
 
   await FirebaseDynamicLinks.instance.getInitialLink();
 
-  runApp(Haniwa());
-}
-
-class Haniwa extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Future<String> fetchGroupId() async {
-      // すでにログインしている場合groupIdを取得する
-      if (FirebaseAuth.instance.currentUser != null) {
-        final doc = await FirebaseFirestore.instance
-            .doc('versions/v2/users/${FirebaseAuth.instance.currentUser.uid}')
-            .get();
-        return doc['groupId'];
-      } else {
-        return null;
-      }
-    }
-
-    return FutureBuilder<String>(
-      future: fetchGroupId(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          // ランディングページをリターン
-          return MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          );
-        }
-        if (!snapshot.hasError) return HaniwaContent(groupId: snapshot.data);
-        return MaterialApp(
-          home: Scaffold(
-            body: SafeArea(
-              child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(child: Text('エラー')),
-                    MaterialButton(
-                      child: Text('サインアウト'),
-                      onPressed: () => FirebaseAuth.instance.signOut(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // runApp(Haniwa());
+  runApp(HaniwaContent());
 }
 
 class HaniwaContent extends StatelessWidget {
-  const HaniwaContent({
-    @required this.groupId,
-  });
-  final String groupId;
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HaniwaProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
-      builder: (context, child) {
-        // groupIdをuserProviderに保存
-        final userProvider = Provider.of<UserProvider>(
-          context,
-          listen: false,
-        );
-        userProvider.setUser(user_model.User(groupId: groupId));
-        return child;
-      },
       child: MaterialApp(
         title: 'Flutter Demo',
         navigatorKey: _navigatorKey,
         theme: kLightTheme,
         darkTheme: kDarkTheme,
-        initialRoute: ListPage.id,
+        initialRoute: LandingPage.id,
         routes: {
+          LandingPage.id: (_) => LandingPage(),
+          ErrorPage.id: (_) => ErrorPage(),
           DevPage.id: (_) => DevPage(),
           SigninPage.id: (_) => SigninPage(),
           SelectGroupPage.id: (_) => SelectGroupPage(),
           ResultPage.id: (_) => ResultPage(),
-          ListPage.id: (context) => _routeBranch(context, ListPage()),
+          ListPage.id: (_) => ListPage(),
           QuestCreatePage.id: (_) => QuestCreatePage(),
           TimerPage.id: (_) => TimerPage(),
         },
       ),
     );
-  }
-
-  Widget _routeBranch(BuildContext context, Widget trueWidget) {
-    // ログインしていなければサインインページに飛ばす
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return SigninPage();
-    // groupIdがnullならセレクトグループページに飛ばす
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (userProvider.user.groupId == null) return SelectGroupPage();
-    return trueWidget;
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/prefs_timer_data.dart';
-import 'package:haniwa/providers/haniwa_provider.dart';
 import 'package:haniwa/pages/result_page/index.dart';
 import 'package:haniwa/pages/timer_page/index.dart';
 import 'package:haniwa/pages/timer_page/content.dart';
@@ -13,21 +11,6 @@ import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/notification.dart';
-
-// groupのデータを取得し初期化する
-void initGroupData(BuildContext context) async {
-  showProgressDialog(context);
-  try {
-    final groupId = fetchGroupId(context);
-    final groupData = await fetchGroupData(groupId);
-    final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
-    haniwaProvider.editAdmin(groupData['admin']);
-    Navigator.pop(context);
-  } catch (e) {
-    print('グループデータ初期化エラー: $e');
-    showSnackBar(context, 'グループデータの取得に失敗しました');
-  }
-}
 
 // ダイナミックリンクをリッスン
 void listenDynamicLink(BuildContext context) async {

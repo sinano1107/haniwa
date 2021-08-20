@@ -1,16 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/quest.dart';
 import 'package:haniwa/models/member.dart';
-import 'package:haniwa/models/user.dart' as user;
-import 'package:haniwa/providers/user_provider.dart';
-
-String fetchGroupId(BuildContext context) {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-  return userProvider.user.groupId;
-}
+import 'provider.dart';
 
 // グループのデータを取得
 Future fetchGroupData(String groupId) async {
@@ -26,10 +19,10 @@ Future initUser(String uid) async {
 }
 
 // userデータを取得
-Future<user.User> fetchUser(String uid) async {
+Future<String> fetchMyGroupId(String uid) async {
   final path = 'versions/v2/users/$uid';
   final data = await FirebaseFirestore.instance.doc(path).get();
-  return user.User(groupId: data['groupId']);
+  return data['groupId'];
 }
 
 // 自分のuserデータを編集して、グループに自分を追加
