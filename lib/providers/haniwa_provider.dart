@@ -7,6 +7,12 @@ class HaniwaProvider extends ChangeNotifier {
     _admin = admin;
   }
 
+  // データ全削除
+  void clear() {
+    _groupId = null;
+    _admin = null;
+  }
+
   // グループid
   String _groupId;
   String get groupId => _groupId;
