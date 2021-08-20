@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:haniwa/pages/quest_create_page/index.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -142,6 +143,7 @@ class HaniwaContent extends StatelessWidget {
           SelectGroupPage.id: (_) => SelectGroupPage(),
           ResultPage.id: (_) => ResultPage(),
           ListPage.id: (context) => _routeBranch(context, ListPage()),
+          QuestCreatePage.id: (_) => QuestCreatePage(),
           TimerPage.id: (_) => TimerPage(),
         },
       ),
