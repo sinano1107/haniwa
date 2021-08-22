@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/common/progress.dart';
+import 'package:haniwa/common/nfc.dart';
 import 'package:haniwa/models/report_quest.dart';
+import 'package:haniwa/components/report_dialog.dart';
 import 'package:haniwa/theme/colors.dart';
-import 'package:haniwa/pages/result_page/index.dart';
 
 class ReportQuestItem extends StatelessWidget {
   const ReportQuestItem({
@@ -13,23 +17,27 @@ class ReportQuestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        Icons.local_fire_department,
-        color: Colors.orange[brightness],
-        size: 40,
-      ),
-      title: Text(
-        quest.name,
-      ),
-      trailing: Text(
-        '${quest.point}pt',
-        style: TextStyle(
-          color: kPointColor,
-          fontWeight: FontWeight.bold,
+    return Slidable(
+      actionPane: SlidableScrollActionPane(),
+      actions: [buildTagAction(context)],
+      child: ListTile(
+        leading: Icon(
+          Icons.local_fire_department,
+          color: Colors.orange[brightness],
+          size: 40,
         ),
+        title: Text(
+          quest.name,
+        ),
+        trailing: Text(
+          '${quest.point}pt',
+          style: TextStyle(
+            color: kPointColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onTap: () => showReportDialog(context),
       ),
-      onTap: () => showReportDialog(context),
     );
   }
 
@@ -42,35 +50,32 @@ class ReportQuestItem extends StatelessWidget {
   void showReportDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('ほうこくする'),
-        content: Text('ま、まさか、、あの伝説の\n「${quest.name}」\nをこなしてきたのかい！？'),
-        actions: [
-          TextButton(
-            child: Text('まだだ！'),
-            onPressed: () {
-              Navigator.pop(context);
-              showSnackBar(context, 'まぁほどほどに頑張ろう！');
-            },
-          ),
-          TextButton(
-            child: Text(
-              'できたよ！',
-              style: TextStyle(
-                color: Colors.amber,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                ResultPage.id,
-                arguments: ResultArguments(quest: quest),
-              );
-            },
-          ),
-        ],
-      ),
+      builder: (context) => ReportDialog(quest: quest),
+    );
+  }
+
+  IconSlideAction buildTagAction(BuildContext context) {
+    return IconSlideAction(
+      caption: 'タグにリンクする',
+      color: Colors.lightGreen,
+      foregroundColor: Colors.white,
+      icon: Icons.nfc,
+      onTap: () {
+        getTagId(
+          handle: (tagId) async {
+            showProgressDialog(context);
+            try {
+              await updateTagQuest(context, tagId.split('-').last, quest);
+              showSnackBar(context, 'タグとのリンクに成功しました');
+            } catch (e) {
+              print('タグアップデートエラー: $e');
+              showSnackBar(context, 'タグとのリンクに失敗しました');
+            }
+            Navigator.pop(context);
+          },
+          context: context,
+        );
+      },
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/notification.dart';
+import 'package:haniwa/components/report_dialog.dart';
 
 // ダイナミックリンクをリッスン
 void listenDynamicLink(BuildContext context) async {
@@ -49,10 +50,11 @@ void _navigatePage(
         if (_quest.id == null) {
           showSnackBar(context, 'このタグにはクエストがリンクされていません');
         } else {
-          // 終了したらタイマー画面へプッシュ
-          _navigator.pushNamed(
-            TimerPage.id,
-            arguments: TimerArguments(quest: _quest),
+          // 正常な値
+          print(_quest.name);
+          showDialog(
+            context: context,
+            builder: (context) => ReportDialog(quest: _quest),
           );
         }
       } else {

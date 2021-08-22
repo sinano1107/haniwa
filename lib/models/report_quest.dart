@@ -13,4 +13,24 @@ class ReportQuest {
   final String name;
   final double lebel;
   final int point;
+
+  Map<String, dynamic> get encode {
+    return {
+      'id': this.id,
+      'uid': this.uid,
+      'name': this.name,
+      'lebel': this.lebel,
+      'point': this.point,
+    };
+  }
+
+  static ReportQuest decode(Map<String, dynamic> value) {
+    return ReportQuest(
+      id: value['id'],
+      uid: value['uid'],
+      name: value['name'],
+      lebel: value['lebel'],
+      point: value['point'],
+    );
+  }
 }

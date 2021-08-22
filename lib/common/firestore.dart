@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:haniwa/models/quest.dart';
+import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'provider.dart';
 
@@ -118,18 +118,12 @@ Future deleteQuest(BuildContext context, String questId) async {
 }
 
 // タグのクエストを取得
-Future<Quest> fetchTagQuest(BuildContext context, String tagId) async {
+Future<ReportQuest> fetchTagQuest(BuildContext context, String tagId) async {
   final groupId = fetchGroupId(context);
   final path = 'versions/v2/groups/$groupId/tags/$tagId';
   final then = (DocumentSnapshot docSnap) {
     if (docSnap.exists) {
-      return Quest(
-        id: docSnap['id'],
-        uid: docSnap['uid'],
-        name: docSnap['name'],
-        minutes: docSnap['minutes'],
-        point: docSnap['point'],
-      );
+      return ReportQuest.decode(docSnap.data());
     } else {
       throw StateError('タグが存在しませんでした');
     }
@@ -139,7 +133,8 @@ Future<Quest> fetchTagQuest(BuildContext context, String tagId) async {
 }
 
 // タグのクエストを編集
-Future updateTagQuest(BuildContext context, String tagId, Quest quest) async {
+Future updateTagQuest(
+    BuildContext context, String tagId, ReportQuest quest) async {
   final groupId = fetchGroupId(context);
   final path = 'versions/v2/groups/$groupId/tags/$tagId';
   await FirebaseFirestore.instance.doc(path).update(quest.encode);

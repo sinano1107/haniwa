@@ -42,16 +42,16 @@ class QuestListItem extends StatelessWidget {
       onTap: () {
         getTagId(
           handle: (tagId) async {
-            print(tagId);
-            showProgressDialog(context);
-            try {
-              await updateTagQuest(context, tagId.split('-').last, quest);
-              showSnackBar(context, 'タグとのリンクに成功しました！');
-            } catch (e) {
-              print('タグアップデートエラー: $e');
-              showSnackBar(context, 'タグとのリンクに失敗しました');
-            }
-            Navigator.pop(context);
+            // print(tagId);
+            // showProgressDialog(context);
+            // try {
+            //   await updateTagQuest(context, tagId.split('-').last, quest);
+            //   showSnackBar(context, 'タグとのリンクに成功しました！');
+            // } catch (e) {
+            //   print('タグアップデートエラー: $e');
+            //   showSnackBar(context, 'タグとのリンクに失敗しました');
+            // }
+            // Navigator.pop(context);
           },
           context: context,
         );
