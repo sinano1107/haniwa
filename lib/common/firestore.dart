@@ -80,17 +80,19 @@ Stream<QuerySnapshot> streamQuests(BuildContext context) {
       .snapshots();
 }
 
-// クエストを作成
 Future createQuest(
-    BuildContext context, String name, int minutes, int point) async {
+  BuildContext context,
+  String name,
+  double lebel,
+  int point,
+) async {
   final groupId = fetchGroupId(context);
   final path = 'versions/v2/groups/$groupId/quests';
   await FirebaseFirestore.instance.collection(path).add({
     'createdAt': FieldValue.serverTimestamp(),
-    'updatedAt': FieldValue.serverTimestamp(),
     'uid': FirebaseAuth.instance.currentUser.uid,
     'name': name,
-    'minutes': minutes,
+    'lebel': lebel,
     'point': point,
   });
 }
