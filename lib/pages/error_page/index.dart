@@ -11,9 +11,11 @@ class ErrorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('申し訳ありません: エラーが発生しました'),
-          Text('下のボタンを押してリスタートしてください'),
+          Center(child: Text('申し訳ありません: エラーが発生しました')),
+          Center(child: Text('下のボタンを押してリスタートしてください')),
           MaterialButton(
             child: Text('リスタート'),
             onPressed: () async {
