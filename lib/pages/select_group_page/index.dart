@@ -6,8 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'components/qr_view_widget.dart';
 import 'package:haniwa/common/auth.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/providers/user_provider.dart';
-import 'package:haniwa/models/user.dart' as user_model;
+import 'package:haniwa/providers/haniwa_provider.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 import 'package:haniwa/components/icon_button.dart';
 
@@ -62,16 +61,16 @@ class SelectGroupPage extends StatelessWidget {
     try {
       // グループを新規作成して、グループ参加と同じ処理をする
       final groupRef = await FirebaseFirestore.instance
-          .collection('versions/v1/groups')
-          .add({});
+          .collection('versions/v2/groups')
+          .add({'admin': uid});
       final groupId = groupRef.id;
       await addMe(uid, groupId);
       // グループIDをプロバイダに保存して遷移
-      final userProvider = Provider.of<UserProvider>(
+      final haniwaProvider = Provider.of<HaniwaProvider>(
         context,
         listen: false,
       );
-      userProvider.setUser(user_model.User(groupId: groupId));
+      haniwaProvider.init(groupId: groupId, admin: uid);
       showSnackBar(context, 'グループの作成に成功しました');
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {

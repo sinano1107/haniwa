@@ -9,8 +9,7 @@ import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/cloudstorage.dart';
-import 'package:haniwa/models/user.dart' as user_model;
-import 'package:haniwa/providers/user_provider.dart';
+import 'package:haniwa/providers/haniwa_provider.dart';
 
 class GoogleSigninButton extends StatelessWidget {
   @override
@@ -33,11 +32,15 @@ class GoogleSigninButton extends StatelessWidget {
         await initUser(userCredential.user.uid);
         Navigator.pushReplacementNamed(context, SelectGroupPage.id);
       } else {
-        // groupIdを取得・保存してlist画面へ
-        final user = await fetchUser(userCredential.user.uid);
-        final userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUser(user_model.User(groupId: user.groupId));
-        if (user.groupId == null) {
+        // groupId,権限者uidを取得・保存してlist画面へ
+        final groupId = await fetchMyGroupId(userCredential.user.uid);
+        final admin = (await fetchGroupData(groupId))['admin'];
+        final haniwaProvider = Provider.of<HaniwaProvider>(
+          context,
+          listen: false,
+        );
+        haniwaProvider.init(groupId: groupId, admin: admin);
+        if (groupId == null) {
           // ログインしたがgroupIdがnullだった場合
           Navigator.pushReplacementNamed(context, SelectGroupPage.id);
         } else {

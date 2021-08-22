@@ -16,6 +16,6 @@ Future addMyImage() async {
     contentType: 'image/png',
   );
   await FirebaseStorage.instance
-      .ref('versions/v1/users/${user.uid}/icon.png')
+      .ref('versions/v2/users/${user.uid}/icon.png')
       .putFile(file, metaData);
 }

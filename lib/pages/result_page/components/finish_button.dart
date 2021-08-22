@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 
 class FinishButton extends StatelessWidget {
@@ -19,10 +20,13 @@ class FinishButton extends StatelessWidget {
         primary: _theme.primaryColor,
         shape: StadiumBorder(),
       ),
-      onPressed: () => Navigator.popUntil(
-        context,
-        ModalRoute.withName(ListPage.id),
-      ),
+      onPressed: () {
+        showSnackBar(context, 'あんなことよくできたね！すごいよ！！ありがとう😊');
+        Navigator.popUntil(
+          context,
+          ModalRoute.withName(ListPage.id),
+        );
+      },
     );
   }
 }

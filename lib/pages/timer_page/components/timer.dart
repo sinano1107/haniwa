@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:vibration/vibration.dart';
 import 'package:haniwa/common/snackbar.dart';
-import 'package:haniwa/pages/result_page/index.dart';
+// import 'package:haniwa/pages/result_page/index.dart';
 import '../view_model.dart';
 
 class Timer extends StatefulWidget {
@@ -72,11 +72,11 @@ class _TimerState extends State<Timer> {
         onComplete: () {
           print('Countdown Ended');
           _vibration();
-          Navigator.pushReplacementNamed(
-            context,
-            ResultPage.id,
-            arguments: ResultArguments(quest: _quest),
-          );
+          // Navigator.pushReplacementNamed(
+          //   context,
+          //   ResultPage.id,
+          //   arguments: ResultArguments(quest: _quest),
+          // );
         },
       ),
     );
