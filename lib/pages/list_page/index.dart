@@ -53,6 +53,6 @@ class _ListPageState extends State<ListPage> {
     // ダイナミックリンクをリッスン
     listenDynamicLink(context);
     // タイマーのデータが残存している場合はタイマー画面にとばす
-    checkTimer(context);
+    // checkTimer(context);
   }
 }

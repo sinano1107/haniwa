@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:haniwa/models/quest.dart';
+import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'quest_list_item.dart';
+import 'report_quest_item.dart';
 
 class QuestList extends StatelessWidget {
   @override
@@ -51,16 +51,15 @@ class QuestList extends StatelessWidget {
                   ]
                 : data.map((DocumentSnapshot docSnap) {
                     final data = docSnap;
-                    return QuestListItem(
+                    return ReportQuestItem(
                       key: UniqueKey(),
-                      quest: Quest(
+                      quest: ReportQuest(
                         id: docSnap.id,
                         uid: data['uid'],
                         name: data['name'],
-                        minutes: data['minutes'],
+                        lebel: data['lebel'],
                         point: data['point'],
                       ),
-                      showBorder: true,
                     );
                   }).toList(),
           ),

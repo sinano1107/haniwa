@@ -3,7 +3,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/prefs_timer_data.dart';
-import 'package:haniwa/pages/result_page/index.dart';
+// import 'package:haniwa/pages/result_page/index.dart';
 import 'package:haniwa/pages/timer_page/index.dart';
 import 'package:haniwa/pages/timer_page/content.dart';
 import 'index.dart';
@@ -77,11 +77,11 @@ void checkTimer(BuildContext context) async {
     prefs.remove(timerKey);
     cancelLocalNotification();
     if (data.endTime != null && DateTime.now().isAfter(data.endTime)) {
-      Navigator.pushNamed(
-        context,
-        ResultPage.id,
-        arguments: ResultArguments(quest: data.quest),
-      );
+      // Navigator.pushNamed(
+      //   context,
+      //   ResultPage.id,
+      //   arguments: ResultArguments(quest: data.quest),
+      // );
     } else {
       Navigator.pushNamed(
         context,

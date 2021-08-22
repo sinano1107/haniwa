@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:haniwa/models/quest.dart';
+import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/common/firestore.dart';
 import './content.dart';
@@ -55,7 +55,8 @@ class ResultPage extends StatelessWidget {
   }
 }
 
-Future<Member> fetchAndUpdateMyData(BuildContext context, Quest quest) async {
+Future<Member> fetchAndUpdateMyData(
+    BuildContext context, ReportQuest quest) async {
   final uid = FirebaseAuth.instance.currentUser.uid;
   final data = await fetchMemberData(context, uid);
   await updateMyData(context, {'point': data.point + quest.point});
@@ -66,5 +67,5 @@ class ResultArguments {
   ResultArguments({
     @required this.quest,
   });
-  final Quest quest;
+  final ReportQuest quest;
 }
