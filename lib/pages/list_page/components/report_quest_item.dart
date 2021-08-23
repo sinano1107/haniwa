@@ -42,9 +42,9 @@ class ReportQuestItem extends StatelessWidget {
   }
 
   int get brightness {
-    final lebel = quest.lebel;
-    if (lebel == 0.5) return 50;
-    return ((lebel - 0.5) * 200).toInt();
+    final level = quest.level;
+    if (level == 0.5) return 50;
+    return ((level - 0.5) * 200).toInt();
   }
 
   void showReportDialog(BuildContext context) {

@@ -69,7 +69,7 @@ class _PointInputState extends State<PointInput> {
             Padding(
               padding: const EdgeInsets.only(left: 8),
               child: IconButtonWidget(
-                text: '難易度\'${viewModel.lebel}\'を編集する',
+                text: '難易度\'${viewModel.level}\'を編集する',
                 color: Colors.grey,
                 icon: Icon(Icons.arrow_back),
                 onPressed: viewModel.previousPage,

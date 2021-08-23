@@ -83,7 +83,7 @@ Stream<QuerySnapshot> streamQuests(BuildContext context) {
 Future createQuest(
   BuildContext context,
   String name,
-  double lebel,
+  double level,
   int point,
 ) async {
   final groupId = fetchGroupId(context);
@@ -92,7 +92,7 @@ Future createQuest(
     'createdAt': FieldValue.serverTimestamp(),
     'uid': FirebaseAuth.instance.currentUser.uid,
     'name': name,
-    'lebel': lebel,
+    'level': level,
     'point': point,
   });
 }

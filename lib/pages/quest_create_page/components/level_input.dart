@@ -4,8 +4,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:haniwa/components/icon_button.dart';
 import '../view_model.dart';
 
-class LebelInput extends StatelessWidget {
-  const LebelInput({Key key}) : super(key: key);
+class LevelInput extends StatelessWidget {
+  const LevelInput({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class LebelInput extends StatelessWidget {
     String name() {
       const max = 8;
       final name = viewModel.name;
-      return (name.length > 5) ? name.substring(0, max) + '...' : name;
+      return (name.length > max) ? name.substring(0, max) + '...' : name;
     }
 
     return Stack(
@@ -38,7 +38,7 @@ class LebelInput extends StatelessWidget {
             SizedBox(height: height * 0.03),
             Center(
               child: RatingBar.builder(
-                initialRating: viewModel.lebel,
+                initialRating: viewModel.level,
                 minRating: 0.5,
                 allowHalfRating: true,
                 glowColor: Colors.red,
@@ -49,7 +49,7 @@ class LebelInput extends StatelessWidget {
                   Icons.local_fire_department,
                   color: Colors.orange,
                 ),
-                onRatingUpdate: viewModel.editLebel,
+                onRatingUpdate: viewModel.editLevel,
               ),
             ),
             SizedBox(height: height * 0.05),
@@ -78,7 +78,7 @@ class LebelInput extends StatelessWidget {
                   color: theme.primaryColor,
                   size: Size(330, 50),
                   onPressed: () {
-                    viewModel.editPoint((viewModel.lebel * 100).toInt());
+                    viewModel.editPoint((viewModel.level * 100).toInt());
                     viewModel.nextPage();
                   },
                 ),

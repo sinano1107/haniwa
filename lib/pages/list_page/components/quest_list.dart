@@ -57,7 +57,7 @@ class QuestList extends StatelessWidget {
                         id: docSnap.id,
                         uid: data['uid'],
                         name: data['name'],
-                        lebel: data['lebel'],
+                        level: data['level'],
                         point: data['point'],
                       ),
                     );

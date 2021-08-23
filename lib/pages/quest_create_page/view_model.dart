@@ -24,9 +24,9 @@ class QuestCreateViewModel extends ChangeNotifier {
   String get name => _name;
   void editName(String value) => _name = value;
 
-  double _lebel = 2;
-  double get lebel => _lebel;
-  void editLebel(double value) => _lebel = value;
+  double _level = 2;
+  double get level => _level;
+  void editLevel(double value) => _level = value;
 
   int _point = 50;
   int get point => _point;
@@ -36,6 +36,6 @@ class QuestCreateViewModel extends ChangeNotifier {
   }
 
   Future createQuest(BuildContext context) async {
-    await firestore.createQuest(context, name, lebel, point);
+    await firestore.createQuest(context, name, level, point);
   }
 }
