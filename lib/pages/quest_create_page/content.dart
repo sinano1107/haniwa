@@ -25,18 +25,17 @@ class QuestCreateContent extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Column(
+        child: Stack(
+          fit: StackFit.loose,
           children: [
-            Flexible(
-              child: PageView(
-                controller: viewModel.controller,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  NameInput(),
-                  LebelInput(),
-                  PointInput(),
-                ],
-              ),
+            PageView(
+              controller: viewModel.controller,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                NameInput(),
+                LebelInput(),
+                PointInput(),
+              ],
             ),
           ],
         ),
