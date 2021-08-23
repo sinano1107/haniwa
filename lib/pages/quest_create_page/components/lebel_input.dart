@@ -78,7 +78,7 @@ class LebelInput extends StatelessWidget {
                   color: theme.primaryColor,
                   size: Size(330, 50),
                   onPressed: () {
-                    viewModel.editPoint((viewModel.lebel * 150).toInt());
+                    viewModel.editPoint((viewModel.lebel * 100).toInt());
                     viewModel.nextPage();
                   },
                 ),
