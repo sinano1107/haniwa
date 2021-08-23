@@ -5,13 +5,13 @@ class ReportQuest {
     @required this.id,
     @required this.uid,
     @required this.name,
-    @required this.lebel,
+    @required this.level,
     @required this.point,
   });
   final String id;
   final String uid;
   final String name;
-  final double lebel;
+  final double level;
   final int point;
 
   Map<String, dynamic> get encode {
@@ -19,7 +19,7 @@ class ReportQuest {
       'id': this.id,
       'uid': this.uid,
       'name': this.name,
-      'lebel': this.lebel,
+      'level': this.level,
       'point': this.point,
     };
   }
@@ -29,7 +29,7 @@ class ReportQuest {
       id: value['id'],
       uid: value['uid'],
       name: value['name'],
-      lebel: value['lebel'],
+      level: value['level'],
       point: value['point'],
     );
   }

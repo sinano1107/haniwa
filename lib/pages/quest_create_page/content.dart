@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'view_model.dart';
 import 'components/name_input.dart';
-import 'components/lebel_input.dart';
+import 'components/level_input.dart';
 import 'components/point_input.dart';
 
 class QuestCreateContent extends StatelessWidget {
@@ -33,7 +33,7 @@ class QuestCreateContent extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               children: [
                 NameInput(),
-                LebelInput(),
+                LevelInput(),
                 PointInput(),
               ],
             ),
