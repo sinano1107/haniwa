@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,6 +58,7 @@ class SelectGroupPage extends StatelessWidget {
   }
 
   void createNewGroup(BuildContext context) async {
+    showProgressDialog(context);
     final uid = FirebaseAuth.instance.currentUser.uid;
     try {
       // グループを新規作成して、グループ参加と同じ処理をする
@@ -76,6 +78,7 @@ class SelectGroupPage extends StatelessWidget {
     } catch (e) {
       print('グループ新規作成エラー $e');
       showSnackBar(context, 'グループの作成に失敗しました');
+      Navigator.pop(context);
     }
   }
 }

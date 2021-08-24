@@ -95,20 +95,19 @@ Future createQuest(
     'name': name,
     'level': level,
     'point': point,
+    'last': null,
   });
 }
 
 // クエストを編集
-Future updateQuest(BuildContext context, String questId, String name,
-    int minutes, int point) async {
+Future updateQuest(
+  BuildContext context,
+  String questId,
+  Map<String, Object> newData,
+) async {
   final groupId = fetchGroupId(context);
   final path = 'versions/v2/groups/$groupId/quests/$questId';
-  await FirebaseFirestore.instance.doc(path).update({
-    'updatedAt': FieldValue.serverTimestamp(),
-    'name': name,
-    'minutes': minutes,
-    'point': point,
-  });
+  await FirebaseFirestore.instance.doc(path).update(newData);
 }
 
 // クエストを削除

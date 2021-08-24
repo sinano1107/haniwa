@@ -33,7 +33,7 @@ class QuestEditViewModel extends ChangeNotifier {
   void editQuest(BuildContext context) async {
     showProgressDialog(context);
     try {
-      await updateQuest(context, _questId, name, minutes, point);
+      // await updateQuest(context, _questId, name, minutes, point);
     } catch (e) {
       print('クエスト編集エラー $e');
       showSnackBar(context, 'クエストを編集できませんでした');

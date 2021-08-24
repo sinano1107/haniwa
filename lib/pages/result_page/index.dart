@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
@@ -63,6 +64,8 @@ Future<Member> fetchAndUpdateMyData(
   final data = await fetchMemberData(context, uid);
   await updateMyData(context, {'point': data.point + quest.point});
   await saveHistory(context, quest);
+  // クエストのlastを編集
+  await updateQuest(context, quest.id, {'last': FieldValue.serverTimestamp()});
   return data;
 }
 
