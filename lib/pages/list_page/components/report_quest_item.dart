@@ -17,26 +17,42 @@ class ReportQuestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 今日とlastの日付は同じなら今日はもうやったということ
+    final today = DateTime.now();
+    bool isDone = quest.last != null &&
+        quest.last.difference(today).inDays == 0 &&
+        quest.last.day == today.day;
+
     return Slidable(
       actionPane: SlidableScrollActionPane(),
       actions: [buildTagAction(context)],
       child: ListTile(
         leading: Icon(
-          Icons.local_fire_department,
-          color: Colors.orange[brightness],
+          isDone ? Icons.task_alt : Icons.local_fire_department,
+          color: isDone ? Colors.blue : Colors.orange[brightness],
           size: 40,
         ),
         title: Text(
           quest.name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: isDone ? Colors.grey : Colors.black87,
+          ),
         ),
         trailing: Text(
           '${quest.point}pt',
           style: TextStyle(
-            color: kPointColor,
+            color: isDone ? Colors.teal[100] : kPointColor,
             fontWeight: FontWeight.bold,
           ),
         ),
-        onTap: () => showReportDialog(context),
+        subtitle: isDone
+            ? Text(
+                '今日はクリア済み！すごい！！',
+                style: TextStyle(color: Colors.blue),
+              )
+            : null,
+        onTap: isDone ? null : () => showReportDialog(context),
       ),
     );
   }

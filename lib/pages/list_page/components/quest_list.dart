@@ -50,16 +50,11 @@ class QuestList extends StatelessWidget {
                     ))
                   ]
                 : data.map((DocumentSnapshot docSnap) {
-                    final data = docSnap;
+                    final Map<String, dynamic> data = docSnap.data();
+                    data['id'] = docSnap.id;
                     return ReportQuestItem(
                       key: UniqueKey(),
-                      quest: ReportQuest(
-                        id: docSnap.id,
-                        uid: data['uid'],
-                        name: data['name'],
-                        level: data['level'],
-                        point: data['point'],
-                      ),
+                      quest: ReportQuest.decode(data),
                     );
                   }).toList(),
           ),

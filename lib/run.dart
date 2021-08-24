@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/date_symbol_data_local.dart';
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
 import 'theme/dark_theme.dart';
@@ -23,6 +24,7 @@ import 'pages/signin_page/index.dart';
 import 'pages/result_page/index.dart';
 import 'pages/list_page/index.dart';
 import 'pages/timer_page/index.dart';
+import 'pages/history_page/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -46,6 +48,8 @@ void run({bool isEmulator = false}) async {
   tz.initializeTimeZones();
   var tokyo = tz.getLocation('Asia/Tokyo');
   tz.setLocalLocation(tokyo);
+
+  initializeDateFormatting("ja_JP");
 
   //向き指定
   SystemChrome.setPreferredOrientations([
@@ -72,6 +76,7 @@ class HaniwaContent extends StatelessWidget {
         theme: kLightTheme,
         darkTheme: kDarkTheme,
         initialRoute: LandingPage.id,
+        // initialRoute: DevPage.id,
         routes: {
           LandingPage.id: (_) => LandingPage(),
           ErrorPage.id: (_) => ErrorPage(),
@@ -82,6 +87,7 @@ class HaniwaContent extends StatelessWidget {
           ListPage.id: (_) => ListPage(),
           QuestCreatePage.id: (_) => QuestCreatePage(),
           TimerPage.id: (_) => TimerPage(),
+          HistoryPage.id: (_) => HistoryPage(),
         },
       ),
     );

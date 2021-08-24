@@ -46,9 +46,15 @@ void _navigatePage(
         showProgressDialog(context);
         final idList = deeplink.queryParameters['id'].split('-');
         final _quest = await fetchTagQuest(context, idList[1]);
+        final today = DateTime.now();
         _navigator.pop();
         if (_quest.id == null) {
           showSnackBar(context, 'このタグにはクエストがリンクされていません');
+        } else if (_quest.last != null &&
+            _quest.last.difference(today).inDays == 0 &&
+            _quest.last.day == today.day) {
+          // 今日はもうこなしていた場合
+          showSnackBar(context, 'このクエストはクリア済みです！おつかれさま！！');
         } else {
           // 正常な値
           print(_quest.name);

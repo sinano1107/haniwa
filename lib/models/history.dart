@@ -2,13 +2,22 @@ import 'package:flutter/cupertino.dart';
 
 class History {
   History({
-    @required this.image,
+    @required this.id,
     @required this.name,
-    @required this.start,
-    @required this.end,
+    @required this.point,
+    @required this.time,
   });
-  final String image;
+  final String id;
   final String name;
-  final DateTime start;
-  final DateTime end;
+  final int point;
+  final DateTime time;
+
+  static History decode(Map<String, dynamic> value) {
+    return History(
+      id: value['id'],
+      name: value['name'],
+      point: value['point'],
+      time: value['time'].toDate(),
+    );
+  }
 }

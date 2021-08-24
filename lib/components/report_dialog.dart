@@ -32,7 +32,7 @@ class ReportDialog extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               ResultPage.id,
               arguments: ResultArguments(quest: quest),
