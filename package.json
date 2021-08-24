@@ -34,5 +34,8 @@
       "js",
       "rules"
     ]
+  },
+  "dependencies": {
+    "firebase": "^7.18.0"
   }
 }
