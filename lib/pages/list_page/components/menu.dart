@@ -6,6 +6,7 @@ import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/components/cloud_storage_avatar.dart';
 import 'package:haniwa/pages/group_qr_page.dart/index.dart';
+import 'package:haniwa/pages/history_page/index.dart';
 
 class Menu extends StatelessWidget {
   @override
@@ -44,6 +45,11 @@ class Menu extends StatelessWidget {
                 currentAccountPicture: CloudStorageAvatar(
                   path: 'versions/v2/users/${_user.uid}/icon.png',
                 ),
+              ),
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text('クエスト達成の履歴'),
+                onTap: () => Navigator.pushNamed(context, HistoryPage.id),
               ),
               ListTile(
                 leading: Icon(Icons.qr_code),

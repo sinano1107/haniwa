@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
+import 'package:haniwa/models/history.dart';
 import 'provider.dart';
 
 // グループのデータを取得
@@ -134,8 +135,39 @@ Future<ReportQuest> fetchTagQuest(BuildContext context, String tagId) async {
 
 // タグのクエストを編集
 Future updateTagQuest(
-    BuildContext context, String tagId, ReportQuest quest) async {
+  BuildContext context,
+  String tagId,
+  ReportQuest quest,
+) async {
   final groupId = fetchGroupId(context);
   final path = 'versions/v2/groups/$groupId/tags/$tagId';
   await FirebaseFirestore.instance.doc(path).update(quest.encode);
+}
+
+// 履歴を保存
+Future saveHistory(BuildContext context, ReportQuest quest) async {
+  final groupId = fetchGroupId(context);
+  final uid = FirebaseAuth.instance.currentUser.uid;
+  final path = 'versions/v2/groups/$groupId/members/$uid/histories';
+  return await FirebaseFirestore.instance.collection(path).add({
+    'id': quest.id,
+    'name': quest.name,
+    'point': quest.point,
+    'time': FieldValue.serverTimestamp(),
+  });
+}
+
+// 履歴を取得
+Future<List<History>> fetchHistory(BuildContext context) async {
+  final groupId = fetchGroupId(context);
+  final uid = FirebaseAuth.instance.currentUser.uid;
+  final path = 'versions/v2/groups/$groupId/members/$uid/histories';
+  final then = (QuerySnapshot qss) {
+    return qss.docs.map((ss) => History.decode(ss.data())).toList();
+  };
+  return FirebaseFirestore.instance
+      .collection(path)
+      .orderBy('time', descending: true)
+      .get()
+      .then(then);
 }

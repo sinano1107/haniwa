@@ -56,10 +56,13 @@ class ResultPage extends StatelessWidget {
 }
 
 Future<Member> fetchAndUpdateMyData(
-    BuildContext context, ReportQuest quest) async {
+  BuildContext context,
+  ReportQuest quest,
+) async {
   final uid = FirebaseAuth.instance.currentUser.uid;
   final data = await fetchMemberData(context, uid);
   await updateMyData(context, {'point': data.point + quest.point});
+  await saveHistory(context, quest);
   return data;
 }
 

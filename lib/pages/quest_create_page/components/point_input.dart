@@ -87,9 +87,7 @@ class _PointInputState extends State<PointInput> {
                   onPressed: () async {
                     showProgressDialog(context);
                     try {
-                      print('iii');
                       await viewModel.createQuest(context);
-                      print('aaa');
                       Navigator.popUntil(
                         context,
                         ModalRoute.withName(ListPage.id),

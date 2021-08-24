@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:haniwa/pages/quest_create_page/index.dart';
 
 class DevPage extends StatefulWidget {
   static const id = 'dev';
@@ -15,7 +14,7 @@ class _DevPageState extends State<DevPage> {
       body: Center(
         child: MaterialButton(
           child: Text('クエスト追加'),
-          onPressed: () => Navigator.pushNamed(context, QuestCreatePage.id),
+          onPressed: () => {},
         ),
       ),
     );
