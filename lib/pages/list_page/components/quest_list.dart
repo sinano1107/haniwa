@@ -8,7 +8,7 @@ class QuestList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: QuestColFirestore(context).streamQuests(),
+      stream: QuestColFirestore(context).snapshots(),
       builder: (context, snap) {
         if (snap.hasError) {
           return SliverList(

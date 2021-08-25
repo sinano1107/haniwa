@@ -45,7 +45,7 @@ void _navigatePage(
         // プログレスを表示してクエストを取得
         showProgressDialog(context);
         final idList = deeplink.queryParameters['id'].split('-');
-        final _quest = await TagFirestore(context, idList[1]).fetchTagQuest();
+        final _quest = await TagFirestore(context, idList[1]).get();
         final today = DateTime.now();
         _navigator.pop();
         if (_quest.id == null) {

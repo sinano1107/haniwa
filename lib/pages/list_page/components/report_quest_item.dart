@@ -84,7 +84,7 @@ class ReportQuestItem extends StatelessWidget {
               await TagFirestore(
                 context,
                 tagId.split('-').last,
-              ).updateQuest(quest);
+              ).update(quest);
               showSnackBar(context, 'タグとのリンクに成功しました');
             } catch (e) {
               print('タグアップデートエラー: $e');

@@ -78,7 +78,7 @@ class _QRViewWidgetState extends State<QRViewWidget> {
     try {
       await GroupFirestore(context).addMe();
       // グループID,権限者uidをプロバイダに保存して遷移
-      final admin = (await GroupFirestore(context).fetchGroupData())['admin'];
+      final admin = (await GroupFirestore(context).get())['admin'];
       final haniwaProvider = Provider.of<HaniwaProvider>(
         context,
         listen: false,

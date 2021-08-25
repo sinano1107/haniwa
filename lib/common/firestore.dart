@@ -31,7 +31,7 @@ class UserFirestore {
   }
 
   // userデータをアップデート
-  Future updateUserData(Map<String, Object> newValue) async {
+  Future update(Map<String, Object> newValue) async {
     await FirebaseFirestore.instance.doc(_userPath).update(newValue);
   }
 }
@@ -47,7 +47,7 @@ class GroupFirestore {
   }
 
   // グループのデータを取得
-  Future fetchGroupData({String groupId}) async {
+  Future get({String groupId}) async {
     final data = await FirebaseFirestore.instance
         .doc(groupPath(inputGroupId: groupId))
         .get();
@@ -66,7 +66,7 @@ class GroupFirestore {
     await groupSnap.reference.collection('members').doc(uid).set({'point': 0});
     // userDataを編集
     final groupId = inputGroupId == null ? fetchGroupId(context) : inputGroupId;
-    await UserFirestore().updateUserData({'groupId': groupId});
+    await UserFirestore().update({'groupId': groupId});
   }
 }
 
@@ -80,17 +80,16 @@ class MemberFirestore {
   }
 
   // 自分のデータを取得
-  Future<Member> fetchMyData() async {
+  Future<Member> get() async {
     final then = (DocumentSnapshot docSnap) {
       if (docSnap.exists) return Member.decode(docSnap.data());
       throw StateError('メンバーが存在しませんでした');
     };
-
     return FirebaseFirestore.instance.doc(memberPath).get().then(then);
   }
 
   // 自分のデータをアップデート
-  Future updateMyData(Map<String, Object> newData) async {
+  Future update(Map<String, Object> newData) async {
     await FirebaseFirestore.instance
         .doc(memberPath)
         .update(newData)
@@ -116,7 +115,7 @@ class HistoriesColFirestore {
   }
 
   // 履歴を取得
-  Future fetchHistory() async {
+  Future get() async {
     final then = (QuerySnapshot qss) =>
         qss.docs.map((ss) => History.decode(ss.data())).toList();
     return FirebaseFirestore.instance
@@ -161,7 +160,7 @@ class QuestColFirestore {
   String get questColPath => GroupFirestore(context).groupPath() + '/quests';
 
   // クエストコレクションを取得
-  Stream<QuerySnapshot> streamQuests() {
+  Stream<QuerySnapshot> snapshots() {
     return FirebaseFirestore.instance
         .collection(questColPath)
         .orderBy('createdAt', descending: true)
@@ -189,12 +188,12 @@ class QuestFirestore {
   String get questPath => QuestColFirestore(context).questColPath + '/$questId';
 
   // クエストを編集
-  Future updateQuest(Map<String, Object> newData) async {
+  Future update(Map<String, Object> newData) async {
     await FirebaseFirestore.instance.doc(questPath).update(newData);
   }
 
   // クエストを削除
-  Future deleteQuest() async {
+  Future delete() async {
     await FirebaseFirestore.instance.doc(questPath).delete();
   }
 }
@@ -207,7 +206,7 @@ class TagFirestore {
   String get tagPath => GroupFirestore(context).groupPath() + '/tags/$tagId';
 
   // タグのクエストを取得
-  Future<ReportQuest> fetchTagQuest() async {
+  Future<ReportQuest> get() async {
     final then = (DocumentSnapshot docSnap) {
       if (docSnap.exists) return ReportQuest.decode(docSnap.data());
       throw StateError('タグが存在しませんでした');
@@ -216,7 +215,7 @@ class TagFirestore {
   }
 
   // タグのクエストを編集
-  Future updateQuest(ReportQuest quest) async {
+  Future update(ReportQuest quest) async {
     await FirebaseFirestore.instance.doc(tagPath).update(quest.encode);
   }
 }

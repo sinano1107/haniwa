@@ -61,9 +61,9 @@ Future<Member> fetchAndUpdateMyData(
   BuildContext context,
   ReportQuest quest,
 ) async {
-  final data = await MemberFirestore(context).fetchMyData();
+  final data = await MemberFirestore(context).get();
   // ポイントを加算
-  await MemberFirestore(context).updateMyData({
+  await MemberFirestore(context).update({
     'point': data.point + quest.point,
   });
   // レコード(今までこなした回数)を記録
@@ -72,7 +72,7 @@ Future<Member> fetchAndUpdateMyData(
   // 履歴を追加
   await HistoriesColFirestore(context).saveHistory(quest);
   // クエストのlastを編集
-  await QuestFirestore(context, quest.id).updateQuest({
+  await QuestFirestore(context, quest.id).update({
     'last': FieldValue.serverTimestamp(),
   });
   return data;

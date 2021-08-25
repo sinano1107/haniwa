@@ -198,7 +198,7 @@ Widget _deleteDialog(BuildContext context, Quest quest) {
 void deleteQuestAction(BuildContext context, Quest quest) async {
   showProgressDialog(context);
   try {
-    await QuestFirestore(context, quest.id).deleteQuest();
+    await QuestFirestore(context, quest.id).delete();
   } catch (e) {
     print('クエスト削除エラー $e');
     showSnackBar(context, 'クエストの削除に失敗しました');

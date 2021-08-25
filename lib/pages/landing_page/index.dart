@@ -29,7 +29,7 @@ class _LandingPageState extends State<LandingPage> {
       try {
         final uid = currentUser.uid;
         final groupId = await UserFirestore().fetchMyGroupId();
-        final groupData = await GroupFirestore(context).fetchGroupData();
+        final groupData = await GroupFirestore(context).get();
         final haniwaProvider = Provider.of<HaniwaProvider>(
           context,
           listen: false,

@@ -10,7 +10,7 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<List<History>> fetchHistory(BuildContext context) async {
-      final data = await HistoriesColFirestore(context).fetchHistory();
+      final data = await HistoriesColFirestore(context).get();
       return data;
     }
 

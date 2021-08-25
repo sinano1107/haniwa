@@ -34,8 +34,8 @@ class GoogleSigninButton extends StatelessWidget {
       } else {
         // groupId,権限者uidを取得・保存してlist画面へ
         final groupId = await UserFirestore().fetchMyGroupId();
-        final admin = (await GroupFirestore(context)
-            .fetchGroupData(groupId: groupId))['admin'];
+        final admin =
+            (await GroupFirestore(context).get(groupId: groupId))['admin'];
         final haniwaProvider = Provider.of<HaniwaProvider>(
           context,
           listen: false,
