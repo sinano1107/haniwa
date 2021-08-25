@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/models/history.dart';
+import 'package:haniwa/models/record.dart';
 import 'provider.dart';
 
 const version = 'versions/v2';
@@ -123,6 +124,33 @@ class HistoriesColFirestore {
         .orderBy('time', descending: true)
         .get()
         .then(then);
+  }
+}
+
+// /groups/{groupId}/members/{uid}/records/{questId}
+class RecordFirestore {
+  RecordFirestore(this.context, this.questId);
+  final BuildContext context;
+  final String questId;
+  String get recordPath {
+    return MemberFirestore(context).memberPath + '/records/$questId';
+  }
+
+  Future<Record> get() async {
+    final then = (DocumentSnapshot docSnap) {
+      if (docSnap.exists) {
+        Map<String, dynamic> data = docSnap.data();
+        data['questId'] = docSnap.id;
+        return Record.decode(data);
+      }
+      // レコードがなかったらcount0のものを返す
+      return Record(questId: questId, count: 0);
+    };
+    return await FirebaseFirestore.instance.doc(recordPath).get().then(then);
+  }
+
+  Future set(Record record) async {
+    await FirebaseFirestore.instance.doc(recordPath).set(record.encode);
   }
 }
 

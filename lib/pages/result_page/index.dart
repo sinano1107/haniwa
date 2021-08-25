@@ -56,6 +56,7 @@ class ResultPage extends StatelessWidget {
   }
 }
 
+// TODO ここの処理かさんでいるのでfunctionsにうつしてもいいかも recordのあたりは読み込んでアップデートだから特に
 Future<Member> fetchAndUpdateMyData(
   BuildContext context,
   ReportQuest quest,
@@ -66,7 +67,8 @@ Future<Member> fetchAndUpdateMyData(
     'point': data.point + quest.point,
   });
   // レコード(今までこなした回数)を記録
-
+  final record = await RecordFirestore(context, quest.id).get();
+  RecordFirestore(context, quest.id).set(record.inclement());
   // 履歴を追加
   await HistoriesColFirestore(context).saveHistory(quest);
   // クエストのlastを編集
