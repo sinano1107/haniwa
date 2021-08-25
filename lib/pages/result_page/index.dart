@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/models/report_quest.dart';
@@ -40,6 +39,7 @@ class ResultPage extends StatelessWidget {
             }
 
             if (snapshot.hasError) {
+              print('エラー ${snapshot.error}');
               return Center(child: Text('エラー'));
             }
 
@@ -60,12 +60,19 @@ Future<Member> fetchAndUpdateMyData(
   BuildContext context,
   ReportQuest quest,
 ) async {
-  final uid = FirebaseAuth.instance.currentUser.uid;
-  final data = await fetchMemberData(context, uid);
-  await updateMyData(context, {'point': data.point + quest.point});
-  await saveHistory(context, quest);
+  final data = await MemberFirestore(context).fetchMyData();
+  // ポイントを加算
+  await MemberFirestore(context).updateMyData({
+    'point': data.point + quest.point,
+  });
+  // レコード(今までこなした回数)を記録
+
+  // 履歴を追加
+  await HistoriesColFirestore(context).saveHistory(quest);
   // クエストのlastを編集
-  await updateQuest(context, quest.id, {'last': FieldValue.serverTimestamp()});
+  await QuestFirestore(context, quest.id).updateQuest({
+    'last': FieldValue.serverTimestamp(),
+  });
   return data;
 }
 

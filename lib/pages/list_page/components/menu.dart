@@ -24,7 +24,7 @@ class Menu extends StatelessWidget {
                 decoration: BoxDecoration(color: Colors.cyan),
                 accountName: Text('${_user.displayName} の所持ポイント'),
                 accountEmail: FutureBuilder<Member>(
-                  future: fetchMemberData(context, _user.uid),
+                  future: MemberFirestore(context).fetchMyData(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return CircularProgressIndicator();

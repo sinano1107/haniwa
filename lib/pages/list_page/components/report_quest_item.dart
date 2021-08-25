@@ -81,7 +81,10 @@ class ReportQuestItem extends StatelessWidget {
           handle: (tagId) async {
             showProgressDialog(context);
             try {
-              await updateTagQuest(context, tagId.split('-').last, quest);
+              await TagFirestore(
+                context,
+                tagId.split('-').last,
+              ).updateQuest(quest);
               showSnackBar(context, 'タグとのリンクに成功しました');
             } catch (e) {
               print('タグアップデートエラー: $e');

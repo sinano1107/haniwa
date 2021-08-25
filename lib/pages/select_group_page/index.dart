@@ -66,7 +66,7 @@ class SelectGroupPage extends StatelessWidget {
           .collection('versions/v2/groups')
           .add({'admin': uid});
       final groupId = groupRef.id;
-      await addMe(uid, groupId);
+      await GroupFirestore(context).addMe(inputGroupId: groupId);
       // グループIDをプロバイダに保存して遷移
       final haniwaProvider = Provider.of<HaniwaProvider>(
         context,

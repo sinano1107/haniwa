@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:haniwa/common/firestore.dart' as firestore;
+import 'package:haniwa/common/firestore.dart';
 
 class QuestCreateViewModel extends ChangeNotifier {
   final _controller = PageController();
@@ -36,6 +36,6 @@ class QuestCreateViewModel extends ChangeNotifier {
   }
 
   Future createQuest(BuildContext context) async {
-    await firestore.createQuest(context, name, level, point);
+    await QuestColFirestore(context).createQuest(name, level, point);
   }
 }

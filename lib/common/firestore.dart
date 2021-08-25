@@ -6,167 +6,189 @@ import 'package:haniwa/models/member.dart';
 import 'package:haniwa/models/history.dart';
 import 'provider.dart';
 
-// グループのデータを取得
-Future fetchGroupData(String groupId) async {
-  final path = 'versions/v2/groups/$groupId';
-  final data = await FirebaseFirestore.instance.doc(path).get();
-  return data;
+const version = 'versions/v2';
+
+// パスの系統ごとにクラスを分ける
+
+// /users/{uid}
+class UserFirestore {
+  static const version = 'versions/v2';
+  String get _userPath {
+    final uid = FirebaseAuth.instance.currentUser.uid;
+    return '$version/users/$uid';
+  }
+
+  // usersコレクションに新規ユーザーを追加
+  Future initUser() async {
+    await FirebaseFirestore.instance.doc(_userPath).set({'groupId': null});
+  }
+
+  // userデータを取得
+  Future<String> fetchMyGroupId() async {
+    final data = await FirebaseFirestore.instance.doc(_userPath).get();
+    return data['groupId'];
+  }
+
+  // userデータをアップデート
+  Future updateUserData(Map<String, Object> newValue) async {
+    await FirebaseFirestore.instance.doc(_userPath).update(newValue);
+  }
 }
 
-// usersコレクションに新規ユーザーを追加
-Future initUser(String uid) async {
-  final path = 'versions/v2/users/$uid';
-  await FirebaseFirestore.instance.doc(path).set({'groupId': null});
+// /groups/{groupId}
+class GroupFirestore {
+  GroupFirestore(this.context);
+  final BuildContext context;
+  // inputGroupIdに何も代入されなかった場合fetchGroupIdが代入される
+  String groupPath({String inputGroupId}) {
+    final groupId = inputGroupId == null ? fetchGroupId(context) : inputGroupId;
+    return '$version/groups/$groupId';
+  }
+
+  // グループのデータを取得
+  Future fetchGroupData({String groupId}) async {
+    final data = await FirebaseFirestore.instance
+        .doc(groupPath(inputGroupId: groupId))
+        .get();
+    return data;
+  }
+
+  // グループに自分を追加して、自分のuserデータを編集
+  Future addMe({String inputGroupId}) async {
+    final groupSnap = await FirebaseFirestore.instance
+        .doc(groupPath(inputGroupId: inputGroupId))
+        .get();
+    // groupが存在しなかったらエラー
+    if (!groupSnap.exists) throw StateError('グループが存在しません');
+    // groupに自分を追加
+    final uid = FirebaseAuth.instance.currentUser.uid;
+    await groupSnap.reference.collection('members').doc(uid).set({'point': 0});
+    // userDataを編集
+    final groupId = inputGroupId == null ? fetchGroupId(context) : inputGroupId;
+    await UserFirestore().updateUserData({'groupId': groupId});
+  }
 }
 
-// userデータを取得
-Future<String> fetchMyGroupId(String uid) async {
-  final path = 'versions/v2/users/$uid';
-  final data = await FirebaseFirestore.instance.doc(path).get();
-  return data['groupId'];
-}
+// /groups/{groupId}/members/{uid}
+class MemberFirestore {
+  MemberFirestore(this.context);
+  final BuildContext context;
+  String get memberPath {
+    final uid = FirebaseAuth.instance.currentUser.uid;
+    return GroupFirestore(context).groupPath() + '/members/$uid';
+  }
 
-// 自分のuserデータを編集して、グループに自分を追加
-Future addMe(String uid, String groupId) async {
-  final groupPath = 'versions/v2/groups/$groupId';
-  final groupSnap = await FirebaseFirestore.instance.doc(groupPath).get();
-  // groupが存在しなかったらエラー
-  if (!groupSnap.exists) throw StateError('グループが存在しません');
-  // groupに自分を追加
-  await groupSnap.reference.collection('members').doc(uid).set({'point': 0});
-  // userDataを編集
-  final userDataPath = 'versions/v2/users/$uid';
-  await FirebaseFirestore.instance
-      .doc(userDataPath)
-      .update({'groupId': groupId});
-}
-
-// メンバーのデータを取得
-Future<Member> fetchMemberData(BuildContext context, String uid) async {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/members/$uid';
-  final then = (DocumentSnapshot docSnap) {
-    if (docSnap.exists) {
-      print(docSnap.data);
-      return Member(
-        point: docSnap['point'],
-      );
-    } else {
+  // 自分のデータを取得
+  Future<Member> fetchMyData() async {
+    final then = (DocumentSnapshot docSnap) {
+      if (docSnap.exists) return Member.decode(docSnap.data());
       throw StateError('メンバーが存在しませんでした');
-    }
-  };
+    };
 
-  return FirebaseFirestore.instance.doc(path).get().then(then);
+    return FirebaseFirestore.instance.doc(memberPath).get().then(then);
+  }
+
+  // 自分のデータをアップデート
+  Future updateMyData(Map<String, Object> newData) async {
+    await FirebaseFirestore.instance
+        .doc(memberPath)
+        .update(newData)
+        .catchError((e) => StateError('自分のデータをアップデートできませんでした'));
+  }
 }
 
-// 自分のデータをアップデート
-Future updateMyData(BuildContext context, Map<String, Object> newData) async {
-  final groupId = fetchGroupId(context);
-  final uid = FirebaseAuth.instance.currentUser.uid;
-  final path = 'versions/v2/groups/$groupId/members/$uid';
+// /groups/{groupId}/members/{uid}/histories
+class HistoriesColFirestore {
+  HistoriesColFirestore(this.context);
+  final BuildContext context;
+  String get historiesPath =>
+      MemberFirestore(context).memberPath + '/histories';
 
-  await FirebaseFirestore.instance
-      .doc(path)
-      .update(newData)
-      .catchError((e) => StateError('自分のデータをアップデートできませんでした'));
+  // 履歴を保存
+  Future saveHistory(ReportQuest quest) async {
+    return await FirebaseFirestore.instance.collection(historiesPath).add({
+      'id': quest.id,
+      'name': quest.name,
+      'point': quest.point,
+      'time': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // 履歴を取得
+  Future fetchHistory() async {
+    final then = (QuerySnapshot qss) =>
+        qss.docs.map((ss) => History.decode(ss.data())).toList();
+    return FirebaseFirestore.instance
+        .collection(historiesPath)
+        .orderBy('time', descending: true)
+        .get()
+        .then(then);
+  }
 }
 
-// クエストを取得
-Stream<QuerySnapshot> streamQuests(BuildContext context) {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/quests';
-  return FirebaseFirestore.instance
-      .collection(path)
-      .orderBy('createdAt', descending: true)
-      .snapshots();
+// /groups/{groupId}/quests
+class QuestColFirestore {
+  QuestColFirestore(this.context);
+  final BuildContext context;
+  String get questColPath => GroupFirestore(context).groupPath() + '/quests';
+
+  // クエストコレクションを取得
+  Stream<QuerySnapshot> streamQuests() {
+    return FirebaseFirestore.instance
+        .collection(questColPath)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  // クエストを作成
+  Future createQuest(String name, double level, int point) async {
+    await FirebaseFirestore.instance.collection(questColPath).add({
+      'createdAt': FieldValue.serverTimestamp(),
+      'uid': FirebaseAuth.instance.currentUser.uid,
+      'name': name,
+      'level': level,
+      'point': point,
+      'last': null,
+    });
+  }
 }
 
-Future createQuest(
-  BuildContext context,
-  String name,
-  double level,
-  int point,
-) async {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/quests';
-  await FirebaseFirestore.instance.collection(path).add({
-    'createdAt': FieldValue.serverTimestamp(),
-    'uid': FirebaseAuth.instance.currentUser.uid,
-    'name': name,
-    'level': level,
-    'point': point,
-    'last': null,
-  });
+// /groups/{groupId}/quests/{questId}
+class QuestFirestore {
+  QuestFirestore(this.context, this.questId);
+  final BuildContext context;
+  final String questId;
+  String get questPath => QuestColFirestore(context).questColPath + '/$questId';
+
+  // クエストを編集
+  Future updateQuest(Map<String, Object> newData) async {
+    await FirebaseFirestore.instance.doc(questPath).update(newData);
+  }
+
+  // クエストを削除
+  Future deleteQuest() async {
+    await FirebaseFirestore.instance.doc(questPath).delete();
+  }
 }
 
-// クエストを編集
-Future updateQuest(
-  BuildContext context,
-  String questId,
-  Map<String, Object> newData,
-) async {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/quests/$questId';
-  await FirebaseFirestore.instance.doc(path).update(newData);
-}
+// /groups/{groupId}/tags/{tagId}
+class TagFirestore {
+  TagFirestore(this.context, this.tagId);
+  final BuildContext context;
+  final String tagId;
+  String get tagPath => GroupFirestore(context).groupPath() + '/tags/$tagId';
 
-// クエストを削除
-Future deleteQuest(BuildContext context, String questId) async {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/quests/$questId';
-  await FirebaseFirestore.instance.doc(path).delete();
-}
-
-// タグのクエストを取得
-Future<ReportQuest> fetchTagQuest(BuildContext context, String tagId) async {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/tags/$tagId';
-  final then = (DocumentSnapshot docSnap) {
-    if (docSnap.exists) {
-      return ReportQuest.decode(docSnap.data());
-    } else {
+  // タグのクエストを取得
+  Future<ReportQuest> fetchTagQuest() async {
+    final then = (DocumentSnapshot docSnap) {
+      if (docSnap.exists) return ReportQuest.decode(docSnap.data());
       throw StateError('タグが存在しませんでした');
-    }
-  };
+    };
+    return await FirebaseFirestore.instance.doc(tagPath).get().then(then);
+  }
 
-  return await FirebaseFirestore.instance.doc(path).get().then(then);
-}
-
-// タグのクエストを編集
-Future updateTagQuest(
-  BuildContext context,
-  String tagId,
-  ReportQuest quest,
-) async {
-  final groupId = fetchGroupId(context);
-  final path = 'versions/v2/groups/$groupId/tags/$tagId';
-  await FirebaseFirestore.instance.doc(path).update(quest.encode);
-}
-
-// 履歴を保存
-Future saveHistory(BuildContext context, ReportQuest quest) async {
-  final groupId = fetchGroupId(context);
-  final uid = FirebaseAuth.instance.currentUser.uid;
-  final path = 'versions/v2/groups/$groupId/members/$uid/histories';
-  return await FirebaseFirestore.instance.collection(path).add({
-    'id': quest.id,
-    'name': quest.name,
-    'point': quest.point,
-    'time': FieldValue.serverTimestamp(),
-  });
-}
-
-// 履歴を取得
-Future<List<History>> fetchHistory(BuildContext context) async {
-  final groupId = fetchGroupId(context);
-  final uid = FirebaseAuth.instance.currentUser.uid;
-  final path = 'versions/v2/groups/$groupId/members/$uid/histories';
-  final then = (QuerySnapshot qss) {
-    return qss.docs.map((ss) => History.decode(ss.data())).toList();
-  };
-  return FirebaseFirestore.instance
-      .collection(path)
-      .orderBy('time', descending: true)
-      .get()
-      .then(then);
+  // タグのクエストを編集
+  Future updateQuest(ReportQuest quest) async {
+    await FirebaseFirestore.instance.doc(tagPath).update(quest.encode);
+  }
 }

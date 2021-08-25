@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haniwa/common/firestore.dart' as firestore;
+import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/models/history.dart';
 import 'content.dart';
 
@@ -10,7 +10,7 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<List<History>> fetchHistory(BuildContext context) async {
-      final data = await firestore.fetchHistory(context);
+      final data = await HistoriesColFirestore(context).fetchHistory();
       return data;
     }
 

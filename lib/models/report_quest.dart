@@ -17,7 +17,6 @@ class ReportQuest {
   final int point;
   final DateTime last;
 
-  // TODO クエストのlastが書き換えられた際にNFCは変更されないのでFunctionで観測する
   Map<String, dynamic> get encode {
     return {
       'id': this.id,
