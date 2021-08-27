@@ -20,7 +20,7 @@ class QuestCreateViewModel extends ChangeNotifier {
     );
   }
 
-  String _name;
+  String _name = '';
   String get name => _name;
   void editName(String value) => _name = value;
 
