@@ -25,7 +25,7 @@ class ResultPage extends StatelessWidget {
           listen: false,
         );
         return FutureBuilder<Member>(
-          future: fetchAndUpdateMyData(context, _quest),
+          future: fetchAndUpdateMyData(context, _quest, _viewModel),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return Scaffold(
@@ -60,6 +60,7 @@ class ResultPage extends StatelessWidget {
 Future<Member> fetchAndUpdateMyData(
   BuildContext context,
   ReportQuest quest,
+  ResultViewModel viewModel,
 ) async {
   final data = await MemberFirestore(context).get();
   // ポイントを加算
@@ -68,7 +69,8 @@ Future<Member> fetchAndUpdateMyData(
   });
   // レコード(今までこなした回数)を記録
   final record = await RecordFirestore(context, quest.id).get();
-  RecordFirestore(context, quest.id).set(record.inclement());
+  viewModel.setRecord(record.inclement());
+  RecordFirestore(context, quest.id).set(record);
   // 履歴を追加
   await HistoriesColFirestore(context).saveHistory(quest);
   // クエストのlastを編集

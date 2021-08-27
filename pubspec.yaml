@@ -42,6 +42,7 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_rating_bar: ^4.0.0
   numberpicker: ^2.1.1
+  percent_indicator: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,7 @@ flutter:
     - assets/images/haniwa.svg
     - assets/images/logo.svg
     - assets/images/error_haniwa.png
+    - assets/images/medal.png
     - assets/lottiefiles/congratulations.json
 
 flutter_native_splash:

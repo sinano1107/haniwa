@@ -62,7 +62,7 @@ class ResultPageContent extends StatelessWidget {
                   SizedBox(height: _height * 0.1),
                   FadeAnimation(
                     delay: 7,
-                    child: FinishButton(),
+                    child: FinishButton(_quest.name),
                   ),
                 ],
               ),
