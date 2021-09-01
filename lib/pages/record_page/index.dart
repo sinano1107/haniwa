@@ -42,7 +42,11 @@ class RecordPage extends StatelessWidget {
             Column(
               children: [
                 SizedBox(height: height * 0.15),
-                Image.asset('assets/images/medal.png', width: width * 0.65),
+                Image.asset(
+                  'assets/images/times_medal/$target.png',
+                  width: target >= 15 ? width * 0.8 : null,
+                  height: height * 0.51,
+                ),
                 SizedBox(height: height * 0.03),
                 Text(
                   '${_args.name}を$target回クリア' + (completed ? 'した！！！' : 'する！'),
