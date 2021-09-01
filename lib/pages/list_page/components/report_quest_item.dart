@@ -7,6 +7,7 @@ import 'package:haniwa/common/nfc.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/components/report_dialog.dart';
 import 'package:haniwa/theme/colors.dart';
+import 'package:haniwa/pages/list_page/index.dart';
 
 class ReportQuestItem extends StatelessWidget {
   const ReportQuestItem({
@@ -26,6 +27,7 @@ class ReportQuestItem extends StatelessWidget {
     return Slidable(
       actionPane: SlidableScrollActionPane(),
       actions: [buildTagAction(context)],
+      secondaryActions: [buildDeleteAction(context)],
       child: ListTile(
         leading: Icon(
           isDone ? Icons.task_alt : Icons.local_fire_department,
@@ -97,4 +99,60 @@ class ReportQuestItem extends StatelessWidget {
       },
     );
   }
+
+  IconSlideAction buildDeleteAction(BuildContext context) {
+    return IconSlideAction(
+      caption: '削除',
+      color: Colors.red,
+      icon: Icons.delete,
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => _deleteDialog(context, quest),
+      ),
+    );
+  }
+}
+
+Widget _deleteDialog(BuildContext context, ReportQuest quest) {
+  return AlertDialog(
+    title: Text('${quest.name}を本当に削除しますか？'),
+    content: Text(
+      'この操作は取り消せません。本当によろしいですか？',
+      style: TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    actions: [
+      TextButton(
+        child: Text(
+          'キャンセル',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+      TextButton(
+        child: Text(
+          '削除する',
+          style: TextStyle(
+            color: Colors.red,
+          ),
+        ),
+        onPressed: () => deleteQuestAction(context, quest),
+      ),
+    ],
+  );
+}
+
+void deleteQuestAction(BuildContext context, ReportQuest quest) async {
+  showProgressDialog(context);
+  try {
+    await QuestFirestore(context, quest.id).delete();
+  } catch (e) {
+    print('クエスト削除エラー $e');
+    showSnackBar(context, 'クエストの削除に失敗しました');
+  }
+  Navigator.popUntil(context, ModalRoute.withName(ListPage.id));
 }
