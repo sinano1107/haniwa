@@ -7,13 +7,13 @@ import 'package:haniwa/models/history.dart';
 import 'package:haniwa/models/record.dart';
 import 'provider.dart';
 
-const version = 'versions/v2';
+const version = 'versions/v1';
 
 // パスの系統ごとにクラスを分ける
 
 // /users/{uid}
 class UserFirestore {
-  static const version = 'versions/v2';
+  static const version = 'versions/v1';
   String get _userPath {
     final uid = FirebaseAuth.instance.currentUser.uid;
     return '$version/users/$uid';

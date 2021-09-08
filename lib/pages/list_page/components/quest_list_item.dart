@@ -99,7 +99,7 @@ class QuestListItem extends StatelessWidget {
             height: 35,
             child: CircleAvatar(
               child: CloudStorageAvatar(
-                path: 'versions/v2/users/${quest.uid}/icon.png',
+                path: 'versions/v1/users/${quest.uid}/icon.png',
               ),
             ),
           ),

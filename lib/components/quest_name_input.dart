@@ -37,7 +37,7 @@ class _QuestNameInputState extends State<QuestNameInput> {
       children: [
         CloudStorageAvatar(
           path:
-              'versions/v2/users/${FirebaseAuth.instance.currentUser.uid}/icon.png',
+              'versions/v1/users/${FirebaseAuth.instance.currentUser.uid}/icon.png',
           radius: 25,
         ),
         SizedBox(width: 15),
