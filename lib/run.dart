@@ -71,6 +71,7 @@ class HaniwaContent extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HaniwaProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         navigatorKey: _navigatorKey,
         theme: kLightTheme,
