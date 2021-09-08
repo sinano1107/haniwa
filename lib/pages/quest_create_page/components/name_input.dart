@@ -28,6 +28,7 @@ class NameInput extends StatelessWidget {
           child: TextFormField(
             initialValue: viewModel.name,
             onChanged: viewModel.editName,
+            maxLength: 20,
             onEditingComplete: () {
               if (viewModel.name.length > 0) {
                 FocusScope.of(context).unfocus();

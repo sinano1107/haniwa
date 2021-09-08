@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/progress.dart';
@@ -9,6 +9,7 @@ import 'package:haniwa/components/cloud_storage_avatar.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/components/report_dialog.dart';
 import 'package:haniwa/pages/list_page/index.dart';
+import 'package:haniwa/pages/quest_edit_page/index.dart';
 
 class ReportQuestItem extends StatelessWidget {
   const ReportQuestItem({
@@ -51,6 +52,10 @@ class ReportQuestItem extends StatelessWidget {
           unratedColor: Colors.transparent,
         ),
         onTap: isDone ? null : () => showReportDialog(context),
+        onLongPress: () => showDialog(
+          context: context,
+          builder: (_) => QuestEditPage(quest: quest),
+        ),
       ),
     );
   }

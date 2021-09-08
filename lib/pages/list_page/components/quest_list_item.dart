@@ -149,7 +149,7 @@ void _showEditPage(BuildContext context, Quest quest) {
     builder: (context) => SingleChildScrollView(
       child: Column(
         children: [
-          QuestEditPage(quest),
+          // QuestEditPage(quest),
           Container(
             color: _theme.canvasColor,
             height: MediaQuery.of(context).viewInsets.bottom,
