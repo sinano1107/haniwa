@@ -42,10 +42,7 @@ class _ListPageState extends State<ListPage> {
         ],
       ),
       drawer: Menu(),
-      floatingActionButton:
-          (haniwaProvider.admin == FirebaseAuth.instance.currentUser.uid)
-              ? ListPageFAB()
-              : null,
+      floatingActionButton: ListPageFAB(),
     );
   }
 

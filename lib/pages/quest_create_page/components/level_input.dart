@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haniwa/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:haniwa/components/icon_button.dart';
@@ -28,31 +29,30 @@ class LevelInput extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                'それってどれくらい大変？？',
+                'それってどれくらい大変？',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: width * 0.08,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: height * 0.03),
+            SizedBox(height: height * 0.05),
             Center(
               child: RatingBar.builder(
-                initialRating: viewModel.level,
-                minRating: 0.5,
-                allowHalfRating: true,
-                glowColor: Colors.red,
-                itemCount: 5,
+                initialRating: viewModel.star,
+                minRating: 1,
+                glowColor: Colors.orange,
+                itemCount: 3,
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemSize: width * 0.15,
+                itemSize: width * 0.25,
                 itemBuilder: (_, __) => Icon(
-                  Icons.local_fire_department,
-                  color: Colors.orange,
+                  Icons.star,
+                  color: Colors.amber,
                 ),
-                onRatingUpdate: viewModel.editLevel,
+                onRatingUpdate: viewModel.editStar,
               ),
             ),
-            SizedBox(height: height * 0.05),
+            SizedBox(height: height * 0.07),
           ],
         ),
         Column(
@@ -71,16 +71,17 @@ class LevelInput extends StatelessWidget {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 200),
+                padding: const EdgeInsets.only(bottom: 150),
                 child: IconButtonWidget(
                   icon: Icon(Icons.check),
                   text: '次へ',
                   color: theme.primaryColor,
                   size: Size(330, 50),
-                  onPressed: () {
-                    viewModel.editPoint((viewModel.level * 100).toInt());
-                    viewModel.nextPage();
-                  },
+                  // onPressed: () {
+                  //   viewModel.editPoint((viewModel.level * 100).toInt());
+                  //   viewModel.nextPage();
+                  // },
+                  onPressed: () => viewModel.createQuest(context),
                 ),
               ),
             ),

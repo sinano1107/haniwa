@@ -29,12 +29,13 @@ class GoogleSigninButton extends StatelessWidget {
         // 新しいユーザーだった場合
         await addMyImage();
         // groupIdをnullに設定してgroup所属画面へ
-        await initUser(userCredential.user.uid);
+        await UserFirestore().initUser();
         Navigator.pushReplacementNamed(context, SelectGroupPage.id);
       } else {
         // groupId,権限者uidを取得・保存してlist画面へ
-        final groupId = await fetchMyGroupId(userCredential.user.uid);
-        final admin = (await fetchGroupData(groupId))['admin'];
+        final groupId = await UserFirestore().fetchMyGroupId();
+        final admin =
+            (await GroupFirestore(context).get(groupId: groupId))['admin'];
         final haniwaProvider = Provider.of<HaniwaProvider>(
           context,
           listen: false,

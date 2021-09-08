@@ -149,7 +149,7 @@ void _showEditPage(BuildContext context, Quest quest) {
     builder: (context) => SingleChildScrollView(
       child: Column(
         children: [
-          QuestEditPage(quest),
+          // QuestEditPage(quest),
           Container(
             color: _theme.canvasColor,
             height: MediaQuery.of(context).viewInsets.bottom,
@@ -198,7 +198,7 @@ Widget _deleteDialog(BuildContext context, Quest quest) {
 void deleteQuestAction(BuildContext context, Quest quest) async {
   showProgressDialog(context);
   try {
-    await deleteQuest(context, quest.id);
+    await QuestFirestore(context, quest.id).delete();
   } catch (e) {
     print('クエスト削除エラー $e');
     showSnackBar(context, 'クエストの削除に失敗しました');

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/models/report_quest.dart';
@@ -26,7 +25,7 @@ class ResultPage extends StatelessWidget {
           listen: false,
         );
         return FutureBuilder<Member>(
-          future: fetchAndUpdateMyData(context, _quest),
+          future: fetchAndUpdateMyData(context, _quest, _viewModel),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return Scaffold(
@@ -40,6 +39,7 @@ class ResultPage extends StatelessWidget {
             }
 
             if (snapshot.hasError) {
+              print('エラー ${snapshot.error}');
               return Center(child: Text('エラー'));
             }
 
@@ -56,16 +56,27 @@ class ResultPage extends StatelessWidget {
   }
 }
 
+// TODO ここの処理かさんでいるのでfunctionsにうつしてもいいかも recordのあたりは読み込んでアップデートだから特に
 Future<Member> fetchAndUpdateMyData(
   BuildContext context,
   ReportQuest quest,
+  ResultViewModel viewModel,
 ) async {
-  final uid = FirebaseAuth.instance.currentUser.uid;
-  final data = await fetchMemberData(context, uid);
-  await updateMyData(context, {'point': data.point + quest.point});
-  await saveHistory(context, quest);
+  final data = await MemberFirestore(context).get();
+  // ポイントを加算
+  MemberFirestore(context).update({
+    'star': data.star + quest.star,
+  });
+  // レコード(今までこなした回数)を記録
+  final record = await RecordFirestore(context, quest.id).get();
+  viewModel.setRecord(record.inclement());
+  RecordFirestore(context, quest.id).set(record);
+  // 履歴を追加
+  await HistoriesColFirestore(context).saveHistory(quest);
   // クエストのlastを編集
-  await updateQuest(context, quest.id, {'last': FieldValue.serverTimestamp()});
+  await QuestFirestore(context, quest.id).update({
+    'last': FieldValue.serverTimestamp(),
+  });
   return data;
 }
 

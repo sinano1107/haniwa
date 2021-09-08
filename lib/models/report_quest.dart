@@ -6,25 +6,21 @@ class ReportQuest {
     @required this.id,
     @required this.uid,
     @required this.name,
-    @required this.level,
-    @required this.point,
+    @required this.star,
     @required this.last,
   });
   final String id;
   final String uid;
   final String name;
-  final double level;
-  final int point;
+  final int star;
   final DateTime last;
 
-  // TODO クエストのlastが書き換えられた際にNFCは変更されないのでFunctionで観測する
   Map<String, dynamic> get encode {
     return {
       'id': this.id,
       'uid': this.uid,
       'name': this.name,
-      'level': this.level,
-      'point': this.point,
+      'star': this.star,
       'last': this.last == null ? null : Timestamp.fromDate(this.last),
     };
   }
@@ -34,8 +30,7 @@ class ReportQuest {
       id: value['id'],
       uid: value['uid'],
       name: value['name'],
-      level: value['level'],
-      point: value['point'],
+      star: value['star'],
       last: value['last']?.toDate(),
     );
   }

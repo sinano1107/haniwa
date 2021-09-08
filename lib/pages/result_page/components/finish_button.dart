@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:haniwa/common/snackbar.dart';
-import 'package:haniwa/pages/list_page/index.dart';
+import 'package:provider/provider.dart';
+import 'package:haniwa/pages/record_page/index.dart';
+import '../view_model.dart';
 
 class FinishButton extends StatelessWidget {
+  FinishButton(this.name);
+  final String name;
+
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
@@ -21,10 +25,11 @@ class FinishButton extends StatelessWidget {
         shape: StadiumBorder(),
       ),
       onPressed: () {
-        showSnackBar(context, 'あんなことよくできたね！すごいよ！！ありがとう😊');
-        Navigator.popUntil(
+        final viewModel = Provider.of<ResultViewModel>(context, listen: false);
+        Navigator.pushReplacementNamed(
           context,
-          ModalRoute.withName(ListPage.id),
+          RecordPage.id,
+          arguments: RecordArguments(record: viewModel.record, name: name),
         );
       },
     );

@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:haniwa/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/animations/custom_countup.dart';
 import '../view_model.dart';
+import 'package:haniwa/theme/colors.dart';
 
-class TotalPoint extends StatelessWidget {
-  TotalPoint({
-    @required this.point,
+class TotalStar extends StatelessWidget {
+  TotalStar({
+    @required this.star,
     @required this.delay,
   });
-  final int point;
+  final int star;
   final double delay;
 
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<ResultViewModel>(context, listen: false);
-    final _currentPoint = _viewModel.member.point.toDouble();
+    final _currentStar = _viewModel.member.star.toDouble();
     final _pointStyle = TextStyle(
-      color: kPointColor,
-      fontSize: 55,
+      color: Colors.amber,
+      fontSize: width * 0.18,
       fontWeight: FontWeight.bold,
     );
 
@@ -29,27 +30,28 @@ class TotalPoint extends StatelessWidget {
         Text(
           'Total ',
           style: TextStyle(
-            color: Colors.amber,
+            color: kPointColor,
             fontWeight: FontWeight.bold,
             fontSize: 35,
           ),
         ),
+        Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: width * 0.13,
+        ),
         CustomCountup(
-          begin: _currentPoint,
-          end: _currentPoint + point,
+          begin: _currentStar,
+          end: _currentStar + star,
           delay: delay,
           duration: Duration(seconds: 1),
-          style: _pointStyle,
-        ),
-        Text(
-          'pt',
           style: _pointStyle,
         ),
         Text(
           '!!',
           style: TextStyle(
             color: _theme.accentColor,
-            fontSize: 55,
+            fontSize: width * 0.15,
             fontWeight: FontWeight.bold,
           ),
         ),

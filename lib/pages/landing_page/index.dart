@@ -27,9 +27,8 @@ class _LandingPageState extends State<LandingPage> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       try {
-        final uid = currentUser.uid;
-        final groupId = await fetchMyGroupId(uid);
-        final groupData = await fetchGroupData(groupId);
+        final groupId = await UserFirestore().fetchMyGroupId();
+        final groupData = await GroupFirestore(context).get(groupId: groupId);
         final haniwaProvider = Provider.of<HaniwaProvider>(
           context,
           listen: false,

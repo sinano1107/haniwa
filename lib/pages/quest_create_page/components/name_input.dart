@@ -28,9 +28,12 @@ class NameInput extends StatelessWidget {
           child: TextFormField(
             initialValue: viewModel.name,
             onChanged: viewModel.editName,
+            maxLength: 20,
             onEditingComplete: () {
-              FocusScope.of(context).unfocus();
-              viewModel.nextPage();
+              if (viewModel.name.length > 0) {
+                FocusScope.of(context).unfocus();
+                viewModel.nextPage();
+              }
             },
             decoration: InputDecoration(
               focusedBorder: UnderlineInputBorder(
