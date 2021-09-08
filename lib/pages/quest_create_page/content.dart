@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'view_model.dart';
 import 'components/name_input.dart';
 import 'components/level_input.dart';
-import 'components/point_input.dart';
 
 class QuestCreateContent extends StatelessWidget {
   @override
@@ -34,7 +33,6 @@ class QuestCreateContent extends StatelessWidget {
               children: [
                 NameInput(),
                 LevelInput(),
-                PointInput(),
               ],
             ),
           ],

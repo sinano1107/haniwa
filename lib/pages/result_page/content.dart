@@ -5,8 +5,8 @@ import 'package:lottie/lottie.dart';
 import 'package:confetti/confetti.dart';
 import 'package:haniwa/animations/fade_animation.dart';
 import 'package:haniwa/components/cloud_storage_avatar.dart';
-import './components/get_point.dart';
-import './components/total_point.dart';
+import 'components/get_star.dart';
+import 'components/total_star.dart';
 import './components/finish_button.dart';
 import './index.dart';
 
@@ -46,16 +46,16 @@ class ResultPageContent extends StatelessWidget {
                   SizedBox(height: _height * 0.03),
                   FadeAnimation(
                     delay: 1,
-                    child: GetPoint(
-                      point: _quest.point,
+                    child: GetStar(
+                      star: _quest.star,
                       delay: 1,
                     ),
                   ),
                   SizedBox(height: _height * 0.01),
                   FadeAnimation(
                     delay: 4,
-                    child: TotalPoint(
-                      point: _quest.point,
+                    child: TotalStar(
+                      star: _quest.star,
                       delay: 4,
                     ),
                   ),

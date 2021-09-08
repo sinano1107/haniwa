@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:haniwa/animations/custom_countup.dart';
 import 'package:haniwa/theme/colors.dart';
 
-class GetPoint extends StatelessWidget {
-  GetPoint({
-    @required this.point,
+class GetStar extends StatelessWidget {
+  GetStar({
+    @required this.star,
     @required this.delay,
   });
-  final int point;
+  final int star;
   final double delay;
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final _pointStyle = TextStyle(
-      color: kPointColor,
+      color: Colors.amber,
       fontWeight: FontWeight.bold,
-      fontSize: 50,
+      fontSize: width * 0.15,
     );
 
     return Row(
@@ -24,20 +25,21 @@ class GetPoint extends StatelessWidget {
         Text(
           'Get ',
           style: TextStyle(
-            color: Colors.amber,
+            color: kPointColor,
             fontWeight: FontWeight.bold,
             fontSize: 30,
           ),
         ),
+        Icon(
+          Icons.star,
+          color: Colors.amber,
+          size: width * 0.1,
+        ),
         CustomCountup(
           begin: 0,
-          end: point.toDouble(),
+          end: star.toDouble(),
           delay: delay,
           duration: Duration(seconds: 1),
-          style: _pointStyle,
-        ),
-        Text(
-          'pt',
           style: _pointStyle,
         ),
       ],

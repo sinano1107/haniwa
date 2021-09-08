@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 
 class Member {
   Member({
-    @required this.point,
+    @required this.star,
   });
-  final int point;
+  final int star;
 
   static Member decode(Map<String, dynamic> value) {
     return Member(
-      point: value['point'],
+      star: value['star'],
     );
   }
 }

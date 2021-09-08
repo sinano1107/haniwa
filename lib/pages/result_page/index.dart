@@ -64,8 +64,8 @@ Future<Member> fetchAndUpdateMyData(
 ) async {
   final data = await MemberFirestore(context).get();
   // ポイントを加算
-  await MemberFirestore(context).update({
-    'point': data.point + quest.point,
+  MemberFirestore(context).update({
+    'star': data.star + quest.star,
   });
   // レコード(今までこなした回数)を記録
   final record = await RecordFirestore(context, quest.id).get();

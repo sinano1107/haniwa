@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 
 class Record {
   Record({
-    @required this.questId,
+    // @required this.questId,
     @required this.count,
   });
-  final String questId;
+  // final String questId;
   int count;
 
   Record inclement() {
@@ -23,7 +23,7 @@ class Record {
 
   static Record decode(Map<String, dynamic> value) {
     return Record(
-      questId: value['questId'],
+      // questId: value['questId'],
       count: value['count'],
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:haniwa/models/history.dart';
 import 'package:haniwa/theme/colors.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class HistoryPageContent extends StatelessWidget {
   const HistoryPageContent({
@@ -12,12 +13,13 @@ class HistoryPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     return SingleChildScrollView(
       child: Column(
         children: histories.length > 0
-            ? buildList()
+            ? buildList(width)
             : [
                 SizedBox(height: height * 0.05),
                 Center(
@@ -34,7 +36,7 @@ class HistoryPageContent extends StatelessWidget {
     );
   }
 
-  List<Widget> buildList() {
+  List<Widget> buildList(double width) {
     DateTime date = histories.first.time;
     List<Widget> list = [DateHeader(date: date)];
     histories.forEach((history) {
@@ -45,28 +47,30 @@ class HistoryPageContent extends StatelessWidget {
         list.add(Divider());
         list.add(DateHeader(date: date));
       }
-      list.add(buildHistoryTile(history));
+      list.add(buildHistoryTile(history, width));
     });
     return list;
   }
 }
 
-Widget buildHistoryTile(History history) {
+Widget buildHistoryTile(History history, double width) {
   final formatter = DateFormat('HH:mm', 'ja_JP');
 
   return ListTile(
-    leading: Text(
-      '${history.point}pt',
-      style: TextStyle(
-        color: kPointColor,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+    subtitle: RatingBarIndicator(
+      rating: history.star.toDouble(),
+      itemCount: 5,
+      itemBuilder: (_, __) => Icon(
+        Icons.star,
+        color: Colors.amber,
       ),
+      itemSize: width * 0.05,
+      unratedColor: Colors.transparent,
     ),
     title: Text(
-      history.name + 'をクリアした！',
+      history.name + 'をクリアした!',
       style: TextStyle(
-        color: Colors.yellow[700],
+        color: kPointColor,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),

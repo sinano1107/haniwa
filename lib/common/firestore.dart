@@ -63,7 +63,7 @@ class GroupFirestore {
     if (!groupSnap.exists) throw StateError('グループが存在しません');
     // groupに自分を追加
     final uid = FirebaseAuth.instance.currentUser.uid;
-    await groupSnap.reference.collection('members').doc(uid).set({'point': 0});
+    await groupSnap.reference.collection('members').doc(uid).set({'star': 0});
     // userDataを編集
     final groupId = inputGroupId == null ? fetchGroupId(context) : inputGroupId;
     await UserFirestore().update({'groupId': groupId});
@@ -109,7 +109,7 @@ class HistoriesColFirestore {
     return await FirebaseFirestore.instance.collection(historiesPath).add({
       'id': quest.id,
       'name': quest.name,
-      'point': quest.point,
+      'star': quest.star,
       'time': FieldValue.serverTimestamp(),
     });
   }
@@ -143,7 +143,7 @@ class RecordFirestore {
         return Record.decode(data);
       }
       // レコードがなかったらcount0のものを返す
-      return Record(questId: questId, count: 0);
+      return Record(count: 0);
     };
     return await FirebaseFirestore.instance.doc(recordPath).get().then(then);
   }
@@ -168,13 +168,12 @@ class QuestColFirestore {
   }
 
   // クエストを作成
-  Future createQuest(String name, double level, int point) async {
+  Future createQuest(String name, int star) async {
     await FirebaseFirestore.instance.collection(questColPath).add({
       'createdAt': FieldValue.serverTimestamp(),
       'uid': FirebaseAuth.instance.currentUser.uid,
       'name': name,
-      'level': level,
-      'point': point,
+      'star': star,
       'last': null,
     });
   }

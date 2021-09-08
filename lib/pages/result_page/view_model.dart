@@ -9,7 +9,7 @@ class ResultViewModel extends ChangeNotifier {
     _member = newMember;
   }
 
-  Record _record;
+  Record _record = Record(count: 0);
   Record get record => _record;
   void setRecord(Record value) => _record = value;
 }
