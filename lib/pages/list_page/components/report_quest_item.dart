@@ -115,7 +115,7 @@ Widget _leading(bool isDone, String uid) {
           color: Colors.blue,
           size: 40,
         )
-      : CloudStorageAvatar(path: 'versions/v2/users/$uid/icon.png');
+      : CloudStorageAvatar(path: 'versions/v1/users/$uid/icon.png');
 }
 
 Widget _subTitle(bool isDone, int star) {
