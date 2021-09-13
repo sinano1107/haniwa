@@ -67,11 +67,11 @@ class LevelInput extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 150),
                 child: IconButtonWidget(
-                  icon: Icon(Icons.create),
-                  text: 'クエストを作る',
+                  icon: Icon(Icons.check),
+                  text: '次へ',
                   color: theme.primaryColor,
                   size: Size(330, 50),
-                  onPressed: () => viewModel.createQuest(context),
+                  onPressed: () => viewModel.nextPage(),
                 ),
               ),
             ),

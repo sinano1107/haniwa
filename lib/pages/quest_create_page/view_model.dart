@@ -11,6 +11,7 @@ class QuestCreateViewModel extends ChangeNotifier {
     // if (user.star <= 4) {
     //   _controller = PageController(initialPage: 1);
     // }
+    _controller = PageController(initialPage: 1);
   }
 
   PageController _controller = PageController();
@@ -55,10 +56,26 @@ class QuestCreateViewModel extends ChangeNotifier {
   double get star => _star;
   void editStar(double value) => _star = value;
 
+  List<int> _workingDays = [0, 1, 2, 3, 4, 5, 6];
+  List<int> get workingDays => _workingDays;
+  void toggleWorkingDays(int value) {
+    if (_workingDays.contains(value)) {
+      _workingDays.remove(value);
+    } else {
+      _workingDays.add(value);
+    }
+    notifyListeners();
+  }
+
   Future createQuest(BuildContext context) async {
     showProgressDialog(context);
     try {
-      await QuestColFirestore(context).createQuest(name, star.toInt());
+      _workingDays.sort();
+      await QuestColFirestore(context).createQuest(
+        name,
+        star.toInt(),
+        _workingDays,
+      );
       Navigator.popUntil(context, ModalRoute.withName(ListPage.id));
     } catch (e) {
       showSnackBar(context, 'クエスト追加に失敗しました');

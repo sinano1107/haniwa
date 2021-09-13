@@ -26,21 +26,27 @@ class ReportQuestItem extends StatelessWidget {
     bool isDone = quest.last != null &&
         quest.last.difference(today).inDays == 0 &&
         quest.last.day == today.day;
+    bool isWorkingDay = true;
+    if (!isDone) {
+      // 曜日(-1)がworkingDaysに含まれていなければ今日やる必要はないということ
+      final today = DateTime.now().weekday - 1;
+      isWorkingDay = quest.workingDays.contains(today);
+    }
 
     return Slidable(
       actionPane: SlidableScrollActionPane(),
       actions: [buildTagAction(context)],
       secondaryActions: [buildDeleteAction(context)],
       child: ListTile(
-        leading: _leading(isDone, quest.uid),
+        leading: _leading(isDone, isWorkingDay, quest.uid),
         title: Text(
           quest.name,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: isDone ? Colors.grey : Colors.black87,
+            color: isDone || !isWorkingDay ? Colors.grey : Colors.black87,
           ),
         ),
-        subtitle: _subTitle(isDone, quest.star),
+        subtitle: _subTitle(isDone, isWorkingDay, quest),
         trailing: RatingBarIndicator(
           rating: quest.star.toDouble(),
           itemCount: quest.star,
@@ -51,7 +57,7 @@ class ReportQuestItem extends StatelessWidget {
           itemSize: width * 0.05,
           unratedColor: Colors.transparent,
         ),
-        onTap: isDone ? null : () => showReportDialog(context),
+        onTap: isDone || !isWorkingDay ? null : () => showReportDialog(context),
         onLongPress: () => showDialog(
           context: context,
           builder: (_) => QuestEditPage(quest: quest),
@@ -108,23 +114,45 @@ class ReportQuestItem extends StatelessWidget {
   }
 }
 
-Widget _leading(bool isDone, String uid) {
-  return isDone
-      ? Icon(
-          Icons.task_alt,
-          color: Colors.blue,
-          size: 40,
-        )
-      : CloudStorageAvatar(path: 'versions/v2/users/$uid/icon.png');
+Widget _leading(bool isDone, bool isWorkingDay, String uid) {
+  if (isDone) {
+    return Icon(
+      Icons.task_alt,
+      color: Colors.blue,
+      size: 40,
+    );
+  } else if (!isWorkingDay) {
+    return Icon(
+      Icons.coffee,
+      color: Colors.brown,
+      size: 40,
+    );
+  }
+  return CloudStorageAvatar(path: 'versions/v2/users/$uid/icon.png');
 }
 
-Widget _subTitle(bool isDone, int star) {
-  return isDone
-      ? Text(
-          '今日はクリア済み！すごい！！',
-          style: TextStyle(color: Colors.blue),
-        )
-      : null;
+Widget _subTitle(bool isDone, bool isWorkingDay, ReportQuest quest) {
+  if (isDone) {
+    return Text(
+      '今日はクリア済み！すごい！！',
+      style: TextStyle(color: Colors.blue),
+    );
+  } else if (!isWorkingDay) {
+    // 次の勤務日までの日数を計算
+    final today = DateTime.now().weekday - 1;
+    final nextDay = quest.workingDays.firstWhere(
+      (day) => today < day,
+      orElse: () => quest.workingDays[0] + 7,
+    );
+    return Text(
+      '今日は休み！次は${nextDay - today}日後',
+      style: TextStyle(
+        color: Colors.brown,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+  return null;
 }
 
 Widget _deleteDialog(BuildContext context, ReportQuest quest) {

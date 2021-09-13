@@ -163,17 +163,18 @@ class QuestColFirestore {
   Stream<QuerySnapshot> snapshots() {
     return FirebaseFirestore.instance
         .collection(questColPath)
-        .orderBy('createdAt', descending: true)
+        .orderBy('star', descending: true)
         .snapshots();
   }
 
   // クエストを作成
-  Future createQuest(String name, int star) async {
+  Future createQuest(String name, int star, List<int> workingDays) async {
     await FirebaseFirestore.instance.collection(questColPath).add({
       'createdAt': FieldValue.serverTimestamp(),
       'uid': FirebaseAuth.instance.currentUser.uid,
       'name': name,
       'star': star,
+      'workingDays': workingDays,
       'last': null,
     });
   }
