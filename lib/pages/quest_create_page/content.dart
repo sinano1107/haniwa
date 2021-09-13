@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'view_model.dart';
+import 'components/branch.dart';
 import 'components/name_input.dart';
 import 'components/level_input.dart';
+import 'components/urgent_level_input.dart';
 
 class QuestCreateContent extends StatelessWidget {
   @override
@@ -31,8 +33,13 @@ class QuestCreateContent extends StatelessWidget {
               controller: viewModel.controller,
               physics: NeverScrollableScrollPhysics(),
               children: [
+                Branch(),
+                // ==通常クエスト==
                 NameInput(),
                 LevelInput(),
+                // ==緊急クエスト==
+                NameInput(),
+                UrgentLevelInput(),
               ],
             ),
           ],
