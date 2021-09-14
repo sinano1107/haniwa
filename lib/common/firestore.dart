@@ -42,7 +42,7 @@ class GroupFirestore {
   final BuildContext context;
   // inputGroupIdに何も代入されなかった場合fetchGroupIdが代入される
   String groupPath({String inputGroupId}) {
-    final groupId = inputGroupId == null ? fetchGroupId(context) : inputGroupId;
+    final groupId = inputGroupId ?? fetchGroupId(context);
     return '$version/groups/$groupId';
   }
 
@@ -62,11 +62,34 @@ class GroupFirestore {
     // groupが存在しなかったらエラー
     if (!groupSnap.exists) throw StateError('グループが存在しません');
     // groupに自分を追加
-    final uid = FirebaseAuth.instance.currentUser.uid;
-    await groupSnap.reference.collection('members').doc(uid).set({'star': 0});
+    final user = FirebaseAuth.instance.currentUser;
+    await groupSnap.reference.collection('members').doc(user.uid).set({
+      'star': 0,
+      'name': user.displayName,
+    });
     // userDataを編集
-    final groupId = inputGroupId == null ? fetchGroupId(context) : inputGroupId;
+    final groupId = inputGroupId ?? fetchGroupId(context);
     await UserFirestore().update({'groupId': groupId});
+  }
+}
+
+// /groups/{groupId}/members
+class MembersColFirestore {
+  MembersColFirestore(this.context);
+  final BuildContext context;
+  String get path => GroupFirestore(context).groupPath() + '/members';
+
+  Future<List<Member>> get() async {
+    final then = (QuerySnapshot qss) => qss.docs.map((ss) {
+          final Map<String, dynamic> data = ss.data();
+          data['uid'] = ss.id;
+          return Member.decode(data);
+        }).toList();
+    return FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('star', descending: true)
+        .get()
+        .then(then);
   }
 }
 
@@ -79,21 +102,25 @@ class MemberFirestore {
     return GroupFirestore(context).groupPath() + '/members/$uid';
   }
 
-  // 自分のデータを取得
+  // メンバーのデータを取得
   Future<Member> get() async {
     final then = (DocumentSnapshot docSnap) {
-      if (docSnap.exists) return Member.decode(docSnap.data());
+      if (docSnap.exists) {
+        final Map<String, dynamic> data = docSnap.data();
+        data['id'] = docSnap.id;
+        return Member.decode(data);
+      }
       throw StateError('メンバーが存在しませんでした');
     };
     return FirebaseFirestore.instance.doc(memberPath).get().then(then);
   }
 
-  // 自分のデータをアップデート
+  // メンバーのデータをアップデート
   Future update(Map<String, Object> newData) async {
     await FirebaseFirestore.instance
         .doc(memberPath)
         .update(newData)
-        .catchError((e) => StateError('自分のデータをアップデートできませんでした'));
+        .catchError((e) => StateError('メンバーのデータをアップデートできませんでした'));
   }
 }
 
@@ -115,7 +142,7 @@ class HistoriesColFirestore {
   }
 
   // 履歴を取得
-  Future get() async {
+  Future<List<History>> get() async {
     final then = (QuerySnapshot qss) =>
         qss.docs.map((ss) => History.decode(ss.data())).toList();
     return FirebaseFirestore.instance
