@@ -29,7 +29,7 @@ class FinishButton extends StatelessWidget {
         Navigator.pushReplacementNamed(
           context,
           RecordPage.id,
-          arguments: RecordArguments(record: viewModel.record, name: name),
+          arguments: RecordPageArguments(record: viewModel.record, name: name),
         );
       },
     );

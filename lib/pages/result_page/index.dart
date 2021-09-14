@@ -69,7 +69,10 @@ Future<Member> fetchAndUpdateMyData(
   });
   // レコード(今までこなした回数)を記録
   final record = await RecordFirestore(context, quest.id).get();
-  viewModel.setRecord(record.inclement());
+  record.countInclement();
+  record.continuationInclement(quest);
+  record.setLast();
+  viewModel.setRecord(record);
   RecordFirestore(context, quest.id).set(record);
   // 履歴を追加
   await HistoriesColFirestore(context).saveHistory(quest);

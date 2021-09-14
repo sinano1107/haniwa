@@ -24,7 +24,7 @@ class ReportQuest {
       'name': this.name,
       'star': this.star,
       'workingDays': this.workingDays,
-      'last': this.last == null ? null : Timestamp.fromDate(this.last),
+      'last': this.last ?? Timestamp.fromDate(this.last),
     };
   }
 

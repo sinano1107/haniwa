@@ -169,8 +169,13 @@ class RecordFirestore {
         data['questId'] = docSnap.id;
         return Record.decode(data);
       }
-      // レコードがなかったらcount0のものを返す
-      return Record(count: 0);
+      // レコードがなかったら全て初期値のものを返す
+      return Record(
+        count: 0,
+        continuation: 0,
+        maxContinuation: 1,
+        last: null,
+      );
     };
     return await FirebaseFirestore.instance.doc(recordPath).get().then(then);
   }
