@@ -27,7 +27,7 @@ class RecordPage extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     bool ended = false;
-    final completed = target == _args.record.count;
+    final completed = target <= _args.record.count;
 
     return GestureDetector(
       onTap: () {
@@ -49,7 +49,12 @@ class RecordPage extends StatelessWidget {
                 ),
                 SizedBox(height: height * 0.03),
                 Text(
-                  '${_args.name}を$target回クリア' + (completed ? 'した！！！' : 'する！'),
+                  '${_args.name}を' +
+                      (completed
+                          ? _args.record.count.toString()
+                          : target.toString()) +
+                      '回クリア' +
+                      (completed ? 'した！！' : 'する！'),
                   style: TextStyle(
                     fontSize: width * 0.06,
                     color: completed ? theme.accentColor : Colors.grey[600],
@@ -63,7 +68,7 @@ class RecordPage extends StatelessWidget {
                   child: LinearPercentIndicator(
                     lineHeight: 35,
                     progressColor: kPointColor,
-                    percent: _args.record.count / target,
+                    percent: completed ? 1 : _args.record.count / target,
                     animation: true,
                     center: Text(
                       '${_args.record.count}/$target',
@@ -117,7 +122,7 @@ int getTarget(int count) {
   if (count <= 10) return 10;
   if (count <= 15) return 15;
   if (count <= 30) return 30;
-  return 100;
+  return 30;
 }
 
 class RecordArguments {

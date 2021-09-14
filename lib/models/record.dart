@@ -9,7 +9,6 @@ class Record {
   int count;
 
   Record inclement() {
-    if (this.count >= 30) return this;
     count += 1;
     return this;
   }
