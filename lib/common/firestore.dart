@@ -97,7 +97,7 @@ class MembersColFirestore {
 class MemberFirestore {
   MemberFirestore(this.context);
   final BuildContext context;
-  String get memberPath {
+  String get path {
     final uid = FirebaseAuth.instance.currentUser.uid;
     return GroupFirestore(context).groupPath() + '/members/$uid';
   }
@@ -112,13 +112,13 @@ class MemberFirestore {
       }
       throw StateError('メンバーが存在しませんでした');
     };
-    return FirebaseFirestore.instance.doc(memberPath).get().then(then);
+    return FirebaseFirestore.instance.doc(path).get().then(then);
   }
 
   // メンバーのデータをアップデート
   Future update(Map<String, Object> newData) async {
     await FirebaseFirestore.instance
-        .doc(memberPath)
+        .doc(path)
         .update(newData)
         .catchError((e) => StateError('メンバーのデータをアップデートできませんでした'));
   }
@@ -128,8 +128,7 @@ class MemberFirestore {
 class HistoriesColFirestore {
   HistoriesColFirestore(this.context);
   final BuildContext context;
-  String get historiesPath =>
-      MemberFirestore(context).memberPath + '/histories';
+  String get historiesPath => MemberFirestore(context).path + '/histories';
 
   // 履歴を保存
   Future saveHistory(ReportQuest quest) async {
@@ -159,7 +158,7 @@ class RecordFirestore {
   final BuildContext context;
   final String questId;
   String get recordPath {
-    return MemberFirestore(context).memberPath + '/records/$questId';
+    return MemberFirestore(context).path + '/records/$questId';
   }
 
   Future<Record> get() async {
