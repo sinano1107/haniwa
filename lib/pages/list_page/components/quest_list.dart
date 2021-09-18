@@ -36,30 +36,44 @@ class QuestList extends StatelessWidget {
 
         final data = snap.data.docs;
         return SliverList(
-          delegate: SliverChildListDelegate(
-            data.length == 0
-                ? [
-                    SizedBox(height: 50),
-                    Center(
-                        child: Text(
-                      'クエストが存在しません',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                      ),
-                    ))
-                  ]
-                : data.map((DocumentSnapshot docSnap) {
-                    final Map<String, dynamic> data = docSnap.data();
-                    data['id'] = docSnap.id;
-                    return ReportQuestItem(
-                      key: UniqueKey(),
-                      quest: ReportQuest.decode(data),
-                    );
-                  }).toList(),
-          ),
+          delegate: SliverChildListDelegate(_buildList(data)),
         );
       },
     );
+  }
+
+  List<Widget> _buildList(List<QueryDocumentSnapshot<Object>> data) {
+    if (data.length == 0) {
+      return [
+        SizedBox(height: 50),
+        Center(
+            child: Text(
+          'クエストを追加しましょう！',
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 20,
+          ),
+        ))
+      ];
+    }
+
+    // ReportQuestのリストに変換
+    List<ReportQuest> quests = data.map((DocumentSnapshot docSnap) {
+      final Map<String, dynamic> d = docSnap.data();
+      d['id'] = docSnap.id;
+      return ReportQuest.decode(d);
+    }).toList();
+    // 今日やるものとやらないものに分別
+    final today = DateTime.now().weekday - 1;
+    final List<ReportQuest> notTodays = [];
+    final todays = quests.where((quest) {
+      final answer = quest.workingDays.contains(today);
+      if (!answer) notTodays.add(quest);
+      return answer;
+    }).toList();
+    // 合体させてReportQuestItemに
+    return (todays + notTodays)
+        .map((quest) => ReportQuestItem(quest: quest))
+        .toList();
   }
 }

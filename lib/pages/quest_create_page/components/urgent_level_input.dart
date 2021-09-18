@@ -5,8 +5,8 @@ import 'package:haniwa/common/string.dart';
 import 'package:haniwa/components/icon_button.dart';
 import '../view_model.dart';
 
-class LevelInput extends StatelessWidget {
-  const LevelInput({Key key}) : super(key: key);
+class UrgentLevelInput extends StatelessWidget {
+  const UrgentLevelInput({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +33,19 @@ class LevelInput extends StatelessWidget {
             SizedBox(height: height * 0.05),
             Center(
               child: RatingBar.builder(
-                initialRating: viewModel.star,
-                minRating: 1,
-                glowColor: Colors.orange,
-                itemCount: 3,
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemSize: width * 0.25,
-                itemBuilder: (_, __) => Icon(
+                initialRating: 4,
+                itemBuilder: (_, index) => Icon(
                   Icons.star,
-                  color: Colors.amber,
+                  color: index < 3 ? Colors.amber : theme.accentColor,
                 ),
-                onRatingUpdate: viewModel.editStar,
+                onRatingUpdate: (_) {},
+                minRating: 3,
+                itemCount: 5,
+                itemSize: width * 0.17,
+                glowColor: theme.accentColor,
               ),
             ),
-            SizedBox(height: height * 0.07),
+            SizedBox(height: height * 0.1),
           ],
         ),
         Column(
@@ -67,11 +66,11 @@ class LevelInput extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 150),
                 child: IconButtonWidget(
-                  icon: Icon(Icons.check),
-                  text: '次へ',
-                  color: theme.primaryColor,
+                  icon: Icon(Icons.create),
+                  text: '緊急クエストを作る',
+                  color: theme.accentColor,
                   size: Size(330, 50),
-                  onPressed: () => viewModel.nextPage(),
+                  onPressed: () {},
                 ),
               ),
             ),

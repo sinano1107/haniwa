@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/common/firestore.dart';
+import 'package:haniwa/common/badge.dart';
 import './content.dart';
 import './view_model.dart';
 
@@ -62,14 +63,17 @@ Future<Member> fetchAndUpdateMyData(
   ReportQuest quest,
   ResultViewModel viewModel,
 ) async {
-  final data = await MemberFirestore(context).get();
+  final member = await MemberFirestore(context).get();
   // ポイントを加算
   MemberFirestore(context).update({
-    'star': data.star + quest.star,
+    'star': member.star + quest.star,
   });
   // レコード(今までこなした回数)を記録
   final record = await RecordFirestore(context, quest.id).get();
-  viewModel.setRecord(record.inclement());
+  record.countInclement();
+  record.continuationInclement(quest);
+  record.setLast();
+  viewModel.setRecord(record);
   RecordFirestore(context, quest.id).set(record);
   // 履歴を追加
   await HistoriesColFirestore(context).saveHistory(quest);
@@ -77,7 +81,9 @@ Future<Member> fetchAndUpdateMyData(
   await QuestFirestore(context, quest.id).update({
     'last': FieldValue.serverTimestamp(),
   });
-  return data;
+  // バッジ
+  QuestClearBadge(context).save();
+  return member;
 }
 
 class ResultArguments {

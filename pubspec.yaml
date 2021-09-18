@@ -61,6 +61,11 @@ flutter:
     - assets/images/times_medal/10.png
     - assets/images/times_medal/15.png
     - assets/images/times_medal/30.png
+    - assets/images/habit_medal/3.png
+    - assets/images/habit_medal/5.png
+    - assets/images/habit_medal/10.png
+    - assets/images/habit_medal/15.png
+    - assets/images/habit_medal/30.png
     - assets/lottiefiles/congratulations.json
 
 flutter_native_splash:
