@@ -27,6 +27,7 @@ import 'pages/timer_page/index.dart';
 import 'pages/history_page/index.dart';
 import 'pages/record_page/index.dart';
 import 'pages/members_page/index.dart';
+import 'pages/user_page/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -91,6 +92,7 @@ class HaniwaContent extends StatelessWidget {
           HistoryPage.id: (_) => HistoryPage(),
           RecordPage.id: (_) => RecordPage(),
           MembersPage.id: (_) => MembersPage(),
+          UserPage.id: (_) => UserPage(),
         },
       ),
     );
