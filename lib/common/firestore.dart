@@ -5,6 +5,8 @@ import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/models/history.dart';
 import 'package:haniwa/models/record.dart';
+import 'package:haniwa/models/badge.dart';
+
 import 'provider.dart';
 
 const version = 'versions/v2';
@@ -121,6 +123,20 @@ class MemberFirestore {
         .doc(path)
         .update(newData)
         .catchError((e) => StateError('メンバーのデータをアップデートできませんでした'));
+  }
+}
+
+// /groups/{groupId}/members/{uid}/badges
+class BadgesColFirestore {
+  BadgesColFirestore(this.context);
+  final BuildContext context;
+  String get path => MemberFirestore(context).path + '/badges';
+
+  // バッジを取得
+  Future<List<BadgeData>> get() async {
+    final then = (QuerySnapshot qss) =>
+        qss.docs.map((ss) => BadgeData.decode(ss.id, ss.data())).toList();
+    return FirebaseFirestore.instance.collection(path).get().then(then);
   }
 }
 
