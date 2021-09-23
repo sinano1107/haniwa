@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:confetti/confetti.dart';
 import 'package:provider/provider.dart';
-import 'package:haniwa/common/badge.dart';
+import 'package:haniwa/common/badge_collection.dart';
 import 'package:haniwa/theme/colors.dart';
 import '../view_model.dart';
 import '../index.dart';
@@ -112,7 +112,23 @@ class CountPage extends StatelessWidget {
 
   Future saveBadge(BuildContext context, int target, int count) async {
     if (target != count) return;
-    TimesMedalBadge(context).save(count);
-    HaniwaMedalBadge(context).save(count);
+    if (count <= 10) {
+      // 普通のメダル
+      // countを0,1,2(グレード)に変換するマップ
+      final map = {
+        3: [0],
+        5: [1],
+        10: [2]
+      };
+      // 対象のメダルをゲットした時だけインクリメント
+      timesMedalBadge.save(context, subjectGrade: map[count]);
+    } else {
+      // ハニワメダル
+      final map = {
+        15: [0],
+        30: [1, 2]
+      };
+      timesHaniwaBadge.save(context, subjectGrade: map[count]);
+    }
   }
 }

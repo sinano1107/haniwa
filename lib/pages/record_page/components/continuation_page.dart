@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:confetti/confetti.dart';
-import 'package:haniwa/common/badge.dart';
+import 'package:haniwa/common/badge_collection.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 import '../index.dart';
@@ -111,7 +111,23 @@ class ContinuationPage extends StatelessWidget {
 
   Future saveBadge(BuildContext context, int target, int continuation) async {
     if (target != continuation) return;
-    HabitMedalBadge(context).save(continuation);
-    HaniwaMedalBadge(context).save(continuation);
+    if (continuation <= 10) {
+      // 普通のメダル
+      // continuationを0,1,2(グレード)に変換するマップ
+      final map = {
+        3: [0],
+        5: [1],
+        10: [2]
+      };
+      // 対象のメダルをゲットした時だけインクリメント
+      habitMedalBadge.save(context, subjectGrade: map[continuation]);
+    } else {
+      // ハニワメダル
+      final map = {
+        15: [0],
+        30: [1, 2]
+      };
+      habitHaniwaBagde.save(context, subjectGrade: map[continuation]);
+    }
   }
 }
