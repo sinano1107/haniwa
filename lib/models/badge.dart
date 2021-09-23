@@ -45,7 +45,7 @@ class Badge {
     final data = await _get(path);
     // 対象のグレードでなければブレークする
     if (!subjectGrade.contains(data.grade)) return;
-    data.inclement(targets[data.grade]);
+    data.inclement(targets[data.grade], context);
     await _set(path, data.encode);
   }
 }
@@ -60,13 +60,26 @@ class BadgeData {
   int grade;
   int progress;
 
-  void inclement(int target) {
+  void inclement(int target, BuildContext context) {
     progress += 1;
-    if (target <= progress && grade != 2) {
-      // 目標以上に達しグレードが最上でなければグレードを上げてプログレスを初期化する
-      grade += 1;
-      progress = 0;
+    if (target <= progress) {
+      // 目標以上に達した
+      saveBadgeData(grade.toString(), context);
+      if (grade != 2) {
+        // 目標以上に達しグレードが最上でなければグレードを上げてプログレスを初期化する
+        grade += 1;
+        progress = 0;
+      }
     }
+  }
+
+  // ユーザーの銅、銀、金の数を編集する
+  Future saveBadgeData(String grade, BuildContext context) async {
+    final store = MemberFirestore(context);
+    final data = await store.get();
+    final count = data.badgeCount[grade];
+    data.badgeCount[grade] = count + 1;
+    await store.update(data.encode);
   }
 
   Map<String, dynamic> get encode {

@@ -4,13 +4,14 @@ import 'components/badge_card.dart';
 import 'components/complete_card.dart';
 import 'package:haniwa/models/badge.dart';
 import 'package:haniwa/common/badge_collection.dart';
+import 'index.dart';
 
 class UserPageContent extends StatelessWidget {
   const UserPageContent({
     Key key,
-    @required this.badgeData,
+    @required this.inputData,
   }) : super(key: key);
-  final List<BadgeData> badgeData;
+  final InputData inputData;
 
   // 全てのバッジを定義
   static List<Badge> badgeList = [
@@ -30,7 +31,7 @@ class UserPageContent extends StatelessWidget {
         title: Text('ユーザー情報'),
       ),
       body: Column(children: [
-        UserPageHeader(),
+        UserPageHeader(badgeCount: inputData.badgeCount),
         Divider(),
         Expanded(
           child: ListView(
@@ -42,7 +43,7 @@ class UserPageContent extends StatelessWidget {
   }
 
   StatelessWidget _buildCard(Badge badge) {
-    final data = badgeData.firstWhere(
+    final data = inputData.badgeData.firstWhere(
       (d) => d.id == badge.id,
       orElse: () => BadgeData(id: '', grade: 0, progress: 0),
     );

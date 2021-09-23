@@ -65,10 +65,10 @@ class GroupFirestore {
     if (!groupSnap.exists) throw StateError('グループが存在しません');
     // groupに自分を追加
     final user = FirebaseAuth.instance.currentUser;
-    await groupSnap.reference.collection('members').doc(user.uid).set({
-      'star': 0,
-      'name': user.displayName,
-    });
+    await groupSnap.reference
+        .collection('members')
+        .doc(user.uid)
+        .set({'name': user.displayName});
     // userDataを編集
     final groupId = inputGroupId ?? fetchGroupId(context);
     await UserFirestore().update({'groupId': groupId});

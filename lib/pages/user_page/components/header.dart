@@ -3,10 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/components/cloud_storage_avatar.dart';
 
 class UserPageHeader extends StatelessWidget {
-  const UserPageHeader({Key key}) : super(key: key);
+  const UserPageHeader({
+    Key key,
+    @required this.badgeCount,
+  }) : super(key: key);
+  final Map<String, dynamic> badgeCount;
 
   @override
   Widget build(BuildContext context) {
+    print(badgeCount);
     final width = MediaQuery.of(context).size.width;
     final user = FirebaseAuth.instance.currentUser;
     final uid = user.uid;
@@ -30,13 +35,13 @@ class UserPageHeader extends StatelessWidget {
       subtitle: Row(
         children: [
           Icon(Icons.military_tech, color: Color.fromRGBO(255, 221, 58, 1)),
-          Text('10'),
+          Text(badgeCount['2'].toString()),
           SizedBox(width: 10),
           Icon(Icons.military_tech, color: Color.fromRGBO(191, 191, 191, 1)),
-          Text('10'),
+          Text(badgeCount['1'].toString()),
           SizedBox(width: 10),
           Icon(Icons.military_tech, color: Color.fromRGBO(227, 168, 143, 1)),
-          Text('10'),
+          Text(badgeCount['0'].toString()),
           SizedBox(width: 10),
         ],
       ),
