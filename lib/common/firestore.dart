@@ -5,6 +5,8 @@ import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/models/history.dart';
 import 'package:haniwa/models/record.dart';
+import 'package:haniwa/models/badge.dart';
+
 import 'provider.dart';
 
 const version = 'versions/v1';
@@ -63,10 +65,10 @@ class GroupFirestore {
     if (!groupSnap.exists) throw StateError('グループが存在しません');
     // groupに自分を追加
     final user = FirebaseAuth.instance.currentUser;
-    await groupSnap.reference.collection('members').doc(user.uid).set({
-      'star': 0,
-      'name': user.displayName,
-    });
+    await groupSnap.reference
+        .collection('members')
+        .doc(user.uid)
+        .set({'name': user.displayName});
     // userDataを編集
     final groupId = inputGroupId ?? fetchGroupId(context);
     await UserFirestore().update({'groupId': groupId});
@@ -121,6 +123,20 @@ class MemberFirestore {
         .doc(path)
         .update(newData)
         .catchError((e) => StateError('メンバーのデータをアップデートできませんでした'));
+  }
+}
+
+// /groups/{groupId}/members/{uid}/badges
+class BadgesColFirestore {
+  BadgesColFirestore(this.context);
+  final BuildContext context;
+  String get path => MemberFirestore(context).path + '/badges';
+
+  // バッジを取得
+  Future<List<BadgeData>> get() async {
+    final then = (QuerySnapshot qss) =>
+        qss.docs.map((ss) => BadgeData.decode(ss.id, ss.data())).toList();
+    return FirebaseFirestore.instance.collection(path).get().then(then);
   }
 }
 

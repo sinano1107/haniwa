@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/common/badge.dart';
+import 'package:haniwa/common/badge_collection.dart';
 import './content.dart';
 import './view_model.dart';
 
@@ -82,7 +82,7 @@ Future<Member> fetchAndUpdateMyData(
     'last': FieldValue.serverTimestamp(),
   });
   // バッジ
-  QuestClearBadge(context).save();
+  questClearBadge.save(context);
   return member;
 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/common/badge.dart';
+import 'package:haniwa/common/badge_collection.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/pages/list_page/index.dart';
@@ -77,7 +77,7 @@ class QuestCreateViewModel extends ChangeNotifier {
         star.toInt(),
         _workingDays,
       );
-      await QuestCreateBadge(context).save();
+      await questCreateBadge.save(context);
       Navigator.popUntil(context, ModalRoute.withName(ListPage.id));
     } catch (e) {
       showSnackBar(context, 'クエスト追加に失敗しました');
