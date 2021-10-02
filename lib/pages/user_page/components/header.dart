@@ -11,7 +11,6 @@ class UserPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(badgeCount);
     final width = MediaQuery.of(context).size.width;
     final user = FirebaseAuth.instance.currentUser;
     final uid = user.uid;

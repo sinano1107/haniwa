@@ -76,9 +76,10 @@ class _QRViewWidgetState extends State<QRViewWidget> {
   void join(BuildContext context, String groupId) async {
     final _uid = FirebaseAuth.instance.currentUser.uid;
     try {
-      await GroupFirestore(context).addMe();
+      await GroupFirestore(context).addMe(inputGroupId: groupId);
       // グループID,権限者uidをプロバイダに保存して遷移
-      final admin = (await GroupFirestore(context).get())['admin'];
+      final admin =
+          (await GroupFirestore(context).get(groupId: groupId))['admin'];
       final haniwaProvider = Provider.of<HaniwaProvider>(
         context,
         listen: false,

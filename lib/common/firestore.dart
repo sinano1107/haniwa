@@ -87,11 +87,7 @@ class MembersColFirestore {
           data['uid'] = ss.id;
           return Member.decode(data);
         }).toList();
-    return FirebaseFirestore.instance
-        .collection(path)
-        .orderBy('star', descending: true)
-        .get()
-        .then(then);
+    return FirebaseFirestore.instance.collection(path).get().then(then);
   }
 }
 
