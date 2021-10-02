@@ -5,9 +5,9 @@ service firebase.storage {
       allow read, write: if false;
     }
 
-    function isAnyAuthenticated() {
-      return request.auth != null;
-    }
+    // function isAnyAuthenticated() {
+    //   return request.auth != null;
+    // }
 
     // 開発用
     match /dev/{file} {
