@@ -55,7 +55,7 @@ class Record {
       'count': count,
       'continuation': continuation,
       'maxContinuation': maxContinuation,
-      'last': last ?? Timestamp.fromDate(last),
+      'last': last != null ? Timestamp.fromDate(last) : null,
     };
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:haniwa/models/history.dart';
+import 'package:haniwa/models/history/histories_wrap.dart';
+import 'package:haniwa/models/history/history.dart';
+import 'package:haniwa/components/cloud_storage_avatar.dart';
 import 'package:haniwa/theme/colors.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -9,79 +11,76 @@ class HistoryPageContent extends StatelessWidget {
     Key key,
     @required this.histories,
   }) : super(key: key);
-  final List<History> histories;
+  final List<HistoriesWrap> histories;
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
 
     return SingleChildScrollView(
-      child: Column(
-        children: histories.length > 0
-            ? buildList(width)
-            : [
-                SizedBox(height: height * 0.05),
-                Center(
-                  child: Text(
-                    '履歴が存在しません',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                    ),
-                  ),
-                )
-              ],
-      ),
+      child: Column(children: buildList(width)),
     );
   }
 
   List<Widget> buildList(double width) {
-    DateTime date = histories.first.time;
-    List<Widget> list = [DateHeader(date: date)];
-    histories.forEach((history) {
-      if (!(date.difference(history.time).inDays == 0 &&
-          date.day == history.time.day)) {
-        // 日付が変わったのでdateを変更
-        date = history.time;
-        list.add(Divider());
-        list.add(DateHeader(date: date));
-      }
-      list.add(buildHistoryTile(history, width));
+    List<Widget> list = [];
+    histories.forEach((hsWrap) {
+      // ヘッダーの追加
+      list.add(DateHeader(date: hsWrap.date));
+      // 要素の追加
+      hsWrap.histories
+          .forEach((history) => list.add(HistoryTile(history: history)));
     });
     return list;
   }
 }
 
-Widget buildHistoryTile(History history, double width) {
-  final formatter = DateFormat('HH:mm', 'ja_JP');
+final formatter = DateFormat('HH:mm', 'ja_JP');
 
-  return ListTile(
-    subtitle: RatingBarIndicator(
-      rating: history.star.toDouble(),
-      itemCount: 5,
-      itemBuilder: (_, __) => Icon(
-        Icons.star,
-        color: Colors.amber,
+class HistoryTile extends StatelessWidget {
+  const HistoryTile({
+    Key key,
+    @required this.history,
+  }) : super(key: key);
+  final History history;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final isQuest = history.questId != null && history.star != null;
+
+    return ListTile(
+      leading: CloudStorageAvatar(
+          path: 'versions/v2/users/${history.authorId}/icon.png'),
+      title: Text(
+        history.text,
+        style: TextStyle(
+          color: isQuest ? kPointColor : theme.accentColor,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      itemSize: width * 0.05,
-      unratedColor: Colors.transparent,
-    ),
-    title: Text(
-      history.name + 'をクリアした!',
-      style: TextStyle(
-        color: kPointColor,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+      subtitle: isQuest
+          ? RatingBarIndicator(
+              rating: history.star.toDouble(),
+              itemCount: 5,
+              itemBuilder: (_, __) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              itemSize: width * 0.05,
+              unratedColor: Colors.transparent,
+            )
+          : null,
+      trailing: Text(
+        formatter.format(history.time),
+        style: TextStyle(
+          color: Colors.grey,
+        ),
       ),
-    ),
-    trailing: Text(
-      formatter.format(history.time),
-      style: TextStyle(
-        color: Colors.grey,
-      ),
-    ),
-  );
+    );
+  }
 }
 
 class DateHeader extends StatelessWidget {

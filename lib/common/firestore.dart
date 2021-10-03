@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
-import 'package:haniwa/models/history.dart';
+import 'package:haniwa/models/history/histories_wrap.dart';
+import 'package:haniwa/models/history/history.dart';
 import 'package:haniwa/models/record.dart';
 import 'package:haniwa/models/badge.dart';
 
@@ -43,23 +44,22 @@ class GroupFirestore {
   GroupFirestore(this.context);
   final BuildContext context;
   // inputGroupIdに何も代入されなかった場合fetchGroupIdが代入される
-  String groupPath({String inputGroupId}) {
+  String path({String inputGroupId}) {
     final groupId = inputGroupId ?? fetchGroupId(context);
     return '$version/groups/$groupId';
   }
 
   // グループのデータを取得
   Future get({String groupId}) async {
-    final data = await FirebaseFirestore.instance
-        .doc(groupPath(inputGroupId: groupId))
-        .get();
+    final data =
+        await FirebaseFirestore.instance.doc(path(inputGroupId: groupId)).get();
     return data;
   }
 
   // グループに自分を追加して、自分のuserデータを編集
   Future addMe({String inputGroupId}) async {
     final groupSnap = await FirebaseFirestore.instance
-        .doc(groupPath(inputGroupId: inputGroupId))
+        .doc(path(inputGroupId: inputGroupId))
         .get();
     // groupが存在しなかったらエラー
     if (!groupSnap.exists) throw StateError('グループが存在しません');
@@ -79,7 +79,7 @@ class GroupFirestore {
 class MembersColFirestore {
   MembersColFirestore(this.context);
   final BuildContext context;
-  String get path => GroupFirestore(context).groupPath() + '/members';
+  String get path => GroupFirestore(context).path() + '/members';
 
   Future<List<Member>> get() async {
     final then = (QuerySnapshot qss) => qss.docs.map((ss) {
@@ -97,7 +97,7 @@ class MemberFirestore {
   final BuildContext context;
   String get path {
     final uid = FirebaseAuth.instance.currentUser.uid;
-    return GroupFirestore(context).groupPath() + '/members/$uid';
+    return GroupFirestore(context).path() + '/members/$uid';
   }
 
   // メンバーのデータを取得
@@ -136,34 +136,6 @@ class BadgesColFirestore {
   }
 }
 
-// /groups/{groupId}/members/{uid}/histories
-class HistoriesColFirestore {
-  HistoriesColFirestore(this.context);
-  final BuildContext context;
-  String get historiesPath => MemberFirestore(context).path + '/histories';
-
-  // 履歴を保存
-  Future saveHistory(ReportQuest quest) async {
-    return await FirebaseFirestore.instance.collection(historiesPath).add({
-      'id': quest.id,
-      'name': quest.name,
-      'star': quest.star,
-      'time': FieldValue.serverTimestamp(),
-    });
-  }
-
-  // 履歴を取得
-  Future<List<History>> get() async {
-    final then = (QuerySnapshot qss) =>
-        qss.docs.map((ss) => History.decode(ss.data())).toList();
-    return FirebaseFirestore.instance
-        .collection(historiesPath)
-        .orderBy('time', descending: true)
-        .get()
-        .then(then);
-  }
-}
-
 // /groups/{groupId}/members/{uid}/records/{questId}
 class RecordFirestore {
   RecordFirestore(this.context, this.questId);
@@ -196,11 +168,53 @@ class RecordFirestore {
   }
 }
 
+// /groups/{groupId}/histories
+class HistoriesColFirestore {
+  HistoriesColFirestore(this.context);
+  BuildContext context;
+  String get path => GroupFirestore(context).path() + '/histories';
+
+  // 履歴を取得
+  Future<List<HistoriesWrap>> get() async {
+    final then = (QuerySnapshot qss) async {
+      final List<HistoriesWrap> answer = [];
+      await Future.forEach(qss.docs, (QueryDocumentSnapshot ss) async {
+        // 二段回目のhistoriesを取得
+        final histories = await ss.reference
+            .collection('histories')
+            .orderBy('time', descending: true)
+            .get();
+        // 二段回目のhistoriesをList<History>に変換
+        final List<History> list = histories.docs
+            .map((history) => History.decode(history.data()))
+            .toList();
+        answer.add(HistoriesWrap(list));
+      });
+      return answer;
+    };
+    return FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('time')
+        .get()
+        .then(then);
+  }
+
+  // 履歴を保存
+  Future saveHistory(History history) async {
+    final time = history.time;
+    final path = this.path + '/${time.year}-${time.month}-${time.day}';
+    // doc(日付ごとのドキュメント)が存在しなかったら新規作成する
+    final doc = await FirebaseFirestore.instance.doc(path).get();
+    if (!doc.exists) doc.reference.set({'time': time});
+    doc.reference.collection('histories').add(history.encode());
+  }
+}
+
 // /groups/{groupId}/quests
 class QuestColFirestore {
   QuestColFirestore(this.context);
   final BuildContext context;
-  String get questColPath => GroupFirestore(context).groupPath() + '/quests';
+  String get questColPath => GroupFirestore(context).path() + '/quests';
 
   // クエストコレクションを取得
   Stream<QuerySnapshot> snapshots() {
@@ -246,7 +260,7 @@ class TagFirestore {
   TagFirestore(this.context, this.tagId);
   final BuildContext context;
   final String tagId;
-  String get tagPath => GroupFirestore(context).groupPath() + '/tags/$tagId';
+  String get tagPath => GroupFirestore(context).path() + '/tags/$tagId';
 
   // タグのクエストを取得
   Future<ReportQuest> get() async {

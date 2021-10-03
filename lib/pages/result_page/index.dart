@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/models/member.dart';
+import 'package:haniwa/models/history/history.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/common/badge_collection.dart';
 import './content.dart';
@@ -76,7 +78,13 @@ Future<Member> fetchAndUpdateMyData(
   viewModel.setRecord(record);
   RecordFirestore(context, quest.id).set(record);
   // 履歴を追加
-  await HistoriesColFirestore(context).saveHistory(quest);
+  await HistoriesColFirestore(context).saveHistory(History(
+    authorId: FirebaseAuth.instance.currentUser.uid,
+    text: quest.name + 'をクリアした',
+    questId: quest.id,
+    star: quest.star,
+    time: DateTime.now(),
+  ));
   // クエストのlastを編集
   await QuestFirestore(context, quest.id).update({
     'last': FieldValue.serverTimestamp(),

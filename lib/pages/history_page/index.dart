@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/models/history.dart';
+import 'package:haniwa/models/history/histories_wrap.dart';
 import 'content.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -9,16 +9,16 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<List<History>> fetchHistory(BuildContext context) async {
+    Future<List<HistoriesWrap>> fetchHistory(BuildContext context) async {
       final data = await HistoriesColFirestore(context).get();
-      return data;
+      return data.reversed.toList();
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text('クエスト達成の履歴'),
       ),
-      body: FutureBuilder<List<History>>(
+      body: FutureBuilder<List<HistoriesWrap>>(
         future: fetchHistory(context),
         builder: (context, ss) {
           if (ss.connectionState != ConnectionState.done) {
