@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "839442432095-klsia0rhgmas16uu2dgus1e4uoqo1301.apps.googleusercontent.com",
+          "client_id": "839442432095-06uma8jhfiq64l6mg5ddenkltcap8bgk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.haniwa",
@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "839442432095-v3aedm4t5qk2joqdsonuii697ig8ddop.apps.googleusercontent.com",
+              "client_id": "839442432095-4ef3ivp1ckns64ecpdb7vkhej5711fe4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinano1107.haniwa"
+                "bundle_id": "com.sinano1107.haniwa-dev"
               }
             }
           ]

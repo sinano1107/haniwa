@@ -157,7 +157,6 @@ class RecordFirestore {
         count: 0,
         continuation: 0,
         maxContinuation: 1,
-        last: null,
       );
     };
     return await FirebaseFirestore.instance.doc(recordPath).get().then(then);

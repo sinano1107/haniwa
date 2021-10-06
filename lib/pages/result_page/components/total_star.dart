@@ -17,7 +17,7 @@ class TotalStar extends StatelessWidget {
     final _theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
     final _viewModel = Provider.of<ResultViewModel>(context, listen: false);
-    final _currentStar = _viewModel.member.star.toDouble();
+    final _newStar = _viewModel.newStar.toDouble();
     final _pointStyle = TextStyle(
       color: Colors.amber,
       fontSize: width * 0.18,
@@ -41,8 +41,8 @@ class TotalStar extends StatelessWidget {
           size: width * 0.13,
         ),
         CustomCountup(
-          begin: _currentStar,
-          end: _currentStar + star,
+          begin: _newStar - star,
+          end: _newStar,
           delay: delay,
           duration: Duration(seconds: 1),
           style: _pointStyle,

@@ -1,11 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:provider/provider.dart';
+import 'package:haniwa/providers/haniwa_provider.dart';
 import 'package:haniwa/models/report_quest.dart';
-import 'package:haniwa/models/member.dart';
-import 'package:haniwa/models/history/history.dart';
-import 'package:haniwa/common/firestore.dart';
+import 'package:haniwa/models/record.dart';
+import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/badge_collection.dart';
 import './content.dart';
 import './view_model.dart';
@@ -27,7 +28,7 @@ class ResultPage extends StatelessWidget {
           context,
           listen: false,
         );
-        return FutureBuilder<Member>(
+        return FutureBuilder<int>(
           future: fetchAndUpdateMyData(context, _quest, _viewModel),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
@@ -46,12 +47,7 @@ class ResultPage extends StatelessWidget {
               return Center(child: Text('エラー'));
             }
 
-            if (snapshot.hasData) {
-              _viewModel.setMember(snapshot.data);
-              return ResultPageContent();
-            } else {
-              return Center(child: Text('データが存在しません'));
-            }
+            return snapshot.hasData ? ResultPageContent() : Scaffold();
           },
         );
       },
@@ -59,39 +55,47 @@ class ResultPage extends StatelessWidget {
   }
 }
 
-// TODO ここの処理かさんでいるのでfunctionsにうつしてもいいかも recordのあたりは読み込んでアップデートだから特に
-Future<Member> fetchAndUpdateMyData(
+Future<int> fetchAndUpdateMyData(
   BuildContext context,
   ReportQuest quest,
   ResultViewModel viewModel,
 ) async {
-  final member = await MemberFirestore(context).get();
-  // ポイントを加算
-  MemberFirestore(context).update({
-    'star': member.star + quest.star,
+  final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
+  final callable = FirebaseFunctions.instance.httpsCallable('questClear');
+  final res = await callable.call(<String, dynamic>{
+    'uid': FirebaseAuth.instance.currentUser.uid,
+    'groupId': haniwaProvider.groupId,
+    'questId': quest.id,
   });
-  // レコード(今までこなした回数)を記録
-  final record = await RecordFirestore(context, quest.id).get();
-  record.countInclement();
-  record.continuationInclement(quest);
-  record.setLast();
-  viewModel.setRecord(record);
-  RecordFirestore(context, quest.id).set(record);
-  // 履歴を追加
-  await HistoriesColFirestore(context).saveHistory(History(
-    authorId: FirebaseAuth.instance.currentUser.uid,
-    text: quest.name + 'をクリアした',
-    questId: quest.id,
-    star: quest.star,
-    time: DateTime.now(),
-  ));
-  // クエストのlastを編集
-  await QuestFirestore(context, quest.id).update({
-    'last': FieldValue.serverTimestamp(),
-  });
-  // バッジ
-  questClearBadge.save(context);
-  return member;
+  print(res.data);
+  switch (res.data['result']) {
+    case 'finishedNormary':
+      // 正常に終了
+      // バッジを加算
+      await questClearBadge.save(context);
+      viewModel.setNewStar(res.data['newStar']);
+      final recordData = Map<String, dynamic>.from(res.data['record']);
+      viewModel.setRecord(Record.decode(recordData));
+      break;
+    case 'notWorkingDay':
+      // 今日は勤務日ではない
+      showSnackBar(context, '今日はやらなくていい日です');
+      Navigator.pop(context);
+      break;
+    case 'isCleared':
+      // すでにクリアしている
+      showSnackBar(context, 'すでにクリアしています');
+      Navigator.pop(context);
+      break;
+    case 'isNotMember':
+      showSnackBar(context, 'あなたはこのグループのメンバーではありません');
+      Navigator.pop(context);
+      break;
+    default:
+      showSnackBar(context, '未知のレスポンスが帰ってきました');
+      Navigator.pop(context);
+  }
+  return 0;
 }
 
 class ResultArguments {
