@@ -14,7 +14,7 @@ class ReportQuest {
   final String uid;
   final String name;
   final int star;
-  final List<dynamic> workingDays;
+  final List<int> workingDays;
   final DateTime last;
 
   Map<String, dynamic> get encode {
@@ -34,7 +34,7 @@ class ReportQuest {
       uid: value['uid'],
       name: value['name'],
       star: value['star'],
-      workingDays: value['workingDays'],
+      workingDays: List<int>.from(value['workingDays']),
       last: value['last']?.toDate(),
     );
   }

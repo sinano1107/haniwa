@@ -59,6 +59,11 @@ class QuestCreateViewModel extends ChangeNotifier {
 
   List<int> _workingDays = [0, 1, 2, 3, 4, 5, 6];
   List<int> get workingDays => _workingDays;
+  void editWorkingDays(List<int> value) {
+    _workingDays = value;
+    notifyListeners();
+  }
+
   void toggleWorkingDays(int value) {
     if (_workingDays.contains(value)) {
       _workingDays.remove(value);

@@ -9,7 +9,17 @@ import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 import 'view_model.dart';
 
-class QuestEditContent extends StatelessWidget {
+const daysOfWeek = [
+  '月',
+  '火',
+  '水',
+  '木',
+  '金',
+  '土',
+  '日',
+];
+
+class QuestEditContent extends StatefulWidget {
   const QuestEditContent({
     Key key,
     @required this.quest,
@@ -17,10 +27,26 @@ class QuestEditContent extends StatelessWidget {
   final ReportQuest quest;
 
   @override
+  _QuestEditContentState createState() => _QuestEditContentState();
+}
+
+class _QuestEditContentState extends State<QuestEditContent> {
+  @override
+  void initState() {
+    final viewModel = Provider.of<QuestEditViewModel>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel.editWorkingDays(widget.quest.workingDays);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<QuestEditViewModel>(context, listen: false);
+    final listenViewModel = Provider.of<QuestEditViewModel>(context);
     final theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
+    final quest = widget.quest;
 
     return AlertDialog(
       title: Text('クエストを編集する'),
@@ -32,7 +58,6 @@ class QuestEditContent extends StatelessWidget {
             onChanged: viewModel.editName,
             maxLength: 20,
           ),
-          SizedBox(height: height * 0.01),
           RatingBar.builder(
             itemBuilder: (_, __) => Icon(
               Icons.star,
@@ -43,7 +68,30 @@ class QuestEditContent extends StatelessWidget {
             itemCount: 3,
             onRatingUpdate: viewModel.editStar,
           ),
-          SizedBox(height: height * 0.018),
+          SizedBox(height: height * 0.015),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(
+              daysOfWeek.length,
+              (index) => DayButton(index: index),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Checkbox(
+                value: listenViewModel.workingDays.length == 7,
+                onChanged: (value) {
+                  if (value) {
+                    viewModel.editWorkingDays([0, 1, 2, 3, 4, 5, 6]);
+                  } else {
+                    viewModel.editWorkingDays([]);
+                  }
+                },
+              ),
+              Text('毎日'),
+            ],
+          ),
           IconButtonWidget(
             icon: Icon(Icons.edit),
             text: '編集する',
@@ -52,19 +100,21 @@ class QuestEditContent extends StatelessWidget {
             onPressed: () async {
               final name = viewModel.name;
               final star = viewModel.star;
+              final workingDays = viewModel.workingDays;
               if (name.length == 0) {
                 showSnackBar(context, '名前がありません');
                 return;
               }
-              if (name == quest.name && star == quest.star.toDouble()) {
-                showSnackBar(context, '変更がありません');
+              if (workingDays.length == 0) {
+                showSnackBar(context, '曜日が設定されていません');
                 return;
               }
               showProgressDialog(context);
               try {
                 await QuestFirestore(context, quest.id).update({
-                  'name': viewModel.name,
-                  'star': viewModel.star.toInt(),
+                  'name': name,
+                  'star': star.toInt(),
+                  'workingDays': workingDays,
                 });
               } catch (e) {
                 print('クエスト編集エラー $e');
@@ -74,6 +124,37 @@ class QuestEditContent extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DayButton extends StatelessWidget {
+  const DayButton({
+    Key key,
+    @required this.index,
+  }) : super(key: key);
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<QuestEditViewModel>(context, listen: false);
+    final listenViewModel = Provider.of<QuestEditViewModel>(context);
+    final width = MediaQuery.of(context).size.width;
+    return GestureDetector(
+      onTap: () => viewModel.toggleWorkingDays(index),
+      child: CircleAvatar(
+        backgroundColor: listenViewModel.workingDays.contains(index)
+            ? Colors.blue
+            : Colors.grey,
+        child: Text(
+          daysOfWeek[index],
+          style: TextStyle(
+            fontSize: width * 0.035,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        radius: width * 0.035,
       ),
     );
   }

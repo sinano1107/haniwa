@@ -50,7 +50,24 @@ class SelectDay extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: height * 0.05),
+            SizedBox(height: height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Checkbox(
+                  value: viewModel.workingDays.length == 7,
+                  onChanged: (value) {
+                    if (value) {
+                      viewModel.editWorkingDays([0, 1, 2, 3, 4, 5, 6]);
+                    } else {
+                      viewModel.editWorkingDays([]);
+                    }
+                  },
+                ),
+                Text('毎日'),
+                SizedBox(width: width * 0.1),
+              ],
+            ),
           ],
         ),
         Column(
