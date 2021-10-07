@@ -9,6 +9,7 @@ import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 import 'view_model.dart';
 
+// TODO: quest_create/components/select_day とかぶる部分があるので同一Widgetにくくる
 const daysOfWeek = [
   '月',
   '火',
