@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:haniwa/common/progress.dart';
-import 'package:haniwa/common/snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'components/qr_view_widget.dart';
 import 'package:haniwa/common/auth.dart';
 import 'package:haniwa/common/firestore.dart';
+import 'package:haniwa/common/snackbar.dart';
+import 'package:haniwa/common/progress.dart';
+import 'package:haniwa/models/history/history.dart';
 import 'package:haniwa/providers/haniwa_provider.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 import 'package:haniwa/components/icon_button.dart';
@@ -73,6 +74,14 @@ class SelectGroupPage extends StatelessWidget {
         listen: false,
       );
       haniwaProvider.init(groupId: groupId, admin: uid);
+      // 履歴に保存
+      HistoriesColFirestore(context).saveHistory(History(
+        authorId: uid,
+        time: DateTime.now(),
+        text: 'グループが誕生しました🎉',
+        questId: null,
+        star: null,
+      ));
       showSnackBar(context, 'グループの作成に成功しました');
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {

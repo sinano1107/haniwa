@@ -8,4 +8,20 @@ class QuestEditViewModel extends ChangeNotifier {
   double _star = 0;
   double get star => _star;
   void editStar(double value) => _star = value;
+
+  List<int> _workingDays = [];
+  List<int> get workingDays => _workingDays;
+  void editWorkingDays(List<int> value) {
+    _workingDays = value;
+    notifyListeners();
+  }
+
+  void toggleWorkingDays(int value) {
+    if (_workingDays.contains(value)) {
+      _workingDays.remove(value);
+    } else {
+      _workingDays.add(value);
+    }
+    notifyListeners();
+  }
 }

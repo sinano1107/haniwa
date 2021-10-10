@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -45,6 +46,7 @@ void run({bool isEmulator = false}) async {
         Settings(host: '$kLocalIP:8080', sslEnabled: false);
     FirebaseAuth.instance.useEmulator('http://$kLocalIP:9099');
     FirebaseStorage.instance.useStorageEmulator(kLocalIP, 9199);
+    FirebaseFunctions.instance.useFunctionsEmulator(kLocalIP, 5001);
   }
 
   // タイムゾーンを初期化
