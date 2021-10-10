@@ -11,7 +11,9 @@ exports.questClear = functions.https.onRequest(async (req, res) => {
     const uid = req.body.data.uid; // uid
     const groupId = req.body.data.groupId; // groupId
     const questId = req.body.data.questId; // questId
-    const quest = (await getQuest(groupId, questId)).data();
+    const quest = await getQuest(groupId, questId);
+    // クエストが存在しない
+    if (quest == null) return res.json({ result: { result: 'nothingQuest' } })
     //=====チェック=====
     const isMember = checkIsMember(groupId, uid);
     const isWorkingDay = checkIsWorkingDay(quest.workingDays);
@@ -60,7 +62,7 @@ async function checkIsMember(groupId, uid) {
 async function getQuest(groupId, questId) {
     const path = `${version}/groups/${groupId}/quests/${questId}`;
     const quest = await admin.firestore().doc(path).get();
-    return quest;
+    return (quest.exists) ? quest.data() : null;
 }
 
 // ポイントを加算

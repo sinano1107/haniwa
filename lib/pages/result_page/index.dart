@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -76,6 +75,11 @@ Future<int> fetchAndUpdateMyData(
       viewModel.setNewStar(res.data['newStar']);
       final recordData = Map<String, dynamic>.from(res.data['record']);
       viewModel.setRecord(Record.decode(recordData));
+      return 0;
+    case 'nothingQuest':
+      // クエストが存在しない
+      showSnackBar(context, 'このクエストは存在しません');
+      Navigator.pop(context);
       break;
     case 'notWorkingDay':
       // 今日は勤務日ではない
@@ -95,7 +99,7 @@ Future<int> fetchAndUpdateMyData(
       showSnackBar(context, '未知のレスポンスが帰ってきました');
       Navigator.pop(context);
   }
-  return 0;
+  return null;
 }
 
 class ResultArguments {
