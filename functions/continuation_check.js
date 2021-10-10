@@ -10,7 +10,7 @@ const checkIsCleared = common.checkIsCleared;
 // firebase functions:shell
 // firebase > scheduledFunction()
 // で確認できます
-exports.continuationCheck = functions.pubsub.schedule('55 23 * * *')
+exports.continuationCheck = functions.region('asia-northeast1').pubsub.schedule('55 23 * * *')
     .timeZone('Asia/Tokyo')
     .onRun(async (_) => {
         // 日本時間を保存

@@ -7,7 +7,7 @@ const getJapanTime = common.getJapanTime;
 const jsDay2dartDay = common.jsDay2dartDay;
 const checkIsCleared = common.checkIsCleared;
 
-exports.questClear = functions.https.onRequest(async (req, res) => {
+exports.questClear = functions.region('asia-northeast1').https.onRequest(async (req, res) => {
     const uid = req.body.data.uid; // uid
     const groupId = req.body.data.groupId; // groupId
     const questId = req.body.data.questId; // questId
