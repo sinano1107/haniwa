@@ -6,8 +6,10 @@ exports.version = version;
 
 const questClear = require('./quest_clear');
 const continuationCheck = require('./continuation_check');
+const get = require('./get');
 exports.questClear = questClear.questClear;
 exports.continuationCheck = continuationCheck.continuationCheck;
+exports.getTagData = get.getTagData;
 
 // /groups/:groupId/quest/:questIdが編集された際に
 // /groups/:groupId/tags/:tagId のコレクションからidが:questIdと等しいものを同じ値に編集する
