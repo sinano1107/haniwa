@@ -6,12 +6,14 @@ exports.version = version;
 
 const questClear = require('./quest_clear');
 const continuationCheck = require('./continuation_check');
+const get = require('./get');
 exports.questClear = questClear.questClear;
 exports.continuationCheck = continuationCheck.continuationCheck;
+exports.getTagData = get.getTagData;
 
 // /groups/:groupId/quest/:questIdが編集された際に
 // /groups/:groupId/tags/:tagId のコレクションからidが:questIdと等しいものを同じ値に編集する
-exports.editTagQuest = functions.firestore
+exports.editTagQuest = functions.region('asia-northeast1').firestore
         .document(`${version}/groups/{groupId}/quests/{questId}`)
         .onUpdate(async (change, context) => {
     // アップデートされた値を取得
@@ -36,7 +38,7 @@ exports.editTagQuest = functions.firestore
 
 // /groups/:groupId/quest/:questIdが削除された際に
 // /groups/:groupId/tags/:tagIdのコレクションからidが:questIdと等しいものを同じ値に編集する
-exports.deleteTagQuest = functions.firestore
+exports.deleteTagQuest = functions.region('asia-northeast1').firestore
     .document(`${version}/groups/{groupId}/quests/{questId}`)
     .onDelete(async (_, context) => {
         const groupId = context.params.groupId;
@@ -55,7 +57,7 @@ exports.deleteTagQuest = functions.firestore
     });
 
 // テスト関数
-exports.test = functions.https.onRequest(async (_, res) => {
+exports.test = functions.region('asia-northeast1').https.onRequest(async (_, res) => {
     const date = new Date();
     date.setHours(date.getHours() + 9);
     const string = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
