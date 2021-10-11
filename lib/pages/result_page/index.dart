@@ -60,7 +60,8 @@ Future<int> fetchAndUpdateMyData(
   ResultViewModel viewModel,
 ) async {
   final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
-  final callable = FirebaseFunctions.instance.httpsCallable('questClear');
+  final callable = FirebaseFunctions.instanceFor(region: 'asia-northeast1')
+      .httpsCallable('questClear');
   final res = await callable.call(<String, dynamic>{
     'uid': FirebaseAuth.instance.currentUser.uid,
     'groupId': haniwaProvider.groupId,
