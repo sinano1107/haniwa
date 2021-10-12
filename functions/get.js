@@ -7,12 +7,11 @@ exports.getTagData = functions.region('asia-northeast1').https.onRequest(async (
     const tagId = req.body.data.tagId;
     const groupId = req.body.data.groupId;
     const path = `${version}/groups/${groupId}/tags/${tagId}`;
-    functions.logger.log(path);
     const tag = await admin.firestore().doc(path).get();
     if (tag.exists) {
         return res.json({result: {
             result: 'finishedNormally',
             tag: tag.data()
         }});
-    } else return res.json({result: { result: 'nothingQuest' }});
+    } else return res.json({result: { result: 'nothingTag' }});
 })
