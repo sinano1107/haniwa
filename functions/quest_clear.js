@@ -38,8 +38,7 @@ exports.questClear = functions.region('asia-northeast1').https.onRequest(async (
         newStar = addPoint(groupId, uid, quest.star)
     ]);
     res.json({result: {
-        // TODO: スペルミスってる
-        result: 'finishedNormary',
+        result: 'finishedNormally',
         newStar: await newStar,
         record: (await record).encode,
     }});
