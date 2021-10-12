@@ -11,6 +11,7 @@ class GroupQrPage extends StatelessWidget {
     final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
 
     return Container(
+      color: Colors.white,
       child: Center(
         child: QrImage(
           data: haniwaProvider.groupId,
