@@ -50,9 +50,15 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: theme.primaryColor,
       body: Center(
-        child: Text('らんでぃんぐ👍'),
+        child: Image.asset(
+          'assets/images/logo.png',
+          width: 100,
+        ),
       ),
     );
   }

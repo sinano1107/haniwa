@@ -18,7 +18,7 @@ class NameInput extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '何をがんばりますか？？',
+              'クエストを追加しよう',
               style: TextStyle(
                 fontSize: 33,
               ),
