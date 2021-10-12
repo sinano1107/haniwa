@@ -55,7 +55,7 @@ flutter:
   assets:
     - assets/images/phone.svg
     - assets/images/haniwa.svg
-    - assets/images/logo.svg
+    - assets/images/logo.png
     - assets/images/error_haniwa.png
     - assets/images/times_medal/3.png
     - assets/images/times_medal/5.png

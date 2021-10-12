@@ -15,8 +15,8 @@ class SigninPageContent extends StatelessWidget {
           children: [
             SizedBox(height: _height * 0.2),
             Center(
-              child: SvgPicture.asset(
-                'assets/images/logo.svg',
+              child: Image.asset(
+                'assets/images/logo.png',
                 width: 250,
               ),
             ),

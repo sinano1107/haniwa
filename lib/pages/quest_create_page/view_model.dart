@@ -57,7 +57,7 @@ class QuestCreateViewModel extends ChangeNotifier {
   double get star => _star;
   void editStar(double value) => _star = value;
 
-  List<int> _workingDays = [0, 1, 2, 3, 4, 5, 6];
+  List<int> _workingDays = [];
   List<int> get workingDays => _workingDays;
   void editWorkingDays(List<int> value) {
     _workingDays = value;
