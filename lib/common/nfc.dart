@@ -1,33 +1,43 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
-void getTagId({handle(String tagId), BuildContext context}) async {
+// TODO: ここリリース時には本番用に置き換えないとダメよ
+const head =
+    'haniwa.page.link/?ibi=com.sinano1107.haniwa&isi=962194608&apn=com.example.haniwa&link=https%3A%2F%2Fqiita.com%2F%3Fid%3D';
+
+void getTagId({
+  @required nfcStop(String text),
+  @required BuildContext context,
+  @required String groupId,
+  @required String questId,
+}) async {
   if (!(await NfcManager.instance.isAvailable()))
     throw StateError('NFCタグを読み取れません');
 
   NfcManager.instance.startSession(
     onDiscovered: (NfcTag tag) async {
+      // タグが読み取れない場合
       final ndef = Ndef.from(tag);
-      final uriRecord = ndef.cachedMessage.records.first;
-      final uri = Uri.parse(utf8.decode(uriRecord.payload.sublist(1)));
-      final linkUri = Uri.parse(uri.queryParameters['link']);
-      if (Platform.isAndroid) Navigator.pop(context);
-      handle(linkUri.queryParameters['id']);
-      if (Platform.isAndroid) {
-        // androidなら連続読み込みを防止するために5秒待ってからストップする
-        await Future.delayed(Duration(seconds: 5));
+      if (ndef == null || !ndef.isWritable) {
+        nfcStop('このタグとはリンクできません');
+        return;
       }
-      NfcManager.instance.stopSession();
+      // URIを定義
+      final uri = head + groupId + '-' + questId;
+      final records = NdefMessage([NdefRecord.createUri(Uri.parse(uri))]);
+      // 書き込み
+      try {
+        await ndef.write(records);
+        nfcStop('タグへの書き込みに成功しました');
+      } catch (_) {
+        nfcStop('😭タグへの書き込みに失敗しました');
+      }
     },
     onError: (_) async {
-      if (Platform.isAndroid) {
-        Navigator.pop(context);
-        await Future.delayed(Duration(seconds: 5));
-      }
-      NfcManager.instance.stopSession();
-      throw StateError('NFCタグ読み込みに失敗しました');
+      const m = '書き込みに失敗しました';
+      nfcStop(m);
+      throw StateError(m);
     },
   );
 
