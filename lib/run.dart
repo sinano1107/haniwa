@@ -46,7 +46,8 @@ void run({bool isEmulator = false}) async {
         Settings(host: '$kLocalIP:8080', sslEnabled: false);
     FirebaseAuth.instance.useEmulator('http://$kLocalIP:9099');
     FirebaseStorage.instance.useStorageEmulator(kLocalIP, 9199);
-    FirebaseFunctions.instance.useFunctionsEmulator(kLocalIP, 5001);
+    FirebaseFunctions.instanceFor(region: 'asia-northeast1')
+        .useFunctionsEmulator(kLocalIP, 5001);
   }
 
   // タイムゾーンを初期化

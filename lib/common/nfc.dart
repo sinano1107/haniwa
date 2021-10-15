@@ -4,7 +4,7 @@ import 'package:nfc_manager/nfc_manager.dart';
 
 // TODO: ここリリース時には本番用に置き換えないとダメよ
 const head =
-    'haniwa.page.link/?ibi=com.sinano1107.haniwa&isi=962194608&apn=com.example.haniwa&link=https%3A%2F%2Fqiita.com%2F%3Fid%3D';
+    'https://haniwa.page.link/?ibi=com.sinano1107.haniwa&isi=962194608&apn=com.example.haniwa&link=https%3A%2F%2Fqiita.com%2F%3Fid%3D';
 
 void getTagId({
   @required nfcStop(String text),

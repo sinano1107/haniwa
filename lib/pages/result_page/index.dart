@@ -60,7 +60,8 @@ Future<int> fetchAndUpdateMyData(
   ResultViewModel viewModel,
 ) async {
   final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
-  final callable = FirebaseFunctions.instance.httpsCallable('questClear');
+  final functions = FirebaseFunctions.instanceFor(region: 'asia-northeast1');
+  final callable = functions.httpsCallable('questClear');
   final res = await callable.call(<String, dynamic>{
     'uid': FirebaseAuth.instance.currentUser.uid,
     'groupId': haniwaProvider.groupId,
@@ -68,7 +69,7 @@ Future<int> fetchAndUpdateMyData(
   });
   print(res.data);
   switch (res.data['result']) {
-    case 'finishedNormary':
+    case 'finishedNormally':
       // 正常に終了
       // バッジを加算
       await questClearBadge.save(context);
