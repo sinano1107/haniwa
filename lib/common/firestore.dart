@@ -243,6 +243,19 @@ class QuestFirestore {
   final String questId;
   String get questPath => QuestColFirestore(context).questColPath + '/$questId';
 
+  // クエストを取得
+  Future<ReportQuest> get() async {
+    final then = (DocumentSnapshot ss) {
+      if (ss.exists) {
+        final Map<String, dynamic> data = ss.data();
+        data['id'] = questId;
+        return ReportQuest.decode(data);
+      }
+      return null;
+    };
+    return await FirebaseFirestore.instance.doc(questPath).get().then(then);
+  }
+
   // クエストを編集
   Future update(Map<String, Object> newData) async {
     await FirebaseFirestore.instance.doc(questPath).update(newData);
@@ -251,27 +264,5 @@ class QuestFirestore {
   // クエストを削除
   Future delete() async {
     await FirebaseFirestore.instance.doc(questPath).delete();
-  }
-}
-
-// /groups/{groupId}/tags/{tagId}
-class TagFirestore {
-  TagFirestore(this.context, this.tagId);
-  final BuildContext context;
-  final String tagId;
-  String get tagPath => GroupFirestore(context).path() + '/tags/$tagId';
-
-  // タグのクエストを取得
-  Future<ReportQuest> get() async {
-    final then = (DocumentSnapshot docSnap) {
-      if (docSnap.exists) return ReportQuest.decode(docSnap.data());
-      throw StateError('タグが存在しませんでした');
-    };
-    return await FirebaseFirestore.instance.doc(tagPath).get().then(then);
-  }
-
-  // タグのクエストを編集
-  Future update(ReportQuest quest) async {
-    await FirebaseFirestore.instance.doc(tagPath).update(quest.encode);
   }
 }

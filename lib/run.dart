@@ -13,7 +13,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/date_symbol_data_local.dart';
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
-import 'theme/dark_theme.dart';
+// import 'theme/dark_theme.dart';
 import 'providers/haniwa_provider.dart';
 
 import 'pages/landing_page/index.dart';
@@ -46,7 +46,8 @@ void run({bool isEmulator = false}) async {
         Settings(host: '$kLocalIP:8080', sslEnabled: false);
     FirebaseAuth.instance.useEmulator('http://$kLocalIP:9099');
     FirebaseStorage.instance.useStorageEmulator(kLocalIP, 9199);
-    FirebaseFunctions.instance.useFunctionsEmulator(kLocalIP, 5001);
+    FirebaseFunctions.instanceFor(region: 'asia-northeast1')
+        .useFunctionsEmulator(kLocalIP, 5001);
   }
 
   // タイムゾーンを初期化
@@ -79,7 +80,7 @@ class HaniwaContent extends StatelessWidget {
         title: 'Flutter Demo',
         navigatorKey: _navigatorKey,
         theme: kLightTheme,
-        darkTheme: kDarkTheme,
+        // darkTheme: kDarkTheme,
         initialRoute: LandingPage.id,
         // initialRoute: DevPage.id,
         routes: {

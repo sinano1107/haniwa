@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:haniwa/providers/haniwa_provider.dart';
 import 'components/list_app_bar.dart';
 import 'components/quest_list.dart';
 import 'components/menu.dart';
@@ -28,8 +25,6 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final haniwaProvider = Provider.of<HaniwaProvider>(context, listen: false);
-
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -49,7 +44,5 @@ class _ListPageState extends State<ListPage> {
   void init() async {
     // ダイナミックリンクをリッスン
     listenDynamicLink(context);
-    // タイマーのデータが残存している場合はタイマー画面にとばす
-    // checkTimer(context);
   }
 }

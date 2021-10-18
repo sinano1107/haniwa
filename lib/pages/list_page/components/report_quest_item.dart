@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:haniwa/common/firestore.dart';
@@ -10,6 +13,7 @@ import 'package:haniwa/models/report_quest.dart';
 import 'package:haniwa/components/report_dialog.dart';
 import 'package:haniwa/pages/list_page/index.dart';
 import 'package:haniwa/pages/quest_edit_page/index.dart';
+import 'package:haniwa/providers/haniwa_provider.dart';
 
 class ReportQuestItem extends StatelessWidget {
   const ReportQuestItem({
@@ -35,7 +39,7 @@ class ReportQuestItem extends StatelessWidget {
 
     return Slidable(
       actionPane: SlidableScrollActionPane(),
-      actions: [buildTagAction(context)],
+      actions: [buildTagAction(context, quest.id)],
       secondaryActions: [buildDeleteAction(context)],
       child: ListTile(
         leading: _leading(isDone, isWorkingDay, quest.uid),
@@ -73,7 +77,8 @@ class ReportQuestItem extends StatelessWidget {
     );
   }
 
-  IconSlideAction buildTagAction(BuildContext context) {
+  IconSlideAction buildTagAction(BuildContext context, String questId) {
+    final provider = Provider.of<HaniwaProvider>(context, listen: false);
     return IconSlideAction(
       caption: 'タグにリンクする',
       color: Colors.lightGreen,
@@ -81,21 +86,19 @@ class ReportQuestItem extends StatelessWidget {
       icon: Icons.nfc,
       onTap: () {
         getTagId(
-          handle: (tagId) async {
-            showProgressDialog(context);
-            try {
-              await TagFirestore(
-                context,
-                tagId.split('-').last,
-              ).update(quest);
-              showSnackBar(context, 'タグとのリンクに成功しました');
-            } catch (e) {
-              print('タグアップデートエラー: $e');
-              showSnackBar(context, 'タグとのリンクに失敗しました');
+          nfcStop: (text) async {
+            showSnackBar(context, text);
+            if (Platform.isAndroid) {
+              // AndroidDialogを削除
+              Navigator.pop(context);
+              // 連続読取を避けるためインターバルを設ける
+              await Future.delayed(Duration(seconds: 3));
             }
-            Navigator.pop(context);
+            NfcManager.instance.stopSession();
           },
           context: context,
+          groupId: provider.groupId,
+          questId: questId,
         );
       },
     );
