@@ -13,7 +13,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/date_symbol_data_local.dart';
 import 'seacrets/local_ip.dart';
 import 'theme/light_theme.dart';
-import 'theme/dark_theme.dart';
+// import 'theme/dark_theme.dart';
 import 'providers/haniwa_provider.dart';
 
 import 'pages/landing_page/index.dart';
@@ -79,7 +79,7 @@ class HaniwaContent extends StatelessWidget {
         title: 'Flutter Demo',
         navigatorKey: _navigatorKey,
         theme: kLightTheme,
-        darkTheme: kDarkTheme,
+        // darkTheme: kDarkTheme,
         initialRoute: LandingPage.id,
         // initialRoute: DevPage.id,
         routes: {
