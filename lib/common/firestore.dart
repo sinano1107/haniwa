@@ -7,6 +7,7 @@ import 'package:haniwa/models/history/histories_wrap.dart';
 import 'package:haniwa/models/history/history.dart';
 import 'package:haniwa/models/record.dart';
 import 'package:haniwa/models/badge.dart';
+import 'package:haniwa/models/trade.dart';
 
 import 'provider.dart';
 
@@ -164,6 +165,43 @@ class RecordFirestore {
 
   Future set(Record record) async {
     await FirebaseFirestore.instance.doc(recordPath).set(record.encode);
+  }
+}
+
+// /groups/{groupId}/tradeList
+class TradeColFirestore {
+  TradeColFirestore(this.context);
+  final BuildContext context;
+  String get path => GroupFirestore(context).path() + '/tradeList';
+
+  // トレードコレクションを取得
+  Stream<QuerySnapshot> snapshots() {
+    return FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('isAproved', descending: true)
+        .orderBy('star', descending: true)
+        .snapshots();
+  }
+
+  // トレードを追加
+  Future add(Trade trade) async {
+    await FirebaseFirestore.instance.collection(path).add(trade.encode);
+  }
+}
+
+// /groups/{groupId}/tradeList/{tradeId}
+class TradeFirestore {
+  TradeFirestore(this.context, this.tradeId);
+  final BuildContext context;
+  final String tradeId;
+  String get path => TradeColFirestore(context).path + '/' + tradeId;
+
+  Future update(Map<String, dynamic> data) async {
+    FirebaseFirestore.instance.doc(path).update(data);
+  }
+
+  Future delete() async {
+    FirebaseFirestore.instance.doc(path).delete();
   }
 }
 

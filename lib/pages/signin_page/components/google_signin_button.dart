@@ -34,19 +34,20 @@ class GoogleSigninButton extends StatelessWidget {
       } else {
         // groupId,権限者uidを取得・保存してlist画面へ
         final groupId = await UserFirestore().fetchMyGroupId();
-        String admin;
         final haniwaProvider = Provider.of<HaniwaProvider>(
           context,
           listen: false,
         );
         if (groupId == null) {
           // ログインしたがgroupIdがnullだった場合
-          haniwaProvider.init(groupId: groupId, admin: admin);
           Navigator.pushReplacementNamed(context, SelectGroupPage.id);
         } else {
-          admin =
-              (await GroupFirestore(context).get(groupId: groupId))['admin'];
-          haniwaProvider.init(groupId: groupId, admin: admin);
+          final group = await GroupFirestore(context).get(groupId: groupId);
+          haniwaProvider.init(
+            groupId: groupId,
+            admin: group['admin'],
+            adminName: group['adminName'],
+          );
           Navigator.pushReplacementNamed(context, ListPage.id);
         }
       }

@@ -34,7 +34,11 @@ class _LandingPageState extends State<LandingPage> {
           listen: false,
         );
         // プロバイダにgroupId,groupDataを保存
-        haniwaProvider.init(groupId: groupId, admin: groupData['admin']);
+        haniwaProvider.init(
+          groupId: groupId,
+          admin: groupData['admin'],
+          adminName: groupData['adminName'],
+        );
         // 正常に処理完了したのでリストページへ
         Navigator.pushReplacementNamed(context, ListPage.id);
       } catch (e) {
