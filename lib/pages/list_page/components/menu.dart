@@ -60,7 +60,7 @@ class Menu extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.history),
-                title: Text('クエスト達成の履歴'),
+                title: Text('今までの履歴'),
                 onTap: () => Navigator.pushNamed(context, HistoryPage.id),
               ),
               ListTile(

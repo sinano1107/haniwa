@@ -16,7 +16,7 @@ class HistoryPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('クエスト達成の履歴'),
+        title: Text('今までの履歴'),
       ),
       body: FutureBuilder<List<HistoriesWrap>>(
         future: fetchHistory(context),

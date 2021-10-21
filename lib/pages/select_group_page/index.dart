@@ -86,8 +86,6 @@ class SelectGroupPage extends StatelessWidget {
         authorId: user.uid,
         time: DateTime.now(),
         text: 'グループが誕生しました🎉',
-        questId: null,
-        star: null,
       ));
       showSnackBar(context, 'グループの作成に成功しました');
       // TODO: pushAndRemoveUntilにする

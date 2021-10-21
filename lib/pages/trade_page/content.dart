@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:confetti/confetti.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/models/trade.dart';
 import 'components/trade_list_tile.dart';
 
 class TradePageContent extends StatelessWidget {
-  const TradePageContent({Key key}) : super(key: key);
+  const TradePageContent({
+    Key key,
+    @required this.controller,
+  }) : super(key: key);
+  final ConfettiController controller;
 
   List<Widget> _buildList(List<QueryDocumentSnapshot<Object>> data) {
     if (data.length == 0) {
@@ -29,7 +34,12 @@ class TradePageContent extends StatelessWidget {
       d['id'] = ss.id;
       return Trade.decode(d);
     }).toList();
-    return tradeList.map((Trade t) => TradeListTile(trade: t)).toList();
+    return tradeList
+        .map((Trade t) => TradeListTile(
+              trade: t,
+              controller: controller,
+            ))
+        .toList();
   }
 
   @override

@@ -49,6 +49,12 @@ class HistoryTile extends StatelessWidget {
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
     final isQuest = history.questId != null && history.star != null;
+    print(history.encode());
+    final color = isQuest
+        ? kPointColor
+        : history.tradeId != null
+            ? Colors.blue
+            : theme.accentColor;
 
     return ListTile(
       leading: CloudStorageAvatar(
@@ -56,7 +62,7 @@ class HistoryTile extends StatelessWidget {
       title: Text(
         history.text,
         style: TextStyle(
-          color: isQuest ? kPointColor : theme.accentColor,
+          color: color,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),

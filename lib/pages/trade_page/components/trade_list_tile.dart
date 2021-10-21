@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:confetti/confetti.dart';
 import 'package:haniwa/models/trade.dart';
 import 'package:haniwa/providers/haniwa_provider.dart';
 import 'package:haniwa/common/firestore.dart';
@@ -9,13 +10,16 @@ import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'aprove_dialog.dart';
 import 'edit_dialog.dart';
+import 'trade_dialog.dart';
 
 class TradeListTile extends StatelessWidget {
   const TradeListTile({
     Key key,
     @required this.trade,
+    @required this.controller,
   }) : super(key: key);
   final Trade trade;
+  final ConfettiController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +58,7 @@ class TradeListTile extends StatelessWidget {
       ];
     }
 
-    void onTap() {
+    void onTap() async {
       if (provider.admin == uid && !trade.isAproved) {
         // 承認されていなくて自分が権限者の場合
         showDialog(
@@ -69,7 +73,13 @@ class TradeListTile extends StatelessWidget {
         return;
       }
       // 承認されている場合
-      print('交換の処理');
+      showDialog(
+        context: context,
+        builder: (_) => TradeDialog(
+          trade: trade,
+          controller: controller,
+        ),
+      );
     }
 
     return Card(
