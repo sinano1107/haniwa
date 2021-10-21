@@ -58,7 +58,7 @@ class HistoryTile extends StatelessWidget {
 
     return ListTile(
       leading: CloudStorageAvatar(
-          path: 'versions/v2/users/${history.authorId}/icon.png'),
+          path: 'versions/v1/users/${history.authorId}/icon.png'),
       title: Text(
         history.text,
         style: TextStyle(
