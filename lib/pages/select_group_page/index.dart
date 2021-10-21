@@ -60,12 +60,15 @@ class SelectGroupPage extends StatelessWidget {
 
   void createNewGroup(BuildContext context) async {
     showProgressDialog(context);
-    final uid = FirebaseAuth.instance.currentUser.uid;
+    final user = FirebaseAuth.instance.currentUser;
     try {
       // グループを新規作成して、グループ参加と同じ処理をする
       final groupRef = await FirebaseFirestore.instance
           .collection('versions/v1/groups')
-          .add({'admin': uid});
+          .add({
+        'admin': user.uid,
+        'adminName': user.displayName,
+      });
       final groupId = groupRef.id;
       await GroupFirestore(context).addMe(inputGroupId: groupId);
       // グループIDをプロバイダに保存して遷移
@@ -73,16 +76,19 @@ class SelectGroupPage extends StatelessWidget {
         context,
         listen: false,
       );
-      haniwaProvider.init(groupId: groupId, admin: uid);
+      haniwaProvider.init(
+        groupId: groupId,
+        admin: user.uid,
+        adminName: user.displayName,
+      );
       // 履歴に保存
       HistoriesColFirestore(context).saveHistory(History(
-        authorId: uid,
+        authorId: user.uid,
         time: DateTime.now(),
         text: 'グループが誕生しました🎉',
-        questId: null,
-        star: null,
       ));
       showSnackBar(context, 'グループの作成に成功しました');
+      // TODO: pushAndRemoveUntilにする
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {
       print('グループ新規作成エラー $e');

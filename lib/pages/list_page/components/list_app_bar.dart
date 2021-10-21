@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'quest_list_item.dart';
-// import 'package:haniwa/models/quest.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:haniwa/pages/trade_page/index.dart';
 
 class ListAppBar extends StatelessWidget {
   ListAppBar({
@@ -24,8 +22,13 @@ class ListAppBar extends StatelessWidget {
           color: _theme.accentColor,
         ),
       ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.storefront),
+          onPressed: () => Navigator.pushNamed(context, TradePage.id),
+        ),
+      ],
       pinned: true,
-      // collapsedHeight: 100,
       expandedHeight: 100,
     );
   }

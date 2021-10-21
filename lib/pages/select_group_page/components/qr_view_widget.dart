@@ -5,7 +5,6 @@ import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haniwa/common/firestore.dart';
 import 'package:haniwa/providers/haniwa_provider.dart';
 import 'package:haniwa/pages/list_page/index.dart';
@@ -74,17 +73,19 @@ class _QRViewWidgetState extends State<QRViewWidget> {
   }
 
   void join(BuildContext context, String groupId) async {
-    final _uid = FirebaseAuth.instance.currentUser.uid;
     try {
       await GroupFirestore(context).addMe(inputGroupId: groupId);
       // グループID,権限者uidをプロバイダに保存して遷移
-      final admin =
-          (await GroupFirestore(context).get(groupId: groupId))['admin'];
+      final group = await GroupFirestore(context).get(groupId: groupId);
       final haniwaProvider = Provider.of<HaniwaProvider>(
         context,
         listen: false,
       );
-      haniwaProvider.init(groupId: groupId, admin: admin);
+      haniwaProvider.init(
+        groupId: groupId,
+        admin: group['admin'],
+        adminName: group['adminName'],
+      );
       showSnackBar(context, 'グループへの参加に成功しました');
       Navigator.pushReplacementNamed(context, ListPage.id);
     } catch (e) {
