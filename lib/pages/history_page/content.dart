@@ -49,7 +49,6 @@ class HistoryTile extends StatelessWidget {
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
     final isQuest = history.questId != null && history.star != null;
-    print(history.encode());
     final color = isQuest
         ? kPointColor
         : history.tradeId != null
