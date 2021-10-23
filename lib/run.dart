@@ -30,10 +30,14 @@ import 'pages/record_page/index.dart';
 import 'pages/members_page/index.dart';
 import 'pages/user_page/index.dart';
 import 'pages/trade_page/index.dart';
+import 'pages/maintenance_page/index.dart';
+import 'pages/please_update_page.dart/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
-void run({bool isEmulator = false}) async {
+// isEmulator: エミュレーターを使用するか
+// isDeveloper: サーバーのメンテナンスフラグを無視するか
+void run({bool isEmulator = false, bool isDeveloper = false}) async {
   final logger = SimpleLogger();
   logger.info('start(isEmulator: $isEmulator)');
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,10 +70,13 @@ void run({bool isEmulator = false}) async {
   await FirebaseDynamicLinks.instance.getInitialLink();
 
   // runApp(Haniwa());
-  runApp(HaniwaContent());
+  runApp(HaniwaContent(isDeveloper: isDeveloper));
 }
 
 class HaniwaContent extends StatelessWidget {
+  HaniwaContent({@required this.isDeveloper});
+  final isDeveloper;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -85,7 +92,7 @@ class HaniwaContent extends StatelessWidget {
         initialRoute: LandingPage.id,
         // initialRoute: DevPage.id,
         routes: {
-          LandingPage.id: (_) => LandingPage(),
+          LandingPage.id: (_) => LandingPage(isDeveloper: isDeveloper),
           ErrorPage.id: (_) => ErrorPage(),
           DevPage.id: (_) => DevPage(),
           SigninPage.id: (_) => SigninPage(),
@@ -99,6 +106,8 @@ class HaniwaContent extends StatelessWidget {
           MembersPage.id: (_) => MembersPage(),
           UserPage.id: (_) => UserPage(),
           TradePage.id: (_) => TradePage(),
+          MaintenancePage.id: (_) => MaintenancePage(),
+          PleaseUpdatePage.id: (_) => PleaseUpdatePage(),
         },
       ),
     );

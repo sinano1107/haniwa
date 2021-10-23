@@ -1,3 +1,3 @@
 import 'run.dart';
 
-void main() => run(isEmulator: true);
+void main() => run(isEmulator: true, isDeveloper: true);
