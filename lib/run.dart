@@ -31,6 +31,7 @@ import 'pages/members_page/index.dart';
 import 'pages/user_page/index.dart';
 import 'pages/trade_page/index.dart';
 import 'pages/maintenance_page/index.dart';
+import 'pages/please_update_page.dart/index.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -105,6 +106,7 @@ class HaniwaContent extends StatelessWidget {
           UserPage.id: (_) => UserPage(),
           TradePage.id: (_) => TradePage(),
           MaintenancePage.id: (_) => MaintenancePage(),
+          PleaseUpdatePage.id: (_) => PleaseUpdatePage(),
         },
       ),
     );
