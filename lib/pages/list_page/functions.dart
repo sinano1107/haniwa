@@ -4,7 +4,8 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:haniwa/common/progress.dart';
 import 'package:haniwa/common/snackbar.dart';
 import 'package:haniwa/common/firestore.dart';
-import 'package:haniwa/components/report_dialog.dart';
+// import 'package:haniwa/components/report_dialog.dart';
+import 'package:haniwa/pages/result_page/index.dart';
 import 'package:haniwa/providers/haniwa_provider.dart';
 
 // ダイナミックリンクをリッスン
@@ -45,7 +46,12 @@ void _navigatePage(
     if (quest == null) throw StateError('このクエストは削除されたようです');
     // 正常
     Navigator.pop(context);
-    showDialog(context: context, builder: (_) => ReportDialog(quest: quest));
+    // showDialog(context: context, builder: (_) => ReportDialog(quest: quest));
+    Navigator.pushNamed(
+      context,
+      ResultPage.id,
+      arguments: ResultArguments(quest: quest),
+    );
   } catch (e) {
     print('ダイナミックリンク対応エラー: $e');
     showSnackBar(context, e.message);
