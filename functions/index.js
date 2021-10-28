@@ -7,9 +7,12 @@ exports.version = version;
 const questClear = require('./quest_clear');
 const continuationCheck = require('./continuation_check');
 const get = require('./get');
+const group = require('./group');
 exports.questClear = questClear.questClear;
 exports.continuationCheck = continuationCheck.continuationCheck;
 exports.getTagData = get.getTagData;
+exports.withdrawal = group.withdrawal;
+exports.deleteGroup = group.deleteGroup;
 
 // テスト関数
 exports.test = functions.region('asia-northeast1').https.onRequest(async (_, res) => {
