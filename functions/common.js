@@ -1,9 +1,26 @@
 const admin = require('firebase-admin');
 const index = require('./index');
 const version = index.version;
+exports.deleteDocumentRecursively = deleteDocumentRecursively;
 exports.getJapanTime = getJapanTime;
 exports.jsDay2dartDay = jsDay2dartDay;
 exports.checkIsCleared = checkIsCleared;
+
+// サブコレクションも含め全て削除する
+async function deleteDocumentRecursively(docRef) { 
+    const collections = await docRef.listCollections();
+
+    if (collections.length > 0) {
+        for (const collection of collections) {
+            const snapshot = await collection.get();
+            for (const doc of snapshot.docs) {
+                await deleteDocumentRecursively(doc.ref);
+            }
+        }
+    }
+
+    await docRef.delete();
+};
 
 // 日本時間を取得
 function getJapanTime() {
