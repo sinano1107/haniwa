@@ -47,3 +47,5 @@ app.*.map.json
 lib/seacrets
 node_modules
 data
+c:UsersUSER_NAMEkey.jks
+key.jks
